@@ -3,10 +3,10 @@ import Head from "next/head";
 import { AppProps } from "next/app";
 import { CssVarsProvider } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
-import theme from "../lib/theme";
+import theme from "@/libs/theme"
 import CssBaseline from "@mui/joy/CssBaseline";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import createEmotionCache from "../lib/createEmotionCache";
+import { CacheProvider, EmotionCache } from "@emotion/react"
+import createEmotionCache from "@/libs/createEmotionCache";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
