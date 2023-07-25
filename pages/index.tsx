@@ -1,8 +1,16 @@
 import { Button } from "@mui/joy";
-import Layout from "../components/Layout";
+import Layout from "@/pages/components/Layout"
 import Typography from "@mui/joy/Typography";
+import { useRouter } from "next/router";
 
 export default function Index() {
+   
+    const router = useRouter();
+
+    const handleLogin = () => {
+        router.push('./dashboard')
+    }
+
   return (
     <Layout>
       <Typography level="h2" sx={{ mb: "1rem" }}>
@@ -19,7 +27,7 @@ export default function Index() {
         <a href="https://github.com">GitHub</a>.
         Created with 💙 by <a href="https://mui.com/">MUI</a>.
       </Typography>
-      <Button sx={{ mt: "1rem" }} onClick={() => alert('much wow')}>Press Me</Button>
+      <Button sx={{ mt: "1rem" }} onClick={handleLogin}>Press Me</Button>
     </Layout>
   );
 }
