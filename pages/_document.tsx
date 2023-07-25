@@ -1,7 +1,7 @@
 import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-import createEmotionCache from "../lib/createEmotionCache";
+import createEmotionCache from "@/libs/createEmotionCache";
 import { getInitColorSchemeScript } from "@mui/joy/styles";
 
 export default class ThemedDocument extends Document {
