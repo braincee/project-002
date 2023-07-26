@@ -7,47 +7,12 @@ import Link from '@mui/joy/Link';
 import Box from '@mui/joy/Box';
 import { Typography } from '@mui/joy';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-
-
-const useEnhancedEffect =
-  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
-
-function ModeSwitcher() {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-  return (
-    <Button
-      variant="outlined"
-      color="neutral"
-      onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
-    >
-      {mode === 'dark' ? 'Light' : 'Dark'}
-    </Button>
-  );
-}
+import ModeButton from '../ModeButton';
 
 
 const Header: React.FC = () => {
 
-  const [node, setNode] = React.useState<HTMLElement | null>(null);
-  useEnhancedEffect(() => {
-    setNode(document.getElementById('mode-toggle'));
-  }, []);
-
   return (
-    <CssVarsProvider
-         colorSchemeNode={node || null}
-         colorSchemeSelector="#mode-toggle"
-         modeStorageKey="mode-toggle-demo"
-    >
     <Box sx={{ display: 'flex', gap: 55, padding: 3}}>
       <Select defaultValue="Home">
         <Option value="login"><Link href='/' variant='outlined'><Typography level='h1'>Login</Typography></Link></Option>
@@ -61,12 +26,10 @@ const Header: React.FC = () => {
          NFT GATED SERVER
         </Typography>
       <ButtonGroup aria-label="outlined primary button group">
-      <ModeSwitcher />
+      <ModeButton />
       <Button>Logout</Button>
     </ButtonGroup>
     </Box>
-    </CssVarsProvider>
-  
   );
 };
 
