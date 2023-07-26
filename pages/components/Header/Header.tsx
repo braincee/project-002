@@ -29,7 +29,7 @@ function ModeSwitcher() {
       color="neutral"
       onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
     >
-      {mode === 'dark' ? 'Turn light' : 'Turn dark'}
+      {mode === 'dark' ? 'Light' : 'Dark'}
     </Button>
   );
 }
@@ -44,16 +44,11 @@ const Header: React.FC = () => {
 
   return (
     <CssVarsProvider
-         // the element to apply [data-joy-color-scheme] attribute.
          colorSchemeNode={node || null}
-         //
-         // the selector to apply the CSS theme variables stylesheet.
          colorSchemeSelector="#mode-toggle"
-         //
-         // the local storage key to use.
          modeStorageKey="mode-toggle-demo"
     >
-        <Box sx={{ display: 'flex', gap: 55, padding: 3}}>
+    <Box sx={{ display: 'flex', gap: 55, padding: 3}}>
       <Select defaultValue="Home">
         <Option value="login"><Link href='/' variant='outlined'><Typography level='h1'>Login</Typography></Link></Option>
         <Option value="dashboard"><Link href='/dashboard' variant='outlined'><Typography level='h1'>Dashboard</Typography></Link></Option>
