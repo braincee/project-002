@@ -1,7 +1,9 @@
 import { Button } from "@mui/joy";
 import Layout from "@/pages/components/Layout"
-import Typography from "@mui/joy/Typography";
 import { useRouter } from "next/router";
+import Box from '@mui/joy/Box';
+import Input from '@mui/joy/Input';
+
 
 export default function Index() {
    
@@ -13,21 +15,34 @@ export default function Index() {
 
   return (
     <Layout>
-      <Typography level="h2" sx={{ mb: "1rem" }}>
-       Joy UI
-      </Typography>
-      <Typography sx={{ mb: "1rem" }}>
-        Welcome ✨
-      </Typography>
-      <Typography component="h2" level="h3">
-        Features
-      </Typography>
-      <Typography>
-        View it on{" "}
-        <a href="https://github.com">GitHub</a>.
-        Created with 💙 by <a href="https://mui.com/">MUI</a>.
-      </Typography>
-      <Button sx={{ mt: "1rem" }} onClick={handleLogin}>Press Me</Button>
+    <Box
+      sx={{
+        py: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+      >
+        <Input
+          placeholder="Name"
+          sx={{ mb: 2, fontSize: 'var(--joy-fontSize-sm)', width : 400 }}
+          size="lg"
+        />
+        <Input 
+        placeholder="Enter your password" 
+        sx={{ mb: 2, fontSize: 'var(--joy-fontSize-sm)', width: 400 }}
+        size="lg"
+        />
+        <Button type="submit" onClick={handleLogin}>Submit</Button>
+      </form>
+    </Box>
     </Layout>
   );
 }

@@ -12,7 +12,7 @@ import { Typography } from '@mui/joy';
 const Header: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', gap: 55, padding: 3}}>
-      <Select defaultValue="">
+      <Select defaultValue="Home">
         <Option value="login"><Link href='/' variant='outlined'><Typography level='h1'>Login</Typography></Link></Option>
         <Option value="dashboard"><Link href='/dashboard' variant='outlined'><Typography level='h1'>Dashboard</Typography></Link></Option>
         <Option value="audience"><Link href='/audience' variant='outlined'><Typography level='h1'>Address List</Typography></Link></Option>
