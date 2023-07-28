@@ -15,14 +15,18 @@
     "@nextui-org/react": "^0.0.0-dev-v2-20230518012432",
     "@sequelize/core": "^7.0.0-alpha.27",
     "@supabase/supabase-js": "^2.26.0",
+    "axios": "^1.4.0",
     "eslint": "^8.45.0",
     "eslint-config-next": "^13.4.12",
     "ethers": "^6.6.4",
     "next": "latest",
     "numbro": "^2.3.6",
+    "pg": "^8.11.1",
+    "pg-hstore": "^2.3.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.10.1"
+    "react-icons": "^4.10.1",
+    "sequelize": "^6.32.1"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
