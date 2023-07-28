@@ -1,14 +1,17 @@
 import * as React from 'react';
-import { Typography, Box, Select, Option, Button, ButtonGroup } from '@mui/joy';
+import { Typography, Box, Select, Option, Button, ButtonGroup, Link } from '@mui/joy';
 import ModeButton from '../ModeButton';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Header: React.FC = () => {
+  const router = useRouter();
+  
+  console.log(router.pathname)
 
   return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
         <Select
-          placeholder='Home'
+          placeholder={router.pathname == '/' ? 'Home':  `${router.pathname.slice(1)[0].toUpperCase()}${router.pathname.slice(1).slice(1)}`}
           slotProps={{
             listbox: {
               placement: 'top-start',
@@ -18,12 +21,12 @@ const Header: React.FC = () => {
             },
           }}
         >
-          <Link href='/'><Option value="login"><Typography level='h4'>Login</Typography></Option></Link>
-          <Link href='/dashboard'><Option value="dashboard"><Typography level='h4'>Dashboard</Typography></Option></Link>
-          <Link href='/audience'><Option value="audience"><Typography level='h4'>Address List</Typography></Option></Link>
-          <Link href='/content'><Option value="content"><Typography level='h4'>Content List</Typography></Option></Link>
-          <Link href='/logs'><Option value="logs"><Typography level='h4'>Logs</Typography></Option></Link>
-          <Link href='/manage'><Option value="manage"><Typography level='h4'>Manage</Typography></Option></Link>
+          <Link href='/'><Option value="login"><Typography level='h3'>Login</Typography></Option></Link>
+          <Link href='/dashboard'><Option value="dashboard"><Typography level='h3'>Dashboard</Typography></Option></Link>
+          <Link href='/audience'><Option value="audience"><Typography level='h3'>Address List</Typography></Option></Link>
+          <Link href='/content'><Option value="content"><Typography level='h3'>Content List</Typography></Option></Link>
+          <Link href='/logs'><Option value="logs"><Typography level='h3'>Logs</Typography></Option></Link>
+          <Link href='/manage'><Option value="manage"><Typography level='h3'>Manage</Typography></Option></Link>
         </Select>
         <Typography level='h3'>
           NFT GATED SERVER
