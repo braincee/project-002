@@ -1,9 +1,8 @@
 import { Button } from "@mui/joy";
-import Layout from "@/pages/components/Layout"
+import Layout from "@/components/Layout"
 import { useRouter } from "next/router";
 import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input';
-import axios from 'axios';
 
 export default function Index() {
    
@@ -12,12 +11,6 @@ export default function Index() {
     const handleLogin = () => {
         router.push('./dashboard')
     }
-
-    const test = async () => {
-      await axios.get('/api/test');
-    }
-
-    test()
 
   return (
     <Layout>
