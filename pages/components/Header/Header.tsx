@@ -16,11 +16,17 @@ const Header: React.FC = () => {
             listbox: {
               placement: 'top-start',
               sx: {
-                paddingX: 2
+                paddingX: 2,
+                maxHeight: 'fit-content',
+                overflow: 'none',
               }
             },
           }}
         >
+          <ButtonGroup spacing={1} sx={{ display: {xs: 'flex', md: 'none', justifyContent: 'space-between', }, gap: 3, paddingY: 2, }} aria-label="spacing primary button group">
+            <ModeButton />
+            <Button variant='outlined'>Logout</Button>
+          </ButtonGroup>
           <Link href='/'><Option value="login"><Typography level='h3'>Login</Typography></Option></Link>
           <Link href='/dashboard'><Option value="dashboard"><Typography level='h3'>Dashboard</Typography></Option></Link>
           <Link href='/audience'><Option value="audience"><Typography level='h3'>Address List</Typography></Option></Link>
@@ -31,7 +37,7 @@ const Header: React.FC = () => {
         <Typography sx={{ display: { xs: 'none', md: 'flex'}}} level='h3'>
           NFT GATED SERVER
         </Typography>
-        <ButtonGroup sx={{ display: {xs: 'none', md: 'flex'}, gap: 3}} aria-label="outlined primary button group">
+        <ButtonGroup spacing={1} sx={{ display: {xs: 'none', md: 'flex'}, gap: 3}} aria-label="spacing primary button group">
           <ModeButton />
           <Button variant='outlined'>Logout</Button>
         </ButtonGroup>
