@@ -27,7 +27,7 @@ export default function Layout(props: PropsWithChildren) {
           p: "2rem",
         }}
       >
-        <Box>{props.children}</Box>
+        <Box sx={{width: "100%"}}>{props.children}</Box>
       </Grid>
     </>
   );
