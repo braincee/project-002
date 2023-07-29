@@ -26,7 +26,7 @@ export default function Index() {
         }}
         spacing={3}
       >
-        <Grid lg={4} md={6} sm={12}>
+        <Grid lg={4} md={6} xs={12}>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -45,7 +45,7 @@ export default function Index() {
             <Button type="submit" onClick={handleLogin}>Submit</Button>
           </form>
         </Grid>
-        <Grid lg={8} md={6} sm={12} >
+        <Grid lg={8} md={6} xs={12} >
           <AspectRatio variant="outlined" objectFit="fill">
             <Image className="nft-image" src={NFTImage} layout="fill" alt="NTF Image" />
           </AspectRatio>

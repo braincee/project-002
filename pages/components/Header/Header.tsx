@@ -28,10 +28,10 @@ const Header: React.FC = () => {
           <Link href='/logs'><Option value="logs"><Typography level='h3'>Logs</Typography></Option></Link>
           <Link href='/manage'><Option value="manage"><Typography level='h3'>Manage</Typography></Option></Link>
         </Select>
-        <Typography level='h3'>
+        <Typography sx={{ display: { xs: 'none', md: 'flex'}}} level='h3'>
           NFT GATED SERVER
         </Typography>
-        <ButtonGroup sx={{ display: 'flex', gap: 3}} aria-label="outlined primary button group">
+        <ButtonGroup sx={{ display: {xs: 'none', md: 'flex'}, gap: 3}} aria-label="outlined primary button group">
           <ModeButton />
           <Button variant='outlined'>Logout</Button>
         </ButtonGroup>
