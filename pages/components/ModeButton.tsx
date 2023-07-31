@@ -18,7 +18,7 @@ export default function ModeButton() {
       <IconButton
         variant="plain"
         color="neutral"
-        sx={{ width: 60, borderRadius: 'none' }}
+        sx={{ borderRadius: '0px !important' }}
         aria-label="Toggle light and dark mode"
       />
     );
