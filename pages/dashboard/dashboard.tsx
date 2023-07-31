@@ -15,7 +15,7 @@ const Item = styled(Sheet)(({ theme }) => ({
 export default function Dashboard() {
   return (
     <>
-    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
       <Typography level='h3'>Dashboard</Typography>
        <Grid
          container
