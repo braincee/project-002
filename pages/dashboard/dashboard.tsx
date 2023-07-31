@@ -21,7 +21,8 @@ export default function Dashboard() {
          container
          rowSpacing={3}
          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-         sx={{ width: '100%' }}
+         sx={{ width: '100%', px: { xs: 'auto', md: 5, lg: 20} }}
+         
        >
       <Grid xs={12} sm={6}>
         <Card color='primary' variant='outlined' sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
