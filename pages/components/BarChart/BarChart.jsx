@@ -45,7 +45,7 @@ const BarChart = () => {
             },
             title: {
                 display: true,
-                text: 'Daily Addresses'
+                text: 'Address List'
             }
         },
         maintainAspectRatio: false,

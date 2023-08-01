@@ -7,7 +7,7 @@ const AddressList = () => {
       <Typography level='h3'>Address List</Typography>
       <Stack spacing={2}>
         <Typography level='h5' sx={{ textAlign: 'end'}}>Total Number of Addresses: 10 </Typography>
-        <Table aria-label="basic table">
+        <Table aria-label="stripe table" stripe="even" borderAxis="both">
           <thead>
             <tr>
               <th>No.</th>
