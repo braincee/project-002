@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/joy/styles';
 import { Box, Card, Grid, ListItem, Sheet, Stack, Typography } from '@mui/joy';
+import BarChart from '@/pages/components/BarChart/BarChart';
 
 const Item = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -37,7 +38,7 @@ export default function Dashboard() {
         </Card>
       </Grid>
       <Grid xs={12} sm={8}>
-        <Card sx={{ minHeight: '300px'}} color='primary' variant='outlined'>Bar Chart</Card>
+        <Card sx={{ minHeight: '300px'}} color='primary' variant='outlined'><BarChart /></Card>
       </Grid>
       <Grid xs={12} sm={4} spacing={2}>
         <Typography level='h5'>Recent Addresses</Typography>
