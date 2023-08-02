@@ -5,8 +5,6 @@ import { useRouter } from 'next/router';
 
 const Header: React.FC = () => {
   const router = useRouter();
-  
-  console.log(router.pathname)
 
   return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
