@@ -6,7 +6,7 @@ import { BaseModel } from "./BaseModel";
   timestamps: true,
   tableName: "content_addresses",
 })
-export class Content extends BaseModel {
+export class ContentAddress extends BaseModel {
   @Column({
     type: DataType.BIGINT,
     allowNull: false,
