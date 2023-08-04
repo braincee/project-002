@@ -1,12 +1,19 @@
 import { Box, Button, Checkbox, Input, Modal, ModalDialog, Sheet, Stack, Table, Typography } from '@mui/joy'
-import React from 'react'
+import React, { useState } from 'react'
 import TableToolbar from '../components/TableToolbar';
+import MyModal from '../components/MyModal/MyModal';
+import { addAddress } from '@/libs/api';
 
 const AddressList = () => {
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [open, setOpen] = useState(false);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
+
+  const handleSubmit = (event: any) => {
+    let inputValue = event.target[0].value;
+    addAddress({address: inputValue});
+  }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -44,6 +51,25 @@ const AddressList = () => {
   return (
     <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
       <Typography level='h3'>Address List</Typography>
+      
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleSubmit(event);
+          }}
+        >
+          <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
+          <Input
+            placeholder='Type an address'
+            sx={{ width: { xs: "100%", md: "50%" } }}
+          />
+          <Stack direction="row" spacing={2} >
+            <Button type='submit'>Add Item</Button>
+            <Button color='danger'>Remove Item</Button>
+          </Stack>
+          </Stack>
+        </form>
+      
       <Stack spacing={2}>
         <Typography level='h5' sx={{ textAlign: 'end' }}>Total Number of Addresses: 10 </Typography>
         <Sheet sx={{ height: 400, overflow: 'auto' }}>
@@ -124,47 +150,12 @@ const AddressList = () => {
             </tbody>
           </Table>
         </Sheet>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog
-            aria-labelledby="nested-modal-title"
-            aria-describedby="nested-modal-description"
-            sx={(theme) => ({
-              [theme.breakpoints.only('xs')]: {
-                top: 'unset',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                borderRadius: 0,
-                transform: 'none',
-                maxWidth: 'unset',
-              },
-            })}
-          >
-            <Typography id="nested-modal-title" level="h2">
-              Add Address Access for selected content items
-            </Typography>
-            <Input placeholder='Insert an address' />
-            <Box
-              sx={{
-                mt: 1,
-                display: 'flex',
-                gap: 1,
-                flexDirection: { xs: 'column', sm: 'row-reverse' },
-              }}
-            >
-              <Button variant="solid" color="neutral" onClick={() => setOpen(false)}>
-                Continue
-              </Button>
-              <Button
-                variant="outlined"
-                color="neutral"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </Box>
-          </ModalDialog>
-        </Modal>
+        <MyModal
+          open={open}
+          setOpen={setOpen}
+          tableHeading='Add Content Access for selected Addresses'
+          placeholder='Insert a content item'
+        />
       </Stack>
     </Box>
   )
