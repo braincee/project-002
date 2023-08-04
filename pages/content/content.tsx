@@ -1,14 +1,24 @@
-import React from 'react'
-import { Add } from '@mui/icons-material';
-import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography, Tooltip, Modal, ModalDialog } from '@mui/joy';
+import React, { useState } from 'react'
+import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography, } from '@mui/joy';
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
+import { addContent } from '@/libs/api';
 
 const ContentList = () => {
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [open, setOpen] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
+
+  const handleSubmit = (event: any) => {
+    let inputValue = event.target[0].value;
+    setDisable(true);
+    event.target[0].value = "";
+    addContent({content: inputValue}).then(() => {
+      setDisable(false);
+    });
+  }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -46,14 +56,21 @@ const ContentList = () => {
   return (
     <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
       <Typography level='h3'>Content List</Typography>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit(event);
+        }}
+      >
       <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
         <Input placeholder='Type an address' sx={{ width: { xs: "100%", md: "50%" } }} />
         <Stack direction="row" spacing={2} >
-          <Button>Add Item</Button>
+          <Button type='submit' disabled={disable}>Add Item</Button>
           <Button color='danger'>Remove Item</Button>
         </Stack>
         <Input type='file' sx={{ width: { xs: "100%", md: "20%" } }} />
       </Stack>
+      </form>
       <Stack spacing={2}>
         <Typography level='h5' sx={{ textAlign: 'end' }}>Content Total: 15 </Typography>
         <Sheet sx={{ height: 400, overflow: 'auto' }}>

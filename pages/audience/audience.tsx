@@ -7,12 +7,17 @@ import { addAddress } from '@/libs/api';
 const AddressList = () => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
   const handleSubmit = (event: any) => {
     let inputValue = event.target[0].value;
-    addAddress({address: inputValue});
+    setDisable(true);
+    event.target[0].value = "";
+    addAddress({address: inputValue}).then(() => {
+      setDisable(false);
+    });
   }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,8 +69,8 @@ const AddressList = () => {
             sx={{ width: { xs: "100%", md: "50%" } }}
           />
           <Stack direction="row" spacing={2} >
-            <Button type='submit'>Add Item</Button>
-            <Button color='danger'>Remove Item</Button>
+            <Button type='submit' disabled={disable}>Add Address</Button>
+            <Button color='danger'>Remove Address</Button>
           </Stack>
           </Stack>
         </form>
