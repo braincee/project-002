@@ -6,7 +6,7 @@ import { Log } from "./definitions/Log";
 import { User } from "./definitions/User";
 
 
-// export { Address, Content, ContentAddress, Log, User };
+export { Address, Content, ContentAddress, Log, User };
 
 export const initDB = async () => {
   try {

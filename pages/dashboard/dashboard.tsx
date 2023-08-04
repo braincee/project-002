@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { styled } from '@mui/joy/styles';
-import { Box, Card, Grid, ListItem, Sheet, Stack, Typography } from '@mui/joy';
+import { Box, Card, Grid, Sheet, Stack, Typography } from '@mui/joy';
 import BarChart from '@/pages/components/BarChart/BarChart';
+import { Address, Content } from '@/libs/models';
+
+export const getServerSideProps = async () => {
+  const addresses = await Address.findAll();
+  const contentLength = (await Content.findAll()).length;
+
+  return { props: { addresses, contentLength}}
+}
 
 const Item = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -13,7 +21,9 @@ const Item = styled(Sheet)(({ theme }) => ({
   color: theme.vars.palette.text.secondary,
 }));
 
-export default function Dashboard() {
+export default function Dashboard({ addresses, contentLength }: { addresses: any[], contentLength: number }) {
+  console.log(addresses, contentLength);
+
   return (
     <>
     <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
@@ -60,7 +70,5 @@ export default function Dashboard() {
     </Grid>
     </Box>
     </>
-  
-   
   );
 }

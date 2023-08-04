@@ -1,36 +1,170 @@
-import { Box, Stack, Table, Typography } from '@mui/joy'
+import { Box, Button, Checkbox, Input, Modal, ModalDialog, Sheet, Stack, Table, Typography } from '@mui/joy'
 import React from 'react'
+import TableToolbar from '../components/TableToolbar';
 
 const AddressList = () => {
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [open, setOpen] = React.useState(false);
+
+  const isSelected = (index: string) => selected.indexOf(index) !== -1;
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = Array(15).fill(0).map((_, index) => index.toString());
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, index: string) => {
+    const selectedIndex = selected.indexOf(index);
+    let newSelected: readonly string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, index);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleAddressAccess = () => {
+    setOpen(true);
+  }
+
   return (
     <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
       <Typography level='h3'>Address List</Typography>
       <Stack spacing={2}>
-        <Typography level='h5' sx={{ textAlign: 'end'}}>Total Number of Addresses: 10 </Typography>
-        <Table aria-label="stripe table" stripe="even" borderAxis="both">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Address</th>
-              <th>Content Access</th>
-              <th>Date Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            { Array(10).fill(0).map((_, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td><Typography level='h6'>Thdgfhol2337nffh</Typography></td>
-                <td>{index + 3}</td>
-                <td><Typography color='neutral'>31 July 2023</Typography></td>
+        <Typography level='h5' sx={{ textAlign: 'end' }}>Total Number of Addresses: 10 </Typography>
+        <Sheet sx={{ height: 400, overflow: 'auto' }}>
+          <TableToolbar
+            numSelected={selected.length}
+            handleAccess={handleAddressAccess}
+            buttonName={"Content"}
+            tableHeader={"Addresses"}
+          />
+          <Table
+            aria-label="stripe table"
+            stripe="even"
+            stickyHeader
+            hoverRow
+            sx={{
+              '--TableCell-headBackground': 'transparent',
+              '--TableCell-selectedBackground': (theme) =>
+                theme.vars.palette.primary.softBg,
+              '& thead th:nth-child(1)': {
+                width: '40px',
+              },
+              '& thead th:nth-child(2)': {
+                width: '20%',
+              },
+              '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>
+                  <Checkbox
+                    onChange={handleSelectAllClick}
+                    sx={{ verticalAlign: 'sub' }}
+                  />
+                </th>
+                <th>Address</th>
+                <th>Content Access</th>
+                <th>Date Created</th>
               </tr>
-            )
-            )}
-            <tr>
+            </thead>
+            <tbody>
+              {Array(10).fill(0).map((_, index) => {
+                const isItemSelected = isSelected(index.toString());
+                return (
+                 <tr
+                 key={index}
+                 onClick={(event) => handleClick(event, index.toString())}
+                 role="checkbox"
+                 tabIndex={-1}
+                 aria-checked={isItemSelected}
+                 style={
+                   isItemSelected
+                     ? ({
+                       '--TableCell-dataBackground':
+                         'var(--TableCell-selectedBackground)',
+                       '--TableCell-headBackground':
+                         'var(--TableCell-selectedBackground)',
+                     } as React.CSSProperties)
+                     : {}
+                 }
+               >
+                 <th scope="row">
+                   <Checkbox
+                     checked={isItemSelected}
+                     sx={{ verticalAlign: 'top' }}
+                   />
+                 </th>
+                  <td><Typography level='h6'>Thdgfhol2337nffh</Typography></td>
+                  <td>{index + 3}</td>
+                  <td><Typography color='neutral'>31 July 2023</Typography></td>
+                </tr>
+                )
+              }
+              )}
+              <tr>
 
-            </tr>
-          </tbody>
-        </Table>
+              </tr>
+            </tbody>
+          </Table>
+        </Sheet>
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <ModalDialog
+            aria-labelledby="nested-modal-title"
+            aria-describedby="nested-modal-description"
+            sx={(theme) => ({
+              [theme.breakpoints.only('xs')]: {
+                top: 'unset',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                borderRadius: 0,
+                transform: 'none',
+                maxWidth: 'unset',
+              },
+            })}
+          >
+            <Typography id="nested-modal-title" level="h2">
+              Add Address Access for selected content items
+            </Typography>
+            <Input placeholder='Insert an address' />
+            <Box
+              sx={{
+                mt: 1,
+                display: 'flex',
+                gap: 1,
+                flexDirection: { xs: 'column', sm: 'row-reverse' },
+              }}
+            >
+              <Button variant="solid" color="neutral" onClick={() => setOpen(false)}>
+                Continue
+              </Button>
+              <Button
+                variant="outlined"
+                color="neutral"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </ModalDialog>
+        </Modal>
       </Stack>
     </Box>
   )

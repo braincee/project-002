@@ -1,55 +1,7 @@
 import React from 'react'
 import { Add } from '@mui/icons-material';
 import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography, Tooltip, Modal, ModalDialog } from '@mui/joy';
-
-interface TableToolbarProps {
-  numSelected: number;
-  handleAddressAccess: () => void;
-}
-
-const TableToolbar = (props: TableToolbarProps) => {
-  const { numSelected, handleAddressAccess } = props;
-
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        py: 1,
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: 'background.level1',
-        }),
-        borderTopLeftRadius: 'var(--unstable_actionRadius)',
-        borderTopRightRadius: 'var(--unstable_actionRadius)',
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          level="h4"
-          sx={{ flex: '1 1 100%' }}
-          id="tableTitle"
-          component="div"
-        >
-          Items
-        </Typography>
-      )}
-
-      {numSelected > 0 && (
-        <Tooltip title="Add">
-          <Button startDecorator={<Add />} size="sm" color="primary" variant="solid" onClick={() => handleAddressAccess()}>
-            Address
-          </Button>
-        </Tooltip>
-      )}
-    </Box>
-  );
-}
+import TableToolbar from '../components/TableToolbar';
 
 const ContentList = () => {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -104,7 +56,12 @@ const ContentList = () => {
       <Stack spacing={2}>
         <Typography level='h5' sx={{ textAlign: 'end' }}>Content Total: 15 </Typography>
         <Sheet sx={{ height: 400, overflow: 'auto' }}>
-          <TableToolbar numSelected={selected.length} handleAddressAccess={handleAddressAccess} />
+          <TableToolbar
+            numSelected={selected.length}
+            handleAccess={handleAddressAccess}
+            buttonName={"Address"}
+            tableHeader={"Items"}
+          />
           <Table
             aria-label="stripe table"
             stripe="even"
