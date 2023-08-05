@@ -2,13 +2,24 @@ import { Box, Button, Checkbox, Input, Modal, ModalDialog, Sheet, Stack, Table, 
 import React, { useState } from 'react'
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addAddress } from '@/libs/api';
+import { addAddress, addContentAddress, getAddresses } from '@/libs/api';
 import Layout from '../components/Layout';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { Address, Content } from '@/libs/models';
 
-const AddressList = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const addresses = JSON.stringify(await Address.findAll({ order: [["created_at", 'DESC']] }));
+  const contentItems = JSON.stringify(await Content.findAll({ order: [["created_at", 'DESC']] }));
+
+  return { props: { addresses: JSON.parse(addresses), contentItems: JSON.parse(contentItems)} };
+}
+
+const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>("");
+  const [addressList, setAddressList] = useState(addresses);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -17,13 +28,16 @@ const AddressList = () => {
     setDisable(true);
     event.target[0].value = "";
     addAddress({ address: inputValue }).then(() => {
-      setDisable(false);
+      getAddresses().then((res) => {
+        setAddressList(res.data.response);
+        setDisable(false);
+      })
     });
   }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = Array(15).fill(0).map((_, index) => index.toString());
+      const newSelected = addressList.map((address: any) => address.id);
       setSelected(newSelected);
       return;
     }
@@ -50,8 +64,17 @@ const AddressList = () => {
     setSelected(newSelected);
   };
 
-  const handleAddressAccess = () => {
+  const handleContentAccess = () => {
     setOpen(true);
+  }
+
+  const handleAddContentItem = async () => {
+    selected.forEach((item) => {
+      addContentAddress({addressId: item, contentId: selectedOption})
+        .then(() => {
+          setOpen(false);
+        })
+    })
   }
 
   return (
@@ -82,7 +105,7 @@ const AddressList = () => {
           <Sheet sx={{ height: 400, overflow: 'auto' }}>
             <TableToolbar
               numSelected={selected.length}
-              handleAccess={handleAddressAccess}
+              handleAccess={handleContentAccess}
               buttonName={"Content"}
               tableHeader={"Addresses"}
             />
@@ -96,10 +119,10 @@ const AddressList = () => {
                 '--TableCell-selectedBackground': (theme) =>
                   theme.vars.palette.primary.softBg,
                 '& thead th:nth-child(1)': {
-                  width: '40px',
+                  width: '30px',
                 },
                 '& thead th:nth-child(2)': {
-                  width: '20%',
+                  width: '40%',
                 },
                 '& tr > *:nth-child(n+3)': { textAlign: 'right' },
               }}
@@ -118,12 +141,12 @@ const AddressList = () => {
                 </tr>
               </thead>
               <tbody>
-                {Array(10).fill(0).map((_, index) => {
-                  const isItemSelected = isSelected(index.toString());
+                {addressList.map((address: any, index: number) => {
+                  const isItemSelected = isSelected(address.id);
                   return (
                     <tr
                       key={index}
-                      onClick={(event) => handleClick(event, index.toString())}
+                      onClick={(event) => handleClick(event, address.id)}
                       role="checkbox"
                       tabIndex={-1}
                       aria-checked={isItemSelected}
@@ -144,9 +167,9 @@ const AddressList = () => {
                           sx={{ verticalAlign: 'top' }}
                         />
                       </th>
-                      <td><Typography level='h6'>Thdgfhol2337nffh</Typography></td>
+                      <td><Typography level='h6'>{address.address}</Typography></td>
                       <td>{index + 3}</td>
-                      <td><Typography color='neutral'>31 July 2023</Typography></td>
+                      <td><Typography color='neutral'>{new Date(address.created_at).toDateString()}</Typography></td>
                     </tr>
                   )
                 }
@@ -161,7 +184,10 @@ const AddressList = () => {
             open={open}
             setOpen={setOpen}
             tableHeading='Add Content Access for selected Addresses'
-            placeholder='Insert a content item'
+            placeholder='Select a content item'
+            items={contentItems}
+            handleAddItem={handleAddContentItem}
+            setSelectedOption={setSelectedOption}
           />
         </Stack>
       </Box>

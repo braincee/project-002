@@ -1,9 +1,5 @@
 import sequelize from "../db"
-import { Address } from "./definitions/Address";
-import { Content } from "./definitions/Content";
-import { ContentAddress } from "./definitions/ContentAddress";
-import { Log } from "./definitions/Log";
-import { User } from "./definitions/User";
+import { Address, Content, ContentAddress, Log, User } from "./definitions";
 
 
 export { Address, Content, ContentAddress, Log, User };

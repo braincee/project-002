@@ -2,13 +2,24 @@ import React, { useState } from 'react'
 import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography, } from '@mui/joy';
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addContent } from '@/libs/api';
+import { addContent, addContentAddress, getContentItems } from '@/libs/api';
 import Layout from '../components/Layout';
+import { Address, Content } from '@/libs/models';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const ContentList = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const contentItems = JSON.stringify(await Content.findAll({ order: [["created_at", 'DESC']] }));
+  const addresses = JSON.stringify(await Address.findAll({ order: [["created_at", 'DESC']] }));
+
+  return { props: { contentItems: JSON.parse(contentItems), addresses: JSON.parse(addresses)} };
+}
+
+const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>("");
+  const [contentList, setContentList] = useState(contentItems);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -17,13 +28,16 @@ const ContentList = () => {
     setDisable(true);
     event.target[0].value = "";
     addContent({ content: inputValue }).then(() => {
-      setDisable(false);
+      getContentItems().then((res) => {
+        setContentList(res.data.response);
+        setDisable(false);
+      })
     });
   }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = Array(15).fill(0).map((_, index) => index.toString());
+      const newSelected = contentList.map((contentItem: any) => contentItem.id);
       setSelected(newSelected);
       return;
     }
@@ -52,6 +66,15 @@ const ContentList = () => {
 
   const handleAddressAccess = () => {
     setOpen(true);
+  }
+
+  const handleAddAddressAccess = () => {
+    selected.forEach((item) => {
+      addContentAddress({contentId: item, addressId: selectedOption})
+        .then(() => {
+          setOpen(false);
+        })
+    })
   }
 
   return (
@@ -92,10 +115,10 @@ const ContentList = () => {
                 '--TableCell-selectedBackground': (theme) =>
                   theme.vars.palette.primary.softBg,
                 '& thead th:nth-child(1)': {
-                  width: '40px',
+                  width: '30px',
                 },
                 '& thead th:nth-child(2)': {
-                  width: '20%',
+                  width: '40%',
                 },
                 '& tr > *:nth-child(n+3)': { textAlign: 'right' },
               }}
@@ -114,12 +137,12 @@ const ContentList = () => {
                 </tr>
               </thead>
               <tbody>
-                {Array(15).fill(0).map((_, index) => {
-                  const isItemSelected = isSelected(index.toString());
+                {contentList.map((contentItem: any, index: number) => {
+                  const isItemSelected = isSelected(contentItem.id);
                   return (
                     <tr
                       key={index}
-                      onClick={(event) => handleClick(event, index.toString())}
+                      onClick={(event) => handleClick(event, contentItem.id)}
                       role="checkbox"
                       tabIndex={-1}
                       aria-checked={isItemSelected}
@@ -140,9 +163,9 @@ const ContentList = () => {
                           sx={{ verticalAlign: 'top' }}
                         />
                       </th>
-                      <td><Typography level='h6'>Thdgfhol2337nffh</Typography></td>
+                      <td><Typography level='h6'>{contentItem.content}</Typography></td>
                       <td>{index + 3}</td>
-                      <td><Typography color='neutral'>31 July 2023</Typography></td>
+                      <td><Typography color='neutral'>{new Date(contentItem.created_at).toDateString()}</Typography></td>
                     </tr>
                   )
                 }
@@ -155,6 +178,9 @@ const ContentList = () => {
             setOpen={setOpen}
             tableHeading='Add Address Access for selected Content items'
             placeholder='Insert an  address'
+            items={addresses}
+            handleAddItem={handleAddAddressAccess}
+            setSelectedOption={setSelectedOption}
           />
         </Stack>
       </Box>

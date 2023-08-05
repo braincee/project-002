@@ -28,3 +28,18 @@ export const getAddresses = async () => {
   const data = await axios.get(('/api/address/getAllAddresses'));
   return data;
 }
+
+export const getContentItems = async () => {
+  const data = await axios.get(('/api/content/getAllContentItems'));
+  return data;
+}
+
+export const addContentAddress = async ({addressId, contentId}:{addressId: string | null, contentId: string | null}) => {
+  const data = {
+    id: uuidV4(),
+    address_id: addressId, 
+    content_id: contentId
+  }
+  const response = await axios.post('/api/content/addAllowed', {data})
+  return response;
+}

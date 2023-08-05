@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import Input from '@mui/joy/Input';
 import NFTImage from '@/public/nft_image.png';
 import Image from "next/image";
-// import { initDb } from "@/libs/api";
+import { initDb } from "@/libs/api";
 
-// initDb();
+initDb();
 
 
 export default function Index() {

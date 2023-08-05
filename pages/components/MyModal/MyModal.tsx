@@ -1,13 +1,23 @@
-import { Box, Button, Input, Modal, ModalDialog, Typography } from "@mui/joy"
+import { Box, Button, Input, Modal, ModalDialog, Option, Select, Typography } from "@mui/joy";
+
 interface MyModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   tableHeading: string;
   placeholder: string;
+  items: any[];
+  handleAddItem: () => void;
+  setSelectedOption: (value: string | null) => void;
 }
 
 const MyModal = (props: MyModalProps) => {
-  const { open, setOpen, tableHeading, placeholder } = props;
+  const { open, setOpen, tableHeading, placeholder, items, handleAddItem , setSelectedOption} = props;
+
+  const handleChange = (event: any,
+    newValue: string | null) => {
+      setSelectedOption(newValue);
+  }
+
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <ModalDialog
@@ -28,7 +38,16 @@ const MyModal = (props: MyModalProps) => {
         <Typography id="nested-modal-title" level="h2" >
           {tableHeading}
           </Typography>
-          < Input placeholder={placeholder} />
+          {/* < Input placeholder={placeholder} /> */}
+          <Select
+            placeholder={placeholder}
+            onChange={handleChange}
+            defaultValue={placeholder}
+          >
+            { items.map((item) => (              
+              <Option value={item.id} key={item.id}>{item.content ? item.content: item.address}</Option>
+            ))}
+          </Select>
           <Box
             sx={
               {
@@ -39,7 +58,7 @@ const MyModal = (props: MyModalProps) => {
               }
             }
           >
-            <Button variant="solid" color="neutral" onClick={() => setOpen(false)}>
+            <Button variant="solid" color="neutral" onClick={() => handleAddItem()}>
               Continue
             </Button>
             <Button
