@@ -79,6 +79,10 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
       })
   }
 
+  const handleRemoveContentItem = () => {
+
+  }
+
 
   return (
     <Layout>
@@ -99,7 +103,6 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
             />
             <Stack direction="row" spacing={2} >
               <Button type='submit' disabled={disable}>Add Address</Button>
-              <Button color='danger'>Remove Address</Button>
             </Stack>
           </Stack>
         </form>
@@ -194,6 +197,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
             placeholder='Select a content item'
             items={contentItems}
             handleAddItem={handleAddContentItem}
+            handleRemoveItem={handleRemoveContentItem}
             setSelectedOption={setSelectedOption}
           />
         </Stack>

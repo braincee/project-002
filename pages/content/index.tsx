@@ -84,6 +84,10 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
         })
   }
 
+  const handleRemoveAddressAccess = () => {
+
+  }
+
   return (
     <Layout>
       <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
@@ -97,10 +101,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
           <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
             <Input required placeholder='Add title' sx={{ width: { xs: "100%", md: "35%" } }} />
             <Textarea required placeholder='Add description' sx={{ width: { xs: "100%", md: "45%" }, }} />
-            <Stack direction="row" spacing={2} >
-              <Button type='submit' disabled={disable}>Add Item</Button>
-              <Button color='danger'>Remove Item</Button>
-            </Stack>
+            <Button type='submit' disabled={disable}>Add Item</Button>
           </Stack>
           <Input type='file' sx={{ width: { xs: "100%", md: "40%" }, mt: 2, p: 1}} />
         </form>
@@ -192,10 +193,11 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
           <MyModal
             open={open}
             setOpen={setOpen}
-            tableHeading='Add Address Access for selected Content items'
+            tableHeading='Add / Remove Address Access for selected Content items'
             placeholder='Select an address'
             items={addresses}
             handleAddItem={handleAddAddressAccess}
+            handleRemoveItem={handleRemoveAddressAccess}
             setSelectedOption={setSelectedOption}
           />
         </Stack>

@@ -1,4 +1,4 @@
-import { Add } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import { Box, Button, Tooltip, Typography } from "@mui/joy";
 
 interface TableToolbarProps {
@@ -9,7 +9,7 @@ interface TableToolbarProps {
 }
 
 const TableToolbar = (props: TableToolbarProps) => {
-  const { numSelected, handleAccess , buttonName, tableHeader} = props;
+  const { numSelected, handleAccess, buttonName, tableHeader } = props;
 
   return (
     <Box
@@ -42,11 +42,17 @@ const TableToolbar = (props: TableToolbarProps) => {
       )}
 
       {numSelected > 0 && (
-        <Tooltip title="Add">
-          <Button startDecorator={<Add />} size="sm" color="primary" variant="solid" onClick={() => handleAccess()}>
-            {buttonName}
-          </Button>
-        </Tooltip>
+          <Tooltip title="Add / Remove">
+            <Button
+              startDecorator={<div style={{display: "flex", alignItems: "center", gap: "2px"}}><Add />/<Remove /></div>}
+              size="sm"
+              color="neutral"
+              variant="solid"
+              onClick={() => handleAccess()}
+            >
+              {buttonName}
+            </Button>
+          </Tooltip>
       )}
     </Box>
   );

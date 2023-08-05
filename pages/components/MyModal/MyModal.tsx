@@ -7,11 +7,12 @@ interface MyModalProps {
   placeholder: string;
   items: any[];
   handleAddItem: () => void;
+  handleRemoveItem: () => void;
   setSelectedOption: (value: string | null) => void;
 }
 
 const MyModal = (props: MyModalProps) => {
-  const { open, setOpen, tableHeading, placeholder, items, handleAddItem , setSelectedOption} = props;
+  const { open, setOpen, tableHeading, placeholder, items, handleAddItem, handleRemoveItem , setSelectedOption} = props;
 
   const handleChange = (event: any,
     newValue: string | null) => {
@@ -66,15 +67,15 @@ const MyModal = (props: MyModalProps) => {
               }
             }
           >
-            <Button variant="solid" color="neutral" onClick={() => handleAddItem()}>
-              Continue
+            <Button variant="solid" color="primary" onClick={() => handleAddItem()}>
+              Add Access
             </Button>
             <Button
-              variant="outlined"
-              color="neutral"
-              onClick={() => setOpen(false)}
+              variant="solid"
+              color="danger"
+              onClick={() => handleRemoveItem()}
             >
-              Cancel
+              Remove Access
             </Button>
           </Box>
       </ModalDialog>
