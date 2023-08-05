@@ -43,9 +43,17 @@ const MyModal = (props: MyModalProps) => {
             placeholder={placeholder}
             onChange={handleChange}
             defaultValue={placeholder}
+            slotProps={{
+              listbox: {
+                sx: {
+                  paddingX: 2,
+                  maxHeight: 'fit-content',
+                }
+              },
+            }}
           >
             { items.map((item) => (              
-              <Option value={item.id} key={item.id}>{item.content ? item.content: item.address}</Option>
+              <Option value={item.id} key={item.id}>{item.content ? item.content: item.address} </Option>
             ))}
           </Select>
           <Box

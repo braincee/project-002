@@ -2,6 +2,10 @@ import { Address, Content } from "@/libs/models";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-  const response = await Address.findAll({ order: [["created_at", 'DESC']], include: {model: Content} });
+  const { contentId }  = req.query as any;
+  const response = await Content.findOne({
+    where: { id: contentId }, 
+    include: Address
+  });
   res.status(200).json({ response: response });
 }

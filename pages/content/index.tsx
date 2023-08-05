@@ -2,14 +2,18 @@ import React, { useState } from 'react'
 import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Textarea, Typography, } from '@mui/joy';
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addContent, addContentAddress, getContentItems } from '@/libs/api';
+import { addContent, addContentIdAddressIds, getContentItems } from '@/libs/api';
 import Layout from '../components/Layout';
 import { Address, Content } from '@/libs/models';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const contentItems = JSON.stringify(await Content.findAll({ order: [["created_at", 'DESC']] }));
-  const addresses = JSON.stringify(await Address.findAll({ order: [["created_at", 'DESC']] }));
+  const contentItems = JSON.stringify(
+    await Content.findAll({ order: [["created_at", 'DESC']], include: {model: Address} })
+  );
+  const addresses = JSON.stringify(
+    await Address.findAll({ order: [["created_at", 'DESC']] })
+  );
 
   return { props: { contentItems: JSON.parse(contentItems), addresses: JSON.parse(addresses)} };
 }
@@ -24,10 +28,12 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
   const handleSubmit = (event: any) => {
-    let inputValue = event.target[0].value;
+    let title = event.target[0].value;
+    let description = event.target[1].value;
     setDisable(true);
     event.target[0].value = "";
-    addContent({ content: inputValue }).then(() => {
+    event.target[1].value = "";
+    addContent({ title, description }).then(() => {
       getContentItems().then((res) => {
         setContentList(res.data.response);
         setDisable(false);
@@ -69,12 +75,13 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
   }
 
   const handleAddAddressAccess = () => {
-    selected.forEach((item) => {
-      addContentAddress({contentId: item, addressId: selectedOption})
+    addContentIdAddressIds({content: selected, addressId: selectedOption})
         .then(() => {
-          setOpen(false);
+          getContentItems().then((res) => {
+            setContentList(res.data.response);
+            setOpen(false);
+          })
         })
-    })
   }
 
   return (
@@ -88,8 +95,8 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
           }}
         >
           <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
-            <Input placeholder='Add title' sx={{ width: { xs: "100%", md: "35%" } }} />
-            <Textarea placeholder='Add description' sx={{ width: { xs: "100%", md: "45%" }, }} />
+            <Input required placeholder='Add title' sx={{ width: { xs: "100%", md: "35%" } }} />
+            <Textarea required placeholder='Add description' sx={{ width: { xs: "100%", md: "45%" }, }} />
             <Stack direction="row" spacing={2} >
               <Button type='submit' disabled={disable}>Add Item</Button>
               <Button color='danger'>Remove Item</Button>
@@ -171,8 +178,9 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
                           sx={{ verticalAlign: 'top' }}
                         />
                       </th>
-                      <td><Typography level='h6'>{contentItem.content}</Typography></td>
-                      <td>{index + 3}</td>
+                      <td><Typography level='h6'>{contentItem.title}</Typography></td>
+                      <td><Typography level='h6'>{contentItem.description}</Typography></td>
+                      <td>{contentItem.Addresses.length}</td>
                       <td><Typography color='neutral'>{new Date(contentItem.created_at).toDateString()}</Typography></td>
                     </tr>
                   )
@@ -185,7 +193,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
             open={open}
             setOpen={setOpen}
             tableHeading='Add Address Access for selected Content items'
-            placeholder='Insert an  address'
+            placeholder='Select an address'
             items={addresses}
             handleAddItem={handleAddAddressAccess}
             setSelectedOption={setSelectedOption}

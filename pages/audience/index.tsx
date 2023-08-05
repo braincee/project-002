@@ -1,17 +1,21 @@
-import { Box, Button, Checkbox, Input, Modal, ModalDialog, Sheet, Stack, Table, Typography } from '@mui/joy'
+import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography } from '@mui/joy'
 import React, { useState } from 'react'
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addAddress, addContentAddress, getAddresses } from '@/libs/api';
+import { addAddress, addAddressIdContentIds, getAddress, getAddresses } from '@/libs/api';
 import Layout from '../components/Layout';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Address, Content } from '@/libs/models';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const addresses = JSON.stringify(await Address.findAll({ order: [["created_at", 'DESC']] }));
-  const contentItems = JSON.stringify(await Content.findAll({ order: [["created_at", 'DESC']] }));
+  const addresses = JSON.stringify(
+    await Address.findAll({ order: [["created_at", 'DESC']], include: {model: Content} })
+  );
+  const contentItems = JSON.stringify(
+    await Content.findAll({ order: [["created_at", 'DESC']] })
+  );
 
-  return { props: { addresses: JSON.parse(addresses), contentItems: JSON.parse(contentItems)} };
+  return { props: { addresses: JSON.parse(addresses), contentItems: JSON.parse(contentItems) } };
 }
 
 const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -68,14 +72,13 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     setOpen(true);
   }
 
-  const handleAddContentItem = async () => {
-    selected.forEach((item) => {
-      addContentAddress({addressId: item, contentId: selectedOption})
-        .then(() => {
-          setOpen(false);
-        })
-    })
+  const handleAddContentItem = () => {
+    addAddressIdContentIds({ addresses: selected, contentId: selectedOption })
+      .then(() => {
+        setOpen(false);
+      })
   }
+
 
   return (
     <Layout>
@@ -90,6 +93,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
         >
           <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
             <Input
+              required
               placeholder='Type an address'
               sx={{ width: { xs: "100%", md: "50%" } }}
             />
@@ -101,7 +105,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
         </form>
 
         <Stack spacing={2}>
-          <Typography level='h5' sx={{ textAlign: 'end' }}>Total Number of Addresses: 10 </Typography>
+          <Typography level='h5' sx={{ textAlign: 'end' }}>Total Number of Addresses: {addressList.length} </Typography>
           <Sheet sx={{ height: 400, overflow: 'auto' }}>
             <TableToolbar
               numSelected={selected.length}
@@ -171,7 +175,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
                         />
                       </th>
                       <td><Typography level='h6'>{address.address}</Typography></td>
-                      <td>{index + 3}</td>
+                      <td>{address.Contents.length}</td>
                       <td><Typography color='neutral'>{new Date(address.created_at).toDateString()}</Typography></td>
                     </tr>
                   )
