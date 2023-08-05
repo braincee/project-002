@@ -64,8 +64,8 @@ export default function Dashboard(
       </Grid>
       <Grid xs={12} sm={4} spacing={2}>
         <Typography level='h5'>Recent Addresses</Typography>
-        <Stack spacing={2}>
-          { addresses.map((address: any, index: any) => (
+        <Stack spacing={1}>
+          { addresses.slice(0, 4).map((address: any, index: any) => (
             <List sx={{ textAlign: 'start', backgroundColor: 'inherit'}} key={index}>
               <Typography level='h6'>{address.address}</Typography>
               <Typography color='neutral'>{new Date(address.created_at).toDateString()}</Typography>
