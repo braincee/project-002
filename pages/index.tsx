@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 import Input from '@mui/joy/Input';
 import NFTImage from '@/public/nft_image.png';
 import Image from "next/image";
-import { initDb } from "@/libs/api";
+// import { initDb } from "@/libs/api";
 
-initDb();
+// initDb();
+
+
 export default function Index() {
-
   const router = useRouter();
 
   const handleLogin = () => {
@@ -20,11 +21,13 @@ export default function Index() {
       <Grid
         container
         sx={{
-          py: 2,
           width: '100%',
+          maxWidth: "1000px",
           display: 'flex',
           alignItems: 'center',
           mx: 'auto',
+          mt: { xs: "2rem", md: "6rem" },
+          p: "2rem",
         }}
         spacing={3}
       >

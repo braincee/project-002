@@ -23,3 +23,8 @@ export const addContent = async ({ content } : {content: string}) => {
   const response = await axios.post('/api/addContent', { data })
   return response;
 }
+
+export const getAddresses = async () => {
+  const data = await axios.get(('/api/address/getAllAddresses'));
+  return data;
+}
