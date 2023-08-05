@@ -19,20 +19,20 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = () => {
+const BarChart = ({mapData}) => {
   const [chartData, setChartData] = useState({
     datasets: [],
   });
-
+  const { labels, dataValues} = mapData();
   const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
     setChartData({
-        labels: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'],
+        labels: labels,
         datasets: [
             {
                 label: 'Daily Requests',
-                data: [18127, 22201, 19490, 17938, 24182, 17842, 22475],
+                data: dataValues,
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgb(53, 162, 235, 0.4',
               }, 

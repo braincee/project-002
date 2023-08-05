@@ -6,7 +6,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Layout from '../components/Layout';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const addresses = JSON.stringify(await Address.findAll());
+  const addresses = JSON.stringify(await Address.findAll( { order: [["created_at", 'DESC']]}));
   const contents = JSON.stringify(await Content.findAll());
 
   return { props: { addresses:  JSON.parse(addresses), contentLength: JSON.parse(contents).length } };
@@ -15,8 +15,26 @@ export const getServerSideProps: GetServerSideProps = async () => {
 export default function Dashboard(
   { addresses, contentLength  }: InferGetServerSidePropsType<typeof getServerSideProps>)
 {
+  const chartData = () => {
+    const data = new Map();
+    const labels: any[] = [];
+    const dataValues: any[] = [];
+    addresses.map((address: any) => {
+      let date = new Date(address.created_at).toDateString();
+      if (data.has(date)) {
+        data.set(date, data.get(date) + 1);
+      } else {
+        data.set(date, 1);
+      }
+    })
+     data.forEach((value, key) => {
+      labels.push(key.substring(key.indexOf(' ') + 1))
+      dataValues.push(value);
+    });
+    return { labels, dataValues};
+  }
 
-  console.log(addresses, contentLength);
+  chartData();
   
   return (
     <Layout>
@@ -42,7 +60,7 @@ export default function Dashboard(
         </Card>
       </Grid>
       <Grid xs={12} sm={8}>
-        <Card sx={{ minHeight: '300px'}} color='primary' variant='outlined'><BarChart /></Card>
+        <Card sx={{ minHeight: '300px'}} color='primary' variant='outlined'><BarChart mapData={chartData} /></Card>
       </Grid>
       <Grid xs={12} sm={4} spacing={2}>
         <Typography level='h5'>Recent Addresses</Typography>
