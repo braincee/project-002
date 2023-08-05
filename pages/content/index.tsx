@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography, } from '@mui/joy';
+import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Textarea, Typography, } from '@mui/joy';
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
 import { addContent, addContentAddress, getContentItems } from '@/libs/api';
@@ -88,16 +88,17 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
           }}
         >
           <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
-            <Input placeholder='Type an address' sx={{ width: { xs: "100%", md: "50%" } }} />
+            <Input placeholder='Add title' sx={{ width: { xs: "100%", md: "35%" } }} />
+            <Textarea placeholder='Add description' sx={{ width: { xs: "100%", md: "45%" }, }} />
             <Stack direction="row" spacing={2} >
               <Button type='submit' disabled={disable}>Add Item</Button>
               <Button color='danger'>Remove Item</Button>
             </Stack>
-            <Input type='file' sx={{ width: { xs: "100%", md: "20%" } }} />
           </Stack>
+          <Input type='file' sx={{ width: { xs: "100%", md: "40%" }, mt: 2, p: 1}} />
         </form>
-        <Stack spacing={2}>
-          <Typography level='h5' sx={{ textAlign: 'end' }}>Content Total: 15 </Typography>
+        <Stack spacing={1}>
+          <Typography level='h5' sx={{ textAlign: 'end' }}>Content Total: {contentList.length} </Typography>
           <Sheet sx={{ height: 400, overflow: 'auto' }}>
             <TableToolbar
               numSelected={selected.length}
@@ -115,12 +116,18 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
                 '--TableCell-selectedBackground': (theme) =>
                   theme.vars.palette.primary.softBg,
                 '& thead th:nth-child(1)': {
-                  width: '30px',
+                  width: '40px',
                 },
                 '& thead th:nth-child(2)': {
-                  width: '40%',
+                  width: '25%',
                 },
-                '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+                '& thead th:nth-child(4)': {
+                  width: '10%',
+                },
+                '& thead th:nth-child(5)': {
+                  width: '20%',
+                },
+                '& tr > *:nth-child(n+4)': { textAlign: 'center' },
               }}
             >
               <thead>
@@ -131,7 +138,8 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
                       sx={{ verticalAlign: 'sub' }}
                     />
                   </th>
-                  <th>Items</th>
+                  <th>Title</th>
+                  <th>Description</th>
                   <th>Address Access</th>
                   <th>Date Created</th>
                 </tr>

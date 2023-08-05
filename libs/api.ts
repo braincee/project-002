@@ -20,7 +20,7 @@ export const addContent = async ({ content } : {content: string}) => {
   const data = {
     id, content,
   }
-  const response = await axios.post('/api/addContent', { data })
+  const response = await axios.post('/api/content/addContent', { data })
   return response;
 }
 

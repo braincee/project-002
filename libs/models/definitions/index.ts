@@ -9,7 +9,8 @@ interface Address extends Model<InferAttributes<Address>, InferCreationAttribute
 
 interface Content extends Model<InferAttributes<Content>, InferCreationAttributes<Content>> {
   id: UUIDV4;
-  content: string;
+  title: string;
+  description: string;
 }
 
 interface ContentAddress extends Model<InferAttributes<ContentAddress>, InferCreationAttributes<ContentAddress>> {
@@ -53,7 +54,11 @@ const Content = sequelize.define<Content>('Content', {
     defaultValue: DataTypes.UUIDV4,
     allowNull: false,
   },
-  content: {
+  title: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  description: {
     type: DataTypes.TEXT,
     allowNull: false,
   },
@@ -105,13 +110,6 @@ export const Log = sequelize.define<Log>('Log', {
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 });
-
-interface User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  // Some fields are optional when calling UserModel.create() or UserModel.build()
-  id: UUIDV4;
-  name: string;
-  password: string;
-}
 
 export const User = sequelize.define<User>('User', {
   id: {

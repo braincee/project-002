@@ -119,12 +119,15 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
                 '--TableCell-selectedBackground': (theme) =>
                   theme.vars.palette.primary.softBg,
                 '& thead th:nth-child(1)': {
-                  width: '30px',
+                  width: '40px',
                 },
-                '& thead th:nth-child(2)': {
-                  width: '40%',
+                '& thead th:nth-child(3)': {
+                  width: '10%',
                 },
-                '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+                '& thead th:nth-child(4)': {
+                  width: '20%',
+                },
+                '& tr > *:nth-child(n+3)': { textAlign: 'center' },
               }}
             >
               <thead>
