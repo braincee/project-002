@@ -54,7 +54,7 @@ const MyModal = (props: MyModalProps) => {
             }}
           >
             { items.map((item) => (              
-              <Option value={item.id} key={item.id}>{item.content ? item.content: item.address} </Option>
+              <Option value={item.id} key={item.id}>{item.title ? item.title: item.address} </Option>
             ))}
           </Select>
           <Box
