@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Grid, List, ListItem, Sheet, Stack, Typography } from '@mui/joy';
-import BarChart from '@/pages/components/BarChart/BarChart';
+import BarChart from '@/components/BarChart';
 import { Address, Content } from '@/libs/models';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(await Address.findAll({ order: [["created_at", 'DESC']] }));

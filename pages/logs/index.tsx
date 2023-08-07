@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import { Alert, Box, Button, Checkbox, Stack, Table, Tooltip, Typography } from '@mui/joy';
 import { Download } from '@mui/icons-material';
 import { ExportToCsv } from 'export-to-csv';
