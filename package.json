@@ -20,6 +20,7 @@
     "eslint": "^8.45.0",
     "eslint-config-next": "^13.4.12",
     "ethers": "^6.6.4",
+    "export-to-csv": "^0.2.1",
     "next": "latest",
     "numbro": "^2.3.6",
     "pg": "^8.11.1",
