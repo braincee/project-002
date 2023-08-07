@@ -8,7 +8,6 @@ import { initDb } from "@/libs/api";
 
 initDb();
 
-
 export default function Index() {
   const router = useRouter();
 

@@ -33,7 +33,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     event.target[0].value = "";
     addAddress({ address: inputValue }).then(() => {
       getAddresses().then((res) => {
-        setAddressList(res.data.response);
+        setAddressList(res.response);
         setDisable(false);
       })
     });
@@ -76,7 +76,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     addContentIdAddressIds({ addressIds: selected, contentId: selectedOption })
       .then(() => {
         getAddresses().then((res) => {
-          setAddressList(res.data.response);
+          setAddressList(res.response);
           setSelected([])
           setOpen(false);
         })
@@ -87,7 +87,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     removeContentIdAddressIds({addressIds: selected, contentId: selectedOption})
     .then(() => {
       getAddresses().then((res) => {
-        setAddressList(res.data.response);
+        setAddressList(res.response);
         setSelected([])
         setOpen(false);
       })

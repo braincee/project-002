@@ -35,7 +35,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
     event.target[1].value = "";
     addContent({ title, description }).then(() => {
       getContentItems().then((res) => {
-        setContentList(res.data.response);
+        setContentList(res.response);
         setDisable(false);
       })
     });
@@ -78,7 +78,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
     addAddressIdContentIds({contentIds: selected, addressId: selectedOption})
         .then(() => {
           getContentItems().then((res) => {
-            setContentList(res.data.response);
+            setContentList(res.response);
             setSelected([])
             setOpen(false);
           })
