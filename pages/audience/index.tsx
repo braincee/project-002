@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography } from '@
 import React, { useState } from 'react'
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addAddress, addAddressIdContentIds, getAddress, getAddresses } from '@/libs/api';
+import { addAddress, addContentIdAddressIds, getAddresses, removeContentIdAddressIds } from '@/libs/api';
 import Layout from '../components/Layout';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Address, Content } from '@/libs/models';
@@ -72,15 +72,24 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     setOpen(true);
   }
 
-  const handleAddContentItem = () => {
-    addAddressIdContentIds({ addressIds: selected, contentId: selectedOption })
+  const handleAddContentItemAccess = () => {
+    addContentIdAddressIds({ addressIds: selected, contentId: selectedOption })
       .then(() => {
-        setOpen(false);
+        getAddresses().then((res) => {
+          setAddressList(res.data.response);
+          setOpen(false);
+        })
       })
   }
 
-  const handleRemoveContentItem = () => {
-
+  const handleRemoveContentItemAccess = () => {
+    removeContentIdAddressIds({addressIds: selected, contentId: selectedOption})
+    .then(() => {
+      getAddresses().then((res) => {
+        setAddressList(res.data.response);
+        setOpen(false);
+      })
+    })
   }
 
 
@@ -196,8 +205,8 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
             tableHeading='Add Content Access for selected Addresses'
             placeholder='Select a content item'
             items={contentItems}
-            handleAddItem={handleAddContentItem}
-            handleRemoveItem={handleRemoveContentItem}
+            handleAddItem={handleAddContentItemAccess}
+            handleRemoveItem={handleRemoveContentItemAccess}
             setSelectedOption={setSelectedOption}
           />
         </Stack>

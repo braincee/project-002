@@ -48,12 +48,12 @@ export const getContentItems = async () => {
   return response;
 }
 
-export const addContentIdAddressIds = async ({addressId, contentIds}:{addressId: string | null, contentIds: readonly string[]}) => {
+export const addAddressIdContentIds = async ({addressId, contentIds}:{addressId: string | null, contentIds: readonly string[]}) => {
   const response = await axios.post('/api/address/addAllowed', {addressId , contentIds})
   return response;
 }
 
-export const addAddressIdContentIds = async ({contentId, addressIds}:{contentId: string | null, addressIds: readonly string[]}) => {
+export const addContentIdAddressIds = async ({contentId, addressIds}:{contentId: string | null, addressIds: readonly string[]}) => {
   const response = await axios.post('/api/content/addAllowed', {contentId , addressIds})
   return response;
 }

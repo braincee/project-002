@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Textarea, Typography, } from '@mui/joy';
 import TableToolbar from '../components/TableToolbar';
 import MyModal from '../components/MyModal/MyModal';
-import { addContent, addContentIdAddressIds, getContentItems } from '@/libs/api';
+import { addAddressIdContentIds, addContent, getContentItems } from '@/libs/api';
 import Layout from '../components/Layout';
 import { Address, Content } from '@/libs/models';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -75,7 +75,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
   }
 
   const handleAddAddressAccess = () => {
-    addContentIdAddressIds({contentIds: selected, addressId: selectedOption})
+    addAddressIdContentIds({contentIds: selected, addressId: selectedOption})
         .then(() => {
           getContentItems().then((res) => {
             setContentList(res.data.response);
@@ -85,7 +85,6 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
   }
 
   const handleRemoveAddressAccess = () => {
-
   }
 
   return (
