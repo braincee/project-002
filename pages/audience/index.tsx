@@ -77,6 +77,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
       .then(() => {
         getAddresses().then((res) => {
           setAddressList(res.data.response);
+          setSelected([])
           setOpen(false);
         })
       })
@@ -87,6 +88,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     .then(() => {
       getAddresses().then((res) => {
         setAddressList(res.data.response);
+        setSelected([])
         setOpen(false);
       })
     })

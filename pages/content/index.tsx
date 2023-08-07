@@ -79,6 +79,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
         .then(() => {
           getContentItems().then((res) => {
             setContentList(res.data.response);
+            setSelected([])
             setOpen(false);
           })
         })
