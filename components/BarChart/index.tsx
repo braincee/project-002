@@ -6,12 +6,13 @@ const SingleBarChart = dynamic(() => import('@mui/x-charts').then((module) => mo
 })
 
 
-const BarChart = () => {
+const BarChart = ({ mapData }: { mapData: any }) => {
+  const { labels, dataValues } = mapData();
     return (
         <>
             <SingleBarChart
-                xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-                series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+                xAxis={[{ scaleType: 'band', data: labels }]}
+                series={[{ data: dataValues }]}
                 width={500}
                 height={300}
             />
