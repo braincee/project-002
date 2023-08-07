@@ -1,24 +1,49 @@
-import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography } from '@mui/joy'
-import React, { useState } from 'react'
-import TableToolbar from '@/components/TableToolbar';
-import MyModal from '@/components/MyModal';
-import { addAddress, addContentIdAddressIds, getAddresses, removeContentIdAddressIds } from '@/libs/api';
-import Layout from '@/components/Layout';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { Address, Content } from '@/libs/models';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Input,
+  Sheet,
+  Stack,
+  Table,
+  Typography,
+} from "@mui/joy";
+import React, { useState } from "react";
+import TableToolbar from "@/components/TableToolbar";
+import MyModal from "@/components/MyModal";
+import {
+  addAddress,
+  addContentIdAddressIds,
+  getAddresses,
+  removeContentIdAddressIds,
+} from "@/libs/api";
+import Layout from "@/components/Layout";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Address, Content } from "@/libs/models";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
-    await Address.findAll({ order: [["created_at", 'DESC']], include: {model: Content} })
+    await Address.findAll({
+      order: [["created_at", "DESC"]],
+      include: { model: Content },
+    })
   );
   const contentItems = JSON.stringify(
-    await Content.findAll({ order: [["created_at", 'DESC']] })
+    await Content.findAll({ order: [["created_at", "DESC"]] })
   );
 
-  return { props: { addresses: JSON.parse(addresses), contentItems: JSON.parse(contentItems) } };
-}
+  return {
+    props: {
+      addresses: JSON.parse(addresses),
+      contentItems: JSON.parse(contentItems),
+    },
+  };
+};
 
-const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const AddressList = ({
+  addresses,
+  contentItems,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -35,9 +60,9 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
       getAddresses().then((res) => {
         setAddressList(res.response);
         setDisable(false);
-      })
+      });
     });
-  }
+  };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -61,7 +86,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -70,35 +95,40 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
 
   const handleContentAccess = () => {
     setOpen(true);
-  }
+  };
 
   const handleAddContentItemAccess = () => {
-    addContentIdAddressIds({ addressIds: selected, contentId: selectedOption })
-      .then(() => {
-        getAddresses().then((res) => {
-          setAddressList(res.response);
-          setSelected([])
-          setOpen(false);
-        })
-      })
-  }
-
-  const handleRemoveContentItemAccess = () => {
-    removeContentIdAddressIds({addressIds: selected, contentId: selectedOption})
-    .then(() => {
+    addContentIdAddressIds({
+      addressIds: selected,
+      contentId: selectedOption,
+    }).then(() => {
       getAddresses().then((res) => {
         setAddressList(res.response);
-        setSelected([])
+        setSelected([]);
         setOpen(false);
-      })
-    })
-  }
+      });
+    });
+  };
 
+  const handleRemoveContentItemAccess = () => {
+    removeContentIdAddressIds({
+      addressIds: selected,
+      contentId: selectedOption,
+    }).then(() => {
+      getAddresses().then((res) => {
+        setAddressList(res.response);
+        setSelected([]);
+        setOpen(false);
+      });
+    });
+  };
 
   return (
     <Layout>
-      <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
-        <Typography level='h3'>Address List</Typography>
+      <Box
+        sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <Typography level="h3">Address List</Typography>
 
         <form
           onSubmit={(event) => {
@@ -106,21 +136,25 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
             handleSubmit(event);
           }}
         >
-          <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} >
+          <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
             <Input
               required
-              placeholder='Type an address'
+              placeholder="Type an address"
               sx={{ width: { xs: "100%", md: "50%" } }}
             />
-            <Stack direction="row" spacing={2} >
-              <Button type='submit' disabled={disable}>Add Address</Button>
+            <Stack direction="row" spacing={2}>
+              <Button type="submit" disabled={disable}>
+                Add Address
+              </Button>
             </Stack>
           </Stack>
         </form>
 
         <Stack spacing={2}>
-          <Typography level='h5' sx={{ textAlign: 'end' }}>Total Number of Addresses: {addressList.length} </Typography>
-          <Sheet sx={{ height: 400, overflow: 'auto' }}>
+          <Typography level="h5" sx={{ textAlign: "end" }}>
+            Total Number of Addresses: {addressList.length}{" "}
+          </Typography>
+          <Sheet sx={{ height: 400, overflow: "auto" }}>
             <TableToolbar
               numSelected={selected.length}
               handleAccess={handleContentAccess}
@@ -133,19 +167,19 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
               stickyHeader
               hoverRow
               sx={{
-                '--TableCell-headBackground': 'transparent',
-                '--TableCell-selectedBackground': (theme) =>
+                "--TableCell-headBackground": "transparent",
+                "--TableCell-selectedBackground": (theme) =>
                   theme.vars.palette.primary.softBg,
-                '& thead th:nth-child(1)': {
-                  width: '40px',
+                "& thead th:nth-child(1)": {
+                  width: "40px",
                 },
-                '& thead th:nth-child(3)': {
-                  width: '10%',
+                "& thead th:nth-child(3)": {
+                  width: "10%",
                 },
-                '& thead th:nth-child(4)': {
-                  width: '20%',
+                "& thead th:nth-child(4)": {
+                  width: "20%",
                 },
-                '& tr > *:nth-child(n+3)': { textAlign: 'center' },
+                "& tr > *:nth-child(n+3)": { textAlign: "center" },
               }}
             >
               <thead>
@@ -153,7 +187,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
                   <th>
                     <Checkbox
                       onChange={handleSelectAllClick}
-                      sx={{ verticalAlign: 'sub' }}
+                      sx={{ verticalAlign: "sub" }}
                     />
                   </th>
                   <th>Address</th>
@@ -174,38 +208,41 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
                       style={
                         isItemSelected
                           ? ({
-                            '--TableCell-dataBackground':
-                              'var(--TableCell-selectedBackground)',
-                            '--TableCell-headBackground':
-                              'var(--TableCell-selectedBackground)',
-                          } as React.CSSProperties)
+                              "--TableCell-dataBackground":
+                                "var(--TableCell-selectedBackground)",
+                              "--TableCell-headBackground":
+                                "var(--TableCell-selectedBackground)",
+                            } as React.CSSProperties)
                           : {}
                       }
                     >
                       <th scope="row">
                         <Checkbox
                           checked={isItemSelected}
-                          sx={{ verticalAlign: 'top' }}
+                          sx={{ verticalAlign: "top" }}
                         />
                       </th>
-                      <td><Typography level='h6'>{address.address}</Typography></td>
+                      <td>
+                        <Typography level="h6">{address.address}</Typography>
+                      </td>
                       <td>{address.Contents.length}</td>
-                      <td><Typography color='neutral'>{new Date(address.created_at).toDateString()}</Typography></td>
+                      <td>
+                        <Typography color="neutral">
+                          {new Date(address.created_at).toDateString()}
+                        </Typography>
+                      </td>
                     </tr>
-                  )
-                }
-                )}
-                <tr>
-
-                </tr>
+                  );
+                })}
+                <tr></tr>
               </tbody>
             </Table>
           </Sheet>
           <MyModal
             open={open}
             setOpen={setOpen}
-            tableHeading='Add Content Access for selected Addresses'
-            placeholder='Select a content item'
+            tableHeading="Add Content Access for selected Addresses"
+            placeholder="Select a content item"
             items={contentItems}
             handleAddItem={handleAddContentItemAccess}
             handleRemoveItem={handleRemoveContentItemAccess}
@@ -214,7 +251,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
         </Stack>
       </Box>
     </Layout>
-  )
-}
+  );
+};
 
 export default AddressList;

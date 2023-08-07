@@ -8,9 +8,7 @@ export default class ThemedDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head>
-          {(this.props as any).emotionStyleTags}
-        </Head>
+        <Head>{(this.props as any).emotionStyleTags}</Head>
         <body>
           {getInitColorSchemeScript({ defaultMode: "system" })}
           <Main />

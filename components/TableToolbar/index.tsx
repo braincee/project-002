@@ -14,26 +14,26 @@ const TableToolbar = (props: TableToolbarProps) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         py: 1,
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: 'background.level1',
+          bgcolor: "background.level1",
         }),
-        borderTopLeftRadius: 'var(--unstable_actionRadius)',
-        borderTopRightRadius: 'var(--unstable_actionRadius)',
+        borderTopLeftRadius: "var(--unstable_actionRadius)",
+        borderTopRightRadius: "var(--unstable_actionRadius)",
       }}
     >
       {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} component="div">
+        <Typography sx={{ flex: "1 1 100%" }} component="div">
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
           level="h4"
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           id="tableTitle"
           component="div"
         >
@@ -44,7 +44,13 @@ const TableToolbar = (props: TableToolbarProps) => {
       {numSelected > 0 && (
         <Tooltip title="Add / Remove">
           <Button
-            startDecorator={<div style={{ display: "flex", alignItems: "center", gap: "2px" }}><Add />/<Remove /></div>}
+            startDecorator={
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "2px" }}
+              >
+                <Add />/<Remove />
+              </div>
+            }
             size="sm"
             color="neutral"
             variant="solid"
@@ -56,6 +62,6 @@ const TableToolbar = (props: TableToolbarProps) => {
       )}
     </Box>
   );
-}
+};
 
 export default TableToolbar;

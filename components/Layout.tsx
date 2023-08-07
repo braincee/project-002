@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 export default function Layout(props: PropsWithChildren) {
   const router = useRouter();
-  
+
   return (
     <>
       <Head>
@@ -13,7 +13,7 @@ export default function Layout(props: PropsWithChildren) {
         <meta name="robots" content="follow, index" />
         <meta name="description" content="description" />
       </Head>
-      <Box sx={{width: "100%"}}>{props.children}</Box>
+      <Box sx={{ width: "100%" }}>{props.children}</Box>
     </>
   );
 }

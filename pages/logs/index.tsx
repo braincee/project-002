@@ -1,8 +1,17 @@
-import React, { ReactElement, useState } from 'react'
-import Layout from '@/components/Layout'
-import { Alert, Box, Button, Checkbox, Stack, Table, Tooltip, Typography } from '@mui/joy';
-import { Download } from '@mui/icons-material';
-import { ExportToCsv } from 'export-to-csv';
+import React, { ReactElement, useState } from "react";
+import Layout from "@/components/Layout";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Stack,
+  Table,
+  Tooltip,
+  Typography,
+} from "@mui/joy";
+import { Download } from "@mui/icons-material";
+import { ExportToCsv } from "export-to-csv";
 
 const Logs = () => {
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -32,7 +41,7 @@ const Logs = () => {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -46,59 +55,64 @@ const Logs = () => {
         log: "",
         "content request": "",
         "created at": "",
-      })
-    })
+      });
+    });
 
-    const options = { 
-      fieldSeparator: ',',
+    const options = {
+      fieldSeparator: ",",
       quoteStrings: '"',
-      decimalSeparator: '.',
-      showLabels: false, 
+      decimalSeparator: ".",
+      showLabels: false,
       showTitle: true,
-      title: 'Logs Table',
+      title: "Logs Table",
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: false,
-      headers: ['Log', 'Content request', 'Date created'],
+      headers: ["Log", "Content request", "Date created"],
     };
 
     const csvExporter = new ExportToCsv(options);
     if (data.length > 0) {
-      csvExporter.generateCsv(data)
+      csvExporter.generateCsv(data);
     } else {
       setAlert(
         <Alert variant="outlined" color="danger">
           Table has no data
         </Alert>
-      )
+      );
       setTimeout(() => {
         setAlert("");
-      }, 3000)
+      }, 3000);
     }
-  }
+  };
 
   return (
     <Layout>
-      <Box sx={{ py: 2, px: 4, display: 'flex', flexDirection: 'column', gap: 2, }}>
-        <Typography level='h3'>Logs</Typography>
+      <Box
+        sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <Typography level="h3">Logs</Typography>
         <Stack spacing={2}>
           {alert}
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
+              display: "flex",
+              alignItems: "center",
               py: 1,
               pl: { sm: 2 },
               pr: { xs: 1, sm: 1 },
               ...(selected.length > 0 && {
-                bgcolor: 'background.level1',
+                bgcolor: "background.level1",
               }),
-              borderTopLeftRadius: 'var(--unstable_actionRadius)',
-              borderTopRightRadius: 'var(--unstable_actionRadius)',
+              borderTopLeftRadius: "var(--unstable_actionRadius)",
+              borderTopRightRadius: "var(--unstable_actionRadius)",
             }}
           >
-            <Stack spacing={1} direction={{ xs: 'column', md: 'row' }}>
-              <Tooltip title="Download as CSV" sx={{ display: "flex", justifyItems: 'center' }}>
+            <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
+              <Tooltip
+                title="Download as CSV"
+                sx={{ display: "flex", justifyItems: "center" }}
+              >
                 <Button
                   startDecorator={<Download />}
                   size="sm"
@@ -110,8 +124,6 @@ const Logs = () => {
                 </Button>
               </Tooltip>
             </Stack>
-
-
           </Box>
           <Table
             aria-label="stripe table"
@@ -119,19 +131,19 @@ const Logs = () => {
             stickyHeader
             hoverRow
             sx={{
-              '--TableCell-headBackground': 'transparent',
-              '--TableCell-selectedBackground': (theme) =>
+              "--TableCell-headBackground": "transparent",
+              "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.primary.softBg,
-              '& thead th:nth-child(1)': {
-                width: '40px',
+              "& thead th:nth-child(1)": {
+                width: "40px",
               },
-              '& thead th:nth-child(3)': {
-                width: '20%',
+              "& thead th:nth-child(3)": {
+                width: "20%",
               },
-              '& thead th:nth-child(4)': {
-                width: '30%',
+              "& thead th:nth-child(4)": {
+                width: "30%",
               },
-              '& tr > *:nth-child(n+3)': { textAlign: 'center' },
+              "& tr > *:nth-child(n+3)": { textAlign: "center" },
             }}
           >
             <thead>
@@ -139,7 +151,7 @@ const Logs = () => {
                 <th>
                   <Checkbox
                     onChange={handleSelectAllClick}
-                    sx={{ verticalAlign: 'sub' }}
+                    sx={{ verticalAlign: "sub" }}
                   />
                 </th>
                 <th>Logs</th>
@@ -160,38 +172,39 @@ const Logs = () => {
                     style={
                       isItemSelected
                         ? ({
-                          '--TableCell-dataBackground':
-                            'var(--TableCell-selectedBackground)',
-                          '--TableCell-headBackground':
-                            'var(--TableCell-selectedBackground)',
-                        } as React.CSSProperties)
+                            "--TableCell-dataBackground":
+                              "var(--TableCell-selectedBackground)",
+                            "--TableCell-headBackground":
+                              "var(--TableCell-selectedBackground)",
+                          } as React.CSSProperties)
                         : {}
                     }
                   >
                     <th scope="row">
                       <Checkbox
                         checked={isItemSelected}
-                        sx={{ verticalAlign: 'top' }}
+                        sx={{ verticalAlign: "top" }}
                       />
                     </th>
-                    <td><Typography level='h6'>{log.log}</Typography></td>
+                    <td>
+                      <Typography level="h6">{log.log}</Typography>
+                    </td>
                     <td>{log.Contents.length}</td>
-                    <td><Typography color='neutral'>{new Date(log.created_at).toDateString()}</Typography></td>
+                    <td>
+                      <Typography color="neutral">
+                        {new Date(log.created_at).toDateString()}
+                      </Typography>
+                    </td>
                   </tr>
-                )
-              }
-              )}
-              <tr>
-
-              </tr>
+                );
+              })}
+              <tr></tr>
             </tbody>
-
           </Table>
-
         </Stack>
       </Box>
     </Layout>
-  )
-}
+  );
+};
 
 export default Logs;
