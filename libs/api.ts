@@ -48,12 +48,17 @@ export const getContentItems = async () => {
   return response;
 }
 
-export const addContentIdAddressIds = async ({addressId, content}:{addressId: string | null, content: readonly string[]}) => {
-  const response = await axios.post('/api/address/addAllowed', {addressId , content})
+export const addContentIdAddressIds = async ({addressId, contentIds}:{addressId: string | null, contentIds: readonly string[]}) => {
+  const response = await axios.post('/api/address/addAllowed', {addressId , contentIds})
   return response;
 }
 
-export const addAddressIdContentIds = async ({contentId, addresses}:{contentId: string | null, addresses: readonly string[]}) => {
-  const response = await axios.post('/api/content/addAllowed', {contentId , addresses})
+export const addAddressIdContentIds = async ({contentId, addressIds}:{contentId: string | null, addressIds: readonly string[]}) => {
+  const response = await axios.post('/api/content/addAllowed', {contentId , addressIds})
+  return response;
+}
+
+export const removeContentIdAddressIds = async ({contentId, addressIds}: {contentId: string | null, addressIds: readonly string[]}) => {
+  const response = await axios.post('/api/content/removeAllowed', {contentId, addressIds});
   return response;
 }

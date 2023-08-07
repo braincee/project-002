@@ -75,7 +75,7 @@ const ContentList = ({contentItems, addresses}: InferGetServerSidePropsType<type
   }
 
   const handleAddAddressAccess = () => {
-    addContentIdAddressIds({content: selected, addressId: selectedOption})
+    addContentIdAddressIds({contentIds: selected, addressId: selectedOption})
         .then(() => {
           getContentItems().then((res) => {
             setContentList(res.data.response);

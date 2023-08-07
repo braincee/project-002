@@ -73,7 +73,7 @@ const AddressList = ({ addresses, contentItems }: InferGetServerSidePropsType<ty
   }
 
   const handleAddContentItem = () => {
-    addAddressIdContentIds({ addresses: selected, contentId: selectedOption })
+    addAddressIdContentIds({ addressIds: selected, contentId: selectedOption })
       .then(() => {
         setOpen(false);
       })
