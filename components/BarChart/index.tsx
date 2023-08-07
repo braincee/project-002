@@ -20,7 +20,7 @@ ChartJS.register(
 );
 
 const BarChart = ({ mapData }: { mapData: any }) => {
-  const [chartData, setChartData] = useState({
+  const [chartData, setChartData] = useState<any>({
     labels: [],
     datasets: [{}],
   });
