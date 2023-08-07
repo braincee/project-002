@@ -42,17 +42,17 @@ const TableToolbar = (props: TableToolbarProps) => {
       )}
 
       {numSelected > 0 && (
-          <Tooltip title="Add / Remove">
-            <Button
-              startDecorator={<div style={{display: "flex", alignItems: "center", gap: "2px"}}><Add />/<Remove /></div>}
-              size="sm"
-              color="neutral"
-              variant="solid"
-              onClick={() => handleAccess()}
-            >
-              {buttonName}
-            </Button>
-          </Tooltip>
+        <Tooltip title="Add / Remove">
+          <Button
+            startDecorator={<div style={{ display: "flex", alignItems: "center", gap: "2px" }}><Add />/<Remove /></div>}
+            size="sm"
+            color="neutral"
+            variant="solid"
+            onClick={() => handleAccess()}
+          >
+            {buttonName}
+          </Button>
+        </Tooltip>
       )}
     </Box>
   );
