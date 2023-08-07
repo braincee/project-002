@@ -29,7 +29,7 @@ const Manage = () => {
       >
         <Box sx={{ p: 2, border: "1px solid #ccc" }}>
           {/* Content for the first box */}
-          <Typography level="h6" sx={{ marginBottom: 2 }}>
+          <Typography level="h4" sx={{ marginBottom: 2 }}>
             Email Address: test@test.com
           </Typography>
           <Input placeholder="Enter new password" type="password" value="" />

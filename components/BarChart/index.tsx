@@ -16,11 +16,13 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend  
+  Legend
 );
 
-const BarChart = ({ mapData }: {mapData: any}) => {
-  const [chartData, setChartData] = useState<any>({
+const BarChart = ({ mapData }: { mapData: any }) => {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{}],
   });
   const { labels, dataValues } = mapData();
   const [chartOptions, setChartOptions] = useState({});

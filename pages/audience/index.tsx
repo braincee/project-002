@@ -151,7 +151,7 @@ const AddressList = ({
         </form>
 
         <Stack spacing={2}>
-          <Typography level="h5" sx={{ textAlign: "end" }}>
+          <Typography level="h4" sx={{ textAlign: "end" }}>
             Total Number of Addresses: {addressList.length}{" "}
           </Typography>
           <Sheet sx={{ height: 400, overflow: "auto" }}>
@@ -223,7 +223,7 @@ const AddressList = ({
                         />
                       </th>
                       <td>
-                        <Typography level="h6">{address.address}</Typography>
+                        <Typography level="h4">{address.address}</Typography>
                       </td>
                       <td>{address.Contents.length}</td>
                       <td>

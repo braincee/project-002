@@ -147,7 +147,7 @@ const ContentList = ({
           />
         </form>
         <Stack spacing={1}>
-          <Typography level="h5" sx={{ textAlign: "end" }}>
+          <Typography level="h4" sx={{ textAlign: "end" }}>
             Content Total: {contentList.length}{" "}
           </Typography>
           <Sheet sx={{ height: 400, overflow: "auto" }}>
@@ -223,10 +223,10 @@ const ContentList = ({
                         />
                       </th>
                       <td>
-                        <Typography level="h6">{contentItem.title}</Typography>
+                        <Typography level="h4">{contentItem.title}</Typography>
                       </td>
                       <td>
-                        <Typography level="h6">
+                        <Typography level="h4">
                           {contentItem.description}
                         </Typography>
                       </td>

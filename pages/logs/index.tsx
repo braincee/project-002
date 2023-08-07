@@ -187,7 +187,7 @@ const Logs = () => {
                       />
                     </th>
                     <td>
-                      <Typography level="h6">{log.log}</Typography>
+                      <Typography level="h4">{log.log}</Typography>
                     </td>
                     <td>{log.Contents.length}</td>
                     <td>
