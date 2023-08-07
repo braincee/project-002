@@ -2,15 +2,14 @@ import axios from 'axios';
 import { v4 as uuidV4 } from 'uuid';
 
 export const initDb = async () => {
-  const response = await axios.get('api/initDb');
-  return response;
+  const response = await fetch('api/initDb');
+  return response.json();
 }
 
 export const getAddress = async ({ addressId }: {addressId: string}) => {
-  const response = await axios.get(('/api/address'), {
-    params: { addressId },
+  const response = await fetch(`/api/address?addressId=${addressId}`, {
   });
-  return response;
+  return response.json();
 }
 
 export const getContent = async ({ contentId }: {contentId: string}) => {

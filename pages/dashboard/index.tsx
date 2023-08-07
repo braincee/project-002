@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Card, Grid, List, ListItem, Sheet, Stack, Typography } from '@mui/joy';
+import React from 'react';
+import { Box, Card, Grid, List, Stack, Typography } from '@mui/joy';
 import BarChart from '@/pages/components/BarChart/BarChart';
 import { Address, Content } from '@/libs/models';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -13,7 +13,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 }
 
 export default function Dashboard(
-  { addresses, contentLength }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  { addresses, contentLength }: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
   const chartData = () => {
     const data = new Map();
     const labels: any[] = [];
