@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Input, Button, Typography, Table, Sheet, Modal, ModalDialog } from '@mui/joy';
 import Add from '@mui/icons-material/Add';
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
 
 const Manage = () => {
   const [open, setOpen] = useState(false);

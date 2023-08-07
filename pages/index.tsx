@@ -1,5 +1,5 @@
 import { Button, Box, Grid, AspectRatio } from "@mui/joy";
-import Layout from "@/pages/components/Layout"
+import Layout from "@/components/Layout"
 import { useRouter } from "next/router";
 import Input from '@mui/joy/Input';
 import NFTImage from '@/public/nft_image.png';

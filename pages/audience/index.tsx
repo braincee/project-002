@@ -1,9 +1,9 @@
 import { Box, Button, Checkbox, Input, Sheet, Stack, Table, Typography } from '@mui/joy'
 import React, { useState } from 'react'
-import TableToolbar from '../components/TableToolbar';
-import MyModal from '../components/MyModal/MyModal';
+import TableToolbar from '@/components/TableToolbar';
+import MyModal from '@/components/MyModal';
 import { addAddress, addContentIdAddressIds, getAddresses, removeContentIdAddressIds } from '@/libs/api';
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Address, Content } from '@/libs/models';
 
