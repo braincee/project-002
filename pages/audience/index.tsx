@@ -294,6 +294,7 @@ const AddressList = ({
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={addressList.length}
+              name="Address"
             />
             <tbody>
               {stableSort(addressList, getComparator(order, orderBy))

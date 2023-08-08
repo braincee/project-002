@@ -19,7 +19,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
-const headCells: readonly HeadCell[] = [
+const headCells1: readonly HeadCell[] = [
   {
     id: "address",
     numeric: false,
@@ -79,6 +79,7 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
+  name: string;
 }
 
 const TableHead = (props: EnhancedTableProps) => {
@@ -89,6 +90,7 @@ const TableHead = (props: EnhancedTableProps) => {
     numSelected,
     rowCount,
     onRequestSort,
+    name,
   } = props;
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -111,58 +113,114 @@ const TableHead = (props: EnhancedTableProps) => {
             sx={{ verticalAlign: "sub" }}
           />
         </th>
-        {headCells.map((headCell) => {
-          const active = orderBy === headCell.id;
-          return (
-            <th
-              key={headCell.id}
-              aria-sort={
-                active
-                  ? ({ asc: "ascending", desc: "descending" } as const)[order]
-                  : undefined
-              }
-            >
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <Link
-                underline="none"
-                color="neutral"
-                textColor={active ? "primary.plainColor" : undefined}
-                component="button"
-                onClick={createSortHandler(headCell.id)}
-                fontWeight="lg"
-                startDecorator={
-                  headCell.numeric ? (
-                    <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
-                  ) : null
+        {name &&
+          name === "Address" &&
+          headCells1.map((headCell) => {
+            const active = orderBy === headCell.id;
+            return (
+              <th
+                key={headCell.id}
+                aria-sort={
+                  active
+                    ? ({ asc: "ascending", desc: "descending" } as const)[order]
+                    : undefined
                 }
-                endDecorator={
-                  !headCell.numeric ? (
-                    <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
-                  ) : null
-                }
-                sx={{
-                  "& svg": {
-                    transition: "0.2s",
-                    transform:
-                      active && order === "desc"
-                        ? "rotate(0deg)"
-                        : "rotate(180deg)",
-                  },
-                  "&:hover": { "& svg": { opacity: 1 } },
-                }}
               >
-                {headCell.label}
-                {active ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </Link>
-            </th>
-          );
-        })}
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <Link
+                  underline="none"
+                  color="neutral"
+                  textColor={active ? "primary.plainColor" : undefined}
+                  component="button"
+                  onClick={createSortHandler(headCell.id)}
+                  fontWeight="lg"
+                  startDecorator={
+                    headCell.numeric ? (
+                      <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
+                    ) : null
+                  }
+                  endDecorator={
+                    !headCell.numeric ? (
+                      <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
+                    ) : null
+                  }
+                  sx={{
+                    "& svg": {
+                      transition: "0.2s",
+                      transform:
+                        active && order === "desc"
+                          ? "rotate(0deg)"
+                          : "rotate(180deg)",
+                    },
+                    "&:hover": { "& svg": { opacity: 1 } },
+                  }}
+                >
+                  {headCell.label}
+                  {active ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </Link>
+              </th>
+            );
+          })}
+        {name &&
+          name === "Content" &&
+          headCells2.map((headCell) => {
+            const active = orderBy === headCell.id;
+            return (
+              <th
+                key={headCell.id}
+                aria-sort={
+                  active
+                    ? ({ asc: "ascending", desc: "descending" } as const)[order]
+                    : undefined
+                }
+              >
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <Link
+                  underline="none"
+                  color="neutral"
+                  textColor={active ? "primary.plainColor" : undefined}
+                  component="button"
+                  onClick={createSortHandler(headCell.id)}
+                  fontWeight="lg"
+                  startDecorator={
+                    headCell.numeric ? (
+                      <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
+                    ) : null
+                  }
+                  endDecorator={
+                    !headCell.numeric ? (
+                      <ArrowDownwardIcon sx={{ opacity: active ? 1 : 0 }} />
+                    ) : null
+                  }
+                  sx={{
+                    "& svg": {
+                      transition: "0.2s",
+                      transform:
+                        active && order === "desc"
+                          ? "rotate(0deg)"
+                          : "rotate(180deg)",
+                    },
+                    "&:hover": { "& svg": { opacity: 1 } },
+                  }}
+                >
+                  {headCell.label}
+                  {active ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </Link>
+              </th>
+            );
+          })}
       </tr>
     </thead>
   );
