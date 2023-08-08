@@ -47,7 +47,6 @@ export default function Dashboard({
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
-        <Typography level="h3">Dashboard</Typography>
         <Grid
           container
           rowSpacing={3}

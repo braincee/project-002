@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   Link,
 } from "@mui/joy";
+import NextLink from 'next/link';
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
 // import Link from 'next/link';
@@ -29,7 +30,6 @@ const Header: React.FC = () => {
           listbox: {
             placement: "top-start",
             sx: {
-              paddingX: 2,
               maxHeight: "fit-content",
               overflow: "none",
             },
@@ -52,36 +52,48 @@ const Header: React.FC = () => {
           <ModeButton />
           <Button variant="outlined">Logout</Button>
         </ButtonGroup>
-        <Link href="/">
+        <NextLink href="/"> 
+        <Link underline="none">
           <Option value="login">
-            <Typography level="h3">Login</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Login</Typography>
           </Option>
         </Link>
-        <Link href="/dashboard">
+        </NextLink>
+        <NextLink href="/dashboard">
+        <Link underline="none">
           <Option value="dashboard">
-            <Typography level="h3">Dashboard</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Dashboard</Typography>
           </Option>
         </Link>
-        <Link href="/audience">
+        </NextLink>
+       <NextLink href="/audience">
+       <Link underline="none">
           <Option value="audience">
-            <Typography level="h3">Address List</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Address List</Typography>
           </Option>
         </Link>
-        <Link href="/content">
+       </NextLink>
+       <NextLink  href="/content">
+       <Link underline="none">
           <Option value="content">
-            <Typography level="h3">Content List</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Content List</Typography>
           </Option>
         </Link>
-        <Link href="/logs">
+       </NextLink>
+       <NextLink href="/logs">
+       <Link underline="none">
           <Option value="logs">
-            <Typography level="h3">Logs</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Logs</Typography>
           </Option>
         </Link>
-        <Link href="/manage">
+       </NextLink>
+       <NextLink href="/manage">
+       <Link underline="none">
           <Option value="manage">
-            <Typography level="h3">Manage</Typography>
+            <Typography sx={{ padding: 1}} level="h3">Manage</Typography>
           </Option>
         </Link>
+       </NextLink>
       </Select>
       <Typography sx={{ display: { xs: "none", md: "flex" } }} level="h3">
         NFT GATED SERVER

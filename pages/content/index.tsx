@@ -119,7 +119,6 @@ const ContentList = ({
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
-        <Typography level="h3">Content List</Typography>
         <form
           onSubmit={(event) => {
             event.preventDefault();

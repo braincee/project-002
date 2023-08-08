@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { Download } from "@mui/icons-material";
-import { ExportToCsv } from "export-to-csv";
+// import { ExportToCsv } from "export-to-csv";
 
 const Logs = () => {
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -91,7 +91,6 @@ const Logs = () => {
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
-        <Typography level="h3">Logs</Typography>
         <Stack spacing={2}>
           {alert}
           <Box
