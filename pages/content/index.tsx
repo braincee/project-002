@@ -3,7 +3,12 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControl,
+  FormLabel,
+  IconButton,
   Input,
+  Option,
+  Select,
   Sheet,
   Stack,
   Table,
@@ -17,9 +22,13 @@ import {
   addContent,
   getContentItems,
 } from "@/libs/api";
-import Layout from "@/components/Layout";
 import { Address, Content } from "@/libs/models";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import TableHead from "@/components/TableHead";
+import {
+  KeyboardArrowLeft as KeyboardArrowLeftIcon,
+  KeyboardArrowRight as KeyboardArrowRightIcon,
+} from "@mui/icons-material";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contentItems = JSON.stringify(
@@ -40,11 +49,25 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
+interface Data {
+  id: string;
+  address?: string;
+  title?: string;
+  description?: string;
+  Contents?: any[];
+  Addresses?: any[];
+  created_at: Date;
+}
+
 const ContentList = ({
   contentItems,
   addresses,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<readonly string[]>([]);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof Data>("Addresses");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
@@ -64,6 +87,15 @@ const ContentList = ({
         setDisable(false);
       });
     });
+  };
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +127,28 @@ const ContentList = ({
     setSelected(newSelected);
   };
 
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: any, newValue: number | null) => {
+    setRowsPerPage(parseInt(newValue!.toString(), 10));
+    setPage(0);
+  };
+
+  const getLabelDisplayedRowsTo = () => {
+    if (contentList.length === -1) {
+      return (page + 1) * rowsPerPage;
+    }
+    return rowsPerPage === -1
+      ? contentList.length
+      : Math.min(contentList.length, (page + 1) * rowsPerPage);
+  };
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contentList.length) : 0;
+
   const handleAddressAccess = () => {
     setOpen(true);
   };
@@ -114,11 +168,63 @@ const ContentList = ({
 
   const handleRemoveAddressAccess = () => {};
 
+  const labelDisplayedRows = ({
+    from,
+    to,
+    count,
+  }: {
+    from: number;
+    to: number;
+    count: number;
+  }) => {
+    return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  };
+
+  const descendingComparator = <T extends {}>(a: T, b: T, orderBy: keyof T) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  };
+
+  type Order = "asc" | "desc";
+
+  const getComparator = <Key extends keyof any>(
+    order: Order,
+    orderBy: Key
+  ): ((
+    a: { [key in Key]: number | string },
+    b: { [key in Key]: number | string }
+  ) => number) => {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  };
+
+  const stableSort = <T extends {}>(
+    array: readonly T[],
+    comparator: (a: T, b: T) => number
+  ) => {
+    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  };
+
   return (
     <Layout>
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
+        <Typography level="h3">Content List</Typography>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -199,11 +305,14 @@ const ContentList = ({
                   const isItemSelected = isSelected(contentItem.id);
                   return (
                     <tr
-                      key={index}
-                      onClick={(event) => handleClick(event, contentItem.id)}
+                      onClick={(event) =>
+                        handleClick(event, content.id.toString())
+                      }
                       role="checkbox"
-                      tabIndex={-1}
                       aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={content.id}
+                      // selected={isItemSelected}
                       style={
                         isItemSelected
                           ? ({
@@ -218,42 +327,112 @@ const ContentList = ({
                       <th scope="row">
                         <Checkbox
                           checked={isItemSelected}
+                          slotProps={{
+                            input: {
+                              "aria-labelledby": labelId,
+                            },
+                          }}
                           sx={{ verticalAlign: "top" }}
                         />
                       </th>
-                      <td>
-                        <Typography level="h4">{contentItem.title}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="h4">
-                          {contentItem.description}
-                        </Typography>
-                      </td>
-                      <td>{contentItem.Addresses.length}</td>
-                      <td>
-                        <Typography color="neutral">
-                          {new Date(contentItem.created_at).toDateString()}
-                        </Typography>
-                      </td>
+                      <th id={labelId} scope="row">
+                        {content.title}
+                      </th>
+                      <td>{content.description}</td>
+                      <td>{content.Addresses.length}</td>
+                      <td>{new Date(content.created_at).toDateString()}</td>
                     </tr>
                   );
                 })}
-              </tbody>
-            </Table>
-          </Sheet>
-          <MyModal
-            open={open}
-            setOpen={setOpen}
-            tableHeading="Add / Remove Address Access for selected Content items"
-            placeholder="Select an address"
-            items={addresses}
-            handleAddItem={handleAddAddressAccess}
-            handleRemoveItem={handleRemoveAddressAccess}
-            setSelectedOption={setSelectedOption}
-          />
-        </Stack>
-      </Box>
-    </Layout>
+              {emptyRows > 0 && (
+                <tr
+                  style={
+                    {
+                      height: `calc(${emptyRows} * 40px)`,
+                      "--TableRow-hoverBackground": "transparent",
+                    } as React.CSSProperties
+                  }
+                >
+                  <td colSpan={6} />
+                </tr>
+              )}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={6}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <FormControl orientation="horizontal" size="sm">
+                      <FormLabel>Rows per page:</FormLabel>
+                      <Select
+                        onChange={handleChangeRowsPerPage}
+                        value={rowsPerPage}
+                      >
+                        <Option value={5}>5</Option>
+                        <Option value={10}>10</Option>
+                        <Option value={25}>25</Option>
+                      </Select>
+                    </FormControl>
+                    <Typography textAlign="center" sx={{ minWidth: 80 }}>
+                      {labelDisplayedRows({
+                        from:
+                          contentList.length === 0 ? 0 : page * rowsPerPage + 1,
+                        to: getLabelDisplayedRowsTo(),
+                        count:
+                          contentList.length === -1 ? -1 : contentList.length,
+                      })}
+                    </Typography>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <IconButton
+                        size="sm"
+                        color="neutral"
+                        variant="outlined"
+                        disabled={page === 0}
+                        onClick={() => handleChangePage(page - 1)}
+                        sx={{ bgcolor: "background.surface" }}
+                      >
+                        <KeyboardArrowLeftIcon />
+                      </IconButton>
+                      <IconButton
+                        size="sm"
+                        color="neutral"
+                        variant="outlined"
+                        disabled={
+                          contentList.length !== -1
+                            ? page >=
+                              Math.ceil(contentList.length / rowsPerPage) - 1
+                            : false
+                        }
+                        onClick={() => handleChangePage(page + 1)}
+                        sx={{ bgcolor: "background.surface" }}
+                      >
+                        <KeyboardArrowRightIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </td>
+              </tr>
+            </tfoot>
+          </Table>
+        </Sheet>
+        <MyModal
+          open={open}
+          setOpen={setOpen}
+          tableHeading="Add / Remove Address Access for selected Content items"
+          placeholder="Select an address"
+          items={addresses}
+          handleAddItem={handleAddAddressAccess}
+          handleRemoveItem={handleRemoveAddressAccess}
+          setSelectedOption={setSelectedOption}
+        />
+      </Stack>
+    </Box>
   );
 };
 

@@ -3,7 +3,6 @@ import { Box, Card, Grid, List, Stack, Typography } from "@mui/joy";
 import BarChart from "@/components/BarChart";
 import { Address, Content } from "@/libs/models";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Layout from "@/components/Layout";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
@@ -47,6 +46,7 @@ export default function Dashboard({
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
+        <Typography level="h3">Dashboard</Typography>
         <Grid
           container
           rowSpacing={3}

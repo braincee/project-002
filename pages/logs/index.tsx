@@ -1,5 +1,4 @@
 import React, { ReactElement, useState } from "react";
-import Layout from "@/components/Layout";
 import {
   Alert,
   Box,
@@ -91,6 +90,7 @@ const Logs = () => {
       <Box
         sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
       >
+        <Typography level="h3">Logs</Typography>
         <Stack spacing={2}>
           {alert}
           <Box

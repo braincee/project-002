@@ -7,7 +7,7 @@ import theme from "@/libs/theme";
 import CssBaseline from "@mui/joy/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import createEmotionCache from "@/libs/createEmotionCache";
-import Header from "@/components/Header";
+import Layout from "../components/Layout";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -50,8 +50,9 @@ export default function MyApp(props: MyAppProps) {
             },
           }}
         />
-        <Header />
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </CssVarsProvider>
     </CacheProvider>
   );
