@@ -29,6 +29,7 @@ import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
+import MainModal from "@/components/MainModal";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contentItems = JSON.stringify(
@@ -69,9 +70,12 @@ const ContentList = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
+  const [openMain, setOpenMain] = useState(false);
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [contentList, setContentList] = useState(contentItems);
+
+  console.log(open, openMain);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -152,6 +156,9 @@ const ContentList = ({
   const handleAddressAccess = () => {
     setOpen(true);
   };
+  const handleAddContent = () => {
+    setOpenMain(true);
+  };
 
   const handleAddAddressAccess = () => {
     addAddressIdContentIds({
@@ -221,43 +228,17 @@ const ContentList = ({
 
   return (
     <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
-      <Typography level="h3">Content List</Typography>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          handleSubmit(event);
-        }}
-      >
-        <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
-          <Input
-            required
-            placeholder="Add title"
-            sx={{ width: { xs: "100%", md: "35%" } }}
-          />
-          <Textarea
-            required
-            placeholder="Add description"
-            sx={{ width: { xs: "100%", md: "45%" } }}
-          />
-          <Button type="submit" disabled={disable}>
-            Add Item
-          </Button>
-        </Stack>
-        <Input
-          type="file"
-          sx={{ width: { xs: "100%", md: "40%" }, mt: 2, p: 1 }}
-        />
-      </form>
       <Stack spacing={1}>
-        {/* <Typography level="h4" sx={{ textAlign: "end" }}>
-          Content Total: {contentList.length}{" "}
-        </Typography> */}
-        <Sheet sx={{ height: 400, overflow: "auto" }}>
+        <Sheet
+          variant="outlined"
+          sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+        >
           <TableToolbar
             numSelected={selected.length}
             handleAccess={handleAddressAccess}
+            handleAdd={handleAddContent}
             buttonName={"Address"}
-            tableHeader={"Items"}
+            tableHeader={"Content List"}
           />
           <Table
             aria-label="stripe table"
@@ -429,6 +410,17 @@ const ContentList = ({
           handleAddItem={handleAddAddressAccess}
           handleRemoveItem={handleRemoveAddressAccess}
           setSelectedOption={setSelectedOption}
+        />
+        <MainModal
+          open={openMain}
+          setOpen={setOpenMain}
+          tableHeading="Add an new Content Item"
+          placeholder="Select an address"
+          items={addresses}
+          handleSubmit={handleSubmit}
+          setSelectedOption={setSelectedOption}
+          disable={disable}
+          name="Content"
         />
       </Stack>
     </Box>

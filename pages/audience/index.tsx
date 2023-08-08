@@ -29,6 +29,7 @@ import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
+import MainModal from "@/components/MainModal";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
@@ -69,6 +70,7 @@ const AddressList = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
+  const [openMain, setOpenMain] = useState(false);
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [addressList, setAddressList] = useState<any[]>(addresses);
@@ -149,6 +151,9 @@ const AddressList = ({
 
   const handleContentAccess = () => {
     setOpen(true);
+  };
+  const handleAddAddress = () => {
+    setOpenMain(true);
   };
 
   const handleAddContentItemAccess = () => {
@@ -263,6 +268,7 @@ const AddressList = ({
             handleAccess={handleContentAccess}
             buttonName={"Content"}
             tableHeader={"Address List"}
+            handleAdd={handleAddAddress}
           />
           <Table
             aria-label="stripe table"
@@ -429,6 +435,16 @@ const AddressList = ({
           handleAddItem={handleAddContentItemAccess}
           handleRemoveItem={handleRemoveContentItemAccess}
           setSelectedOption={setSelectedOption}
+        />
+        <MainModal
+          open={openMain}
+          setOpen={setOpenMain}
+          tableHeading="Add an new Address"
+          placeholder="Select a content item"
+          items={contentItems}
+          handleSubmit={handleSubmit}
+          setSelectedOption={setSelectedOption}
+          disable={disable}
         />
       </Stack>
     </Box>
