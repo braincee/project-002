@@ -11,7 +11,7 @@ export const getAddress = async ({ addressId }: { addressId: string }) => {
 };
 
 export const getContent = async ({ contentId }: { contentId: string }) => {
-  const response = await fetch(`/api/content?contentId=${contentId}`);
+  const response = await fetch(`/api/content/${contentId}`);
   return response.json();
 };
 
@@ -44,7 +44,7 @@ export const addContent = async ({
     title,
     description,
   };
-  const response = await fetch("/api/content/addContent", {
+  const response = await fetch("/api/content/add", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -96,7 +96,7 @@ export const addContentIdAddressIds = async ({
     contentId,
     addressIds,
   };
-  const response = await fetch("/api/content/addAllowed", {
+  const response = await fetch(`/api/content/${contentId}/addAllowed`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -117,7 +117,7 @@ export const removeContentIdAddressIds = async ({
     contentId,
     addressIds,
   };
-  const response = await fetch("/api/content/removeAllowed", {
+  const response = await fetch(`/api/content/${contentId}/removeAllowed`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -125,4 +125,39 @@ export const removeContentIdAddressIds = async ({
     body: JSON.stringify(data),
   });
   return response.json();
+};
+
+export const addFileToContentsStorage = async (file: { name: any }) => {
+  const data = {
+    filename: `${uuidV4()}.${file.name.substring(
+      file.name.lastIndexOf(".") + 1,
+      file.name.length
+    )}`,
+    file,
+  };
+  const response = await fetch("/api/content/addContent", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return response;
+};
+
+export const getFilePublicURL = async ({
+  filename,
+  contentId,
+}: {
+  filename: string;
+  contentId: string | null;
+}) => {
+  const response = await fetch(`/api/content/{${contentId}}/requestContent`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(filename),
+  });
+  return response;
 };
