@@ -1,4 +1,5 @@
 import { v4 as uuidV4 } from "uuid";
+import supabase from "./supabase";
 
 export const initDb = async () => {
   const response = await fetch("api/initDb");
@@ -32,18 +33,35 @@ export const addAddress = async ({ address }: { address: string }) => {
 };
 
 export const addContent = async ({
+  id,
   title,
   description,
+  url,
+  urlString,
 }: {
+  id: string;
   title: string;
   description: string;
+  url?: string;
+  urlString?: string;
 }) => {
-  const id = uuidV4();
-  const data = {
-    id,
-    title,
-    description,
-  };
+  let data;
+  if (url) {
+    data = {
+      id,
+      title,
+      description,
+      url,
+    };
+  } else {
+    const data = {
+      id,
+      title,
+      description,
+      urlString,
+    };
+  }
+
   const response = await fetch("/api/content/add", {
     headers: {
       "Content-Type": "application/json",
@@ -127,31 +145,26 @@ export const removeContentIdAddressIds = async ({
   return response.json();
 };
 
-export const addFileToContentsStorage = async (file: { name: any }) => {
-  const data = {
-    filename: `${uuidV4()}.${file.name.substring(
-      file.name.lastIndexOf(".") + 1,
-      file.name.length
-    )}`,
-    file,
-  };
-  const response = await fetch("/api/content/addContent", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-  return response;
+export const addFileToContentsStorage = async (file: any) => {
+  const filename = `${uuidV4()}.${file.name.substring(
+    file.name.lastIndexOf(".") + 1,
+    file.name.length
+  )}`;
+
+  const response = await supabase.storage
+    .from("contents")
+    .upload(filename, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+  if (response?.error && response?.error?.message) {
+    return response.error.message;
+  }
+  return filename;
 };
 
-export const getFilePublicURL = async ({
-  filename,
-  contentId,
-}: {
-  filename: string;
-  contentId: string | null;
-}) => {
+export const getFilePublicURL = async (filename: string) => {
+  const contentId = uuidV4();
   const response = await fetch(`/api/content/{${contentId}}/requestContent`, {
     headers: {
       "Content-Type": "application/json",
@@ -159,5 +172,5 @@ export const getFilePublicURL = async ({
     method: "POST",
     body: JSON.stringify(filename),
   });
-  return response;
+  return { url: response.url, contentId };
 };

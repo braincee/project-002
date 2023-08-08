@@ -5,7 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { filename } = req.body;
+  const filename = req.body;
   const response = await supabase.storage
     .from("contents")
     .getPublicUrl(filename);

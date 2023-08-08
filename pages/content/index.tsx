@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import {
   Box,
-  Button,
   Checkbox,
   FormControl,
   FormLabel,
   IconButton,
-  Input,
   Option,
   Select,
   Sheet,
   Stack,
   Table,
-  Textarea,
   Typography,
 } from "@mui/joy";
 import TableToolbar from "@/components/TableToolbar";
@@ -20,7 +17,10 @@ import MyModal from "@/components/MyModal";
 import {
   addAddressIdContentIds,
   addContent,
+  addContentIdAddressIds,
+  addFileToContentsStorage,
   getContentItems,
+  getFilePublicURL,
 } from "@/libs/api";
 import { Address, Content } from "@/libs/models";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -30,6 +30,7 @@ import {
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
 import MainModal from "@/components/MainModal";
+import { v4 as uuidV4 } from "uuid";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contentItems = JSON.stringify(
@@ -74,23 +75,69 @@ const ContentList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [contentList, setContentList] = useState(contentItems);
-
-  console.log(open, openMain);
+  const [file, setFile] = useState<any>("");
+  const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
-  const handleSubmit = (event: any) => {
-    let title = event.target[0].value;
-    let description = event.target[1].value;
+  const handleSubmit = async (event: any) => {
+    let urlString = "";
+    if (event.target[0].type === "text") {
+      urlString = event.target[0].value;
+    }
+
+    let title = event.target[1].value;
+    let description = event.target[2].value;
+
     setDisable(true);
     event.target[0].value = "";
     event.target[1].value = "";
-    addContent({ title, description }).then(() => {
-      getContentItems().then((res) => {
-        setContentList(res.response);
-        setDisable(false);
+    event.target[2].value = "";
+    if (file) {
+      const filename = await addFileToContentsStorage(file);
+      const { url, contentId } = await getFilePublicURL(filename);
+      addContent({ id: contentId, title, description, url }).then(() => {
+        if (selectedAddresses.length > 0) {
+          const addressIds = selectedAddresses.map((address) => address.id);
+          addContentIdAddressIds({
+            contentId,
+            addressIds,
+          }).then(() => {
+            getContentItems().then((res) => {
+              setContentList(res.response);
+              setDisable(false);
+              setOpenMain(false);
+              setFile("");
+            });
+          });
+        } else {
+          getContentItems().then((res) => {
+            setContentList(res.response);
+            setDisable(false);
+            setOpenMain(false);
+            setFile("");
+          });
+        }
       });
-    });
+    } else {
+      const contentId = uuidV4();
+      addContent({ id: contentId, title, description, urlString }).then(() => {
+        if (selectedAddresses.length > 0) {
+          const addressIds = selectedAddresses.map((address) => address.id);
+          addContentIdAddressIds({
+            contentId,
+            addressIds,
+          });
+        }
+        getContentItems().then((res) => {
+          setContentList(res.response);
+          console.log(res.response);
+          setDisable(false);
+          setOpenMain(false);
+          setFile("");
+        });
+      });
+    }
   };
 
   const handleRequestSort = (
@@ -421,6 +468,9 @@ const ContentList = ({
           setSelectedOption={setSelectedOption}
           disable={disable}
           name="Content"
+          setFile={setFile}
+          setSelectedValues={setSelectedAddresses}
+          selectedValues={selectedAddresses}
         />
       </Stack>
     </Box>

@@ -5,7 +5,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { filename, file } = req.body;
-  await supabase.storage.from("contents").upload(filename, file);
-  res.status(200).json({ response: filename });
+  const form = req.body;
+  console.log(typeof form);
+  // const response = await supabase.storage
+  //   .from("contents")
+  //   .upload(filename, file, {
+  //     cacheControl: "3600",
+  //     upsert: false,
+  //   });
+  res.status(200).json({ response: "response" });
 }

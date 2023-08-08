@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
+import DragDrop from "@/components/DragDrop";
 
 interface MyModalProps {
   open: boolean;
@@ -23,6 +24,9 @@ interface MyModalProps {
   items: any[];
   handleSubmit: (event: React.FormEvent) => void;
   setSelectedOption: (value: string | null) => void;
+  setFile?: (value: any) => void;
+  setSelectedValues?: (value: any) => void;
+  selectedValues?: any[];
 }
 
 const MainModal = (props: MyModalProps) => {
@@ -36,12 +40,18 @@ const MainModal = (props: MyModalProps) => {
     setSelectedOption,
     disable,
     name,
+    setFile,
+    setSelectedValues,
+    selectedValues,
   } = props;
 
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
+    if (newValue !== null) {
+      setSelectedValues?.((prev: any) => [...prev, newValue]);
+    }
   };
 
   return (
@@ -79,19 +89,17 @@ const MainModal = (props: MyModalProps) => {
             handleSubmit(event);
           }}
           style={{ minWidth: "500px" }}
+          method="POST"
         >
           <Stack spacing={2} direction={{ xs: "column" }}>
             {name === "Content" ? (
               <>
                 {!checked ? (
-                  <Input
-                    required
-                    type="file"
-                    sx={{ width: { xs: "100%" }, mt: 2, p: 1 }}
-                  />
+                  <DragDrop setFile={setFile} />
                 ) : (
                   <Input
                     placeholder="Add URL"
+                    type="url"
                     required
                     sx={{ width: { xs: "100%" } }}
                   />
@@ -129,11 +137,32 @@ const MainModal = (props: MyModalProps) => {
               }}
             >
               {items.map((item) => (
-                <Option value={item.id} key={item.id}>
+                <Option value={item} key={item.id}>
                   {item.title ? item.title : item.address}{" "}
                 </Option>
               ))}
             </Select>
+            <Stack
+              spacing={1}
+              sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            >
+              {selectedValues &&
+                selectedValues?.length > 0 &&
+                selectedValues?.map((value: any) => {
+                  return (
+                    <Typography
+                      sx={{
+                        border: "1px solid #CDD7E1",
+                        width: "fit-content",
+                        px: "4px",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {value.address}
+                    </Typography>
+                  );
+                })}
+            </Stack>
             <Button type="submit" disabled={disable}>
               Add Item
             </Button>

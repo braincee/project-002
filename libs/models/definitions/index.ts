@@ -19,6 +19,7 @@ interface Content
   id: UUIDV4;
   title: string;
   description: string;
+  url: string;
 }
 
 interface ContentAddress
@@ -79,6 +80,10 @@ const Content = sequelize.define<Content>(
       allowNull: false,
     },
     description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    url: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
