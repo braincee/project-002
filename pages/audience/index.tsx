@@ -234,31 +234,26 @@ const AddressList = ({
   };
 
   return (
-    <Layout>
-      <Box
-        sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
+    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      {/* <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit(event);
+        }}
       >
-        <Typography level="h3">Address List</Typography>
-
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleSubmit(event);
-          }}
-        >
-          <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
-            <Input
-              required
-              placeholder="Type an address"
-              sx={{ width: { xs: "100%", md: "50%" } }}
-            />
-            <Stack direction="row" spacing={2}>
-              <Button type="submit" disabled={disable}>
-                Add Address
-              </Button>
-            </Stack>
+        <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
+          <Input
+            required
+            placeholder="Type an address"
+            sx={{ width: { xs: "100%", md: "50%" } }}
+          />
+          <Stack direction="row" spacing={2}>
+            <Button type="submit" disabled={disable}>
+              Add Address
+            </Button>
           </Stack>
-        </form>
+        </Stack>
+      </form> */}
 
       <Stack spacing={2}>
         {/* <Typography level="h4" sx={{ textAlign: "end" }}>
@@ -450,6 +445,7 @@ const AddressList = ({
           handleSubmit={handleSubmit}
           setSelectedOption={setSelectedOption}
           disable={disable}
+          name="Address"
         />
       </Stack>
     </Box>
