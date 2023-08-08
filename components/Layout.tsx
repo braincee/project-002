@@ -22,7 +22,8 @@ export default function Layout(props: PropsWithChildren) {
           flexDirection: "column",
         }}
       >
-        <Header />
+        {router.pathname !== "/" && <Header />}
+
         <Box sx={{ width: "100%", flexGrow: 1, padding: 2 }}>
           {props.children}
         </Box>

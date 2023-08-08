@@ -15,7 +15,6 @@ const BarChart = ({ mapData }: { mapData: any }) => {
       <SingleBarChart
         xAxis={[{ scaleType: "band", data: labels }]}
         series={[{ data: dataValues, color: "#4393e4" }]}
-        width={500}
         height={300}
       />
     </>

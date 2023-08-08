@@ -23,6 +23,7 @@
     "axios": "^1.4.0",
     "chart.js": "^4.3.2",
     "ethers": "^6.6.4",
+    "export-to-csv": "^0.2.1",
     "next": "latest",
     "numbro": "^2.3.6",
     "pg": "^8.11.1",

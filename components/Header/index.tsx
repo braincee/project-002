@@ -8,7 +8,7 @@ import {
   ButtonGroup,
   Link,
 } from "@mui/joy";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
 // import Link from 'next/link';
@@ -52,48 +52,60 @@ const Header: React.FC = () => {
           <ModeButton />
           <Button variant="outlined">Logout</Button>
         </ButtonGroup>
-        <NextLink href="/"> 
-        <Link underline="none">
-          <Option value="login">
-            <Typography sx={{ padding: 1}} level="h3">Login</Typography>
-          </Option>
-        </Link>
+        <NextLink href="/">
+          <Link underline="none">
+            <Option value="login">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Login
+              </Typography>
+            </Option>
+          </Link>
         </NextLink>
         <NextLink href="/dashboard">
-        <Link underline="none">
-          <Option value="dashboard">
-            <Typography sx={{ padding: 1}} level="h3">Dashboard</Typography>
-          </Option>
-        </Link>
+          <Link underline="none">
+            <Option value="dashboard">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Dashboard
+              </Typography>
+            </Option>
+          </Link>
         </NextLink>
-       <NextLink href="/audience">
-       <Link underline="none">
-          <Option value="audience">
-            <Typography sx={{ padding: 1}} level="h3">Address List</Typography>
-          </Option>
-        </Link>
-       </NextLink>
-       <NextLink  href="/content">
-       <Link underline="none">
-          <Option value="content">
-            <Typography sx={{ padding: 1}} level="h3">Content List</Typography>
-          </Option>
-        </Link>
-       </NextLink>
-       <NextLink href="/logs">
-       <Link underline="none">
-          <Option value="logs">
-            <Typography sx={{ padding: 1}} level="h3">Logs</Typography>
-          </Option>
-        </Link>
-       </NextLink>
-       <NextLink href="/manage">
-       <Link underline="none">
-          <Option value="manage">
-            <Typography sx={{ padding: 1}} level="h3">Manage</Typography>
-          </Option>
-        </Link>
-       </NextLink>
+        <NextLink href="/audience">
+          <Link underline="none">
+            <Option value="audience">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Address List
+              </Typography>
+            </Option>
+          </Link>
+        </NextLink>
+        <NextLink href="/content">
+          <Link underline="none">
+            <Option value="content">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Content List
+              </Typography>
+            </Option>
+          </Link>
+        </NextLink>
+        <NextLink href="/logs">
+          <Link underline="none">
+            <Option value="logs">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Logs
+              </Typography>
+            </Option>
+          </Link>
+        </NextLink>
+        <NextLink href="/manage">
+          <Link underline="none">
+            <Option value="manage">
+              <Typography sx={{ padding: 1 }} level="h3">
+                Manage
+              </Typography>
+            </Option>
+          </Link>
+        </NextLink>
       </Select>
       <Typography sx={{ display: { xs: "none", md: "flex" } }} level="h3">
         NFT GATED SERVER
