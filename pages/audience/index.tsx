@@ -17,7 +17,6 @@ import {
   getAddresses,
   removeContentIdAddressIds,
 } from "@/libs/api";
-import Layout from "@/components/Layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Address, Content } from "@/libs/models";
 
@@ -124,133 +123,129 @@ const AddressList = ({
   };
 
   return (
-    <Layout>
-      <Box
-        sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
+    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Typography level="h3">Address List</Typography>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit(event);
+        }}
       >
-        <Typography level="h3">Address List</Typography>
-
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleSubmit(event);
-          }}
-        >
-          <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
-            <Input
-              required
-              placeholder="Type an address"
-              sx={{ width: { xs: "100%", md: "50%" } }}
-            />
-            <Stack direction="row" spacing={2}>
-              <Button type="submit" disabled={disable}>
-                Add Address
-              </Button>
-            </Stack>
-          </Stack>
-        </form>
-
-        <Stack spacing={2}>
-          <Typography level="h4" sx={{ textAlign: "end" }}>
-            Total Number of Addresses: {addressList.length}{" "}
-          </Typography>
-          <Sheet sx={{ height: 400, overflow: "auto" }}>
-            <TableToolbar
-              numSelected={selected.length}
-              handleAccess={handleContentAccess}
-              buttonName={"Content"}
-              tableHeader={"Addresses"}
-            />
-            <Table
-              aria-label="stripe table"
-              stripe="even"
-              stickyHeader
-              hoverRow
-              sx={{
-                "--TableCell-headBackground": "transparent",
-                "--TableCell-selectedBackground": (theme) =>
-                  theme.vars.palette.primary.softBg,
-                "& thead th:nth-child(1)": {
-                  width: "40px",
-                },
-                "& thead th:nth-child(3)": {
-                  width: "10%",
-                },
-                "& thead th:nth-child(4)": {
-                  width: "20%",
-                },
-                "& tr > *:nth-child(n+3)": { textAlign: "center" },
-              }}
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <Checkbox
-                      onChange={handleSelectAllClick}
-                      sx={{ verticalAlign: "sub" }}
-                    />
-                  </th>
-                  <th>Address</th>
-                  <th>Content Access</th>
-                  <th>Date Created</th>
-                </tr>
-              </thead>
-              <tbody>
-                {addressList.map((address: any, index: number) => {
-                  const isItemSelected = isSelected(address.id);
-                  return (
-                    <tr
-                      key={index}
-                      onClick={(event) => handleClick(event, address.id)}
-                      role="checkbox"
-                      tabIndex={-1}
-                      aria-checked={isItemSelected}
-                      style={
-                        isItemSelected
-                          ? ({
-                              "--TableCell-dataBackground":
-                                "var(--TableCell-selectedBackground)",
-                              "--TableCell-headBackground":
-                                "var(--TableCell-selectedBackground)",
-                            } as React.CSSProperties)
-                          : {}
-                      }
-                    >
-                      <th scope="row">
-                        <Checkbox
-                          checked={isItemSelected}
-                          sx={{ verticalAlign: "top" }}
-                        />
-                      </th>
-                      <td>
-                        <Typography level="h4">{address.address}</Typography>
-                      </td>
-                      <td>{address.Contents.length}</td>
-                      <td>
-                        <Typography color="neutral">
-                          {new Date(address.created_at).toDateString()}
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                })}
-                <tr></tr>
-              </tbody>
-            </Table>
-          </Sheet>
-          <MyModal
-            open={open}
-            setOpen={setOpen}
-            tableHeading="Add Content Access for selected Addresses"
-            placeholder="Select a content item"
-            items={contentItems}
-            handleAddItem={handleAddContentItemAccess}
-            handleRemoveItem={handleRemoveContentItemAccess}
-            setSelectedOption={setSelectedOption}
+        <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
+          <Input
+            required
+            placeholder="Type an address"
+            sx={{ width: { xs: "100%", md: "50%" } }}
           />
+          <Stack direction="row" spacing={2}>
+            <Button type="submit" disabled={disable}>
+              Add Address
+            </Button>
+          </Stack>
         </Stack>
-      </Box>
-    </Layout>
+      </form>
+
+      <Stack spacing={2}>
+        <Typography level="h4" sx={{ textAlign: "end" }}>
+          Total Number of Addresses: {addressList.length}{" "}
+        </Typography>
+        <Sheet sx={{ height: 400, overflow: "auto" }}>
+          <TableToolbar
+            numSelected={selected.length}
+            handleAccess={handleContentAccess}
+            buttonName={"Content"}
+            tableHeader={"Addresses"}
+          />
+          <Table
+            aria-label="stripe table"
+            stripe="even"
+            stickyHeader
+            hoverRow
+            sx={{
+              "--TableCell-headBackground": "transparent",
+              "--TableCell-selectedBackground": (theme) =>
+                theme.vars.palette.primary.softBg,
+              "& thead th:nth-child(1)": {
+                width: "40px",
+              },
+              "& thead th:nth-child(3)": {
+                width: "10%",
+              },
+              "& thead th:nth-child(4)": {
+                width: "20%",
+              },
+              "& tr > *:nth-child(n+3)": { textAlign: "center" },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>
+                  <Checkbox
+                    onChange={handleSelectAllClick}
+                    sx={{ verticalAlign: "sub" }}
+                  />
+                </th>
+                <th>Address</th>
+                <th>Content Access</th>
+                <th>Date Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {addressList.map((address: any, index: number) => {
+                const isItemSelected = isSelected(address.id);
+                return (
+                  <tr
+                    key={index}
+                    onClick={(event) => handleClick(event, address.id)}
+                    role="checkbox"
+                    tabIndex={-1}
+                    aria-checked={isItemSelected}
+                    style={
+                      isItemSelected
+                        ? ({
+                            "--TableCell-dataBackground":
+                              "var(--TableCell-selectedBackground)",
+                            "--TableCell-headBackground":
+                              "var(--TableCell-selectedBackground)",
+                          } as React.CSSProperties)
+                        : {}
+                    }
+                  >
+                    <th scope="row">
+                      <Checkbox
+                        checked={isItemSelected}
+                        sx={{ verticalAlign: "top" }}
+                      />
+                    </th>
+                    <td>
+                      <Typography level="h4">{address.address}</Typography>
+                    </td>
+                    <td>{address.Contents.length}</td>
+                    <td>
+                      <Typography color="neutral">
+                        {new Date(address.created_at).toDateString()}
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr></tr>
+            </tbody>
+          </Table>
+        </Sheet>
+        <MyModal
+          open={open}
+          setOpen={setOpen}
+          tableHeading="Add Content Access for selected Addresses"
+          placeholder="Select a content item"
+          items={contentItems}
+          handleAddItem={handleAddContentItemAccess}
+          handleRemoveItem={handleRemoveContentItemAccess}
+          setSelectedOption={setSelectedOption}
+        />
+      </Stack>
+    </Box>
   );
 };
 

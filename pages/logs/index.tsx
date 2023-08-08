@@ -1,5 +1,4 @@
 import React, { ReactElement, useState } from "react";
-import Layout from "@/components/Layout";
 import {
   Alert,
   Box,
@@ -87,123 +86,119 @@ const Logs = () => {
   };
 
   return (
-    <Layout>
-      <Box
-        sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
-      >
-        <Typography level="h3">Logs</Typography>
-        <Stack spacing={2}>
-          {alert}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              py: 1,
-              pl: { sm: 2 },
-              pr: { xs: 1, sm: 1 },
-              ...(selected.length > 0 && {
-                bgcolor: "background.level1",
-              }),
-              borderTopLeftRadius: "var(--unstable_actionRadius)",
-              borderTopRightRadius: "var(--unstable_actionRadius)",
-            }}
-          >
-            <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
-              <Tooltip
-                title="Download as CSV"
-                sx={{ display: "flex", justifyItems: "center" }}
+    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Typography level="h3">Logs</Typography>
+      <Stack spacing={2}>
+        {alert}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            py: 1,
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(selected.length > 0 && {
+              bgcolor: "background.level1",
+            }),
+            borderTopLeftRadius: "var(--unstable_actionRadius)",
+            borderTopRightRadius: "var(--unstable_actionRadius)",
+          }}
+        >
+          <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
+            <Tooltip
+              title="Download as CSV"
+              sx={{ display: "flex", justifyItems: "center" }}
+            >
+              <Button
+                startDecorator={<Download />}
+                size="sm"
+                color="neutral"
+                variant="solid"
+                onClick={() => handleDownload()}
               >
-                <Button
-                  startDecorator={<Download />}
-                  size="sm"
-                  color="neutral"
-                  variant="solid"
-                  onClick={() => handleDownload()}
+                Download
+              </Button>
+            </Tooltip>
+          </Stack>
+        </Box>
+        <Table
+          aria-label="stripe table"
+          stripe="even"
+          stickyHeader
+          hoverRow
+          sx={{
+            "--TableCell-headBackground": "transparent",
+            "--TableCell-selectedBackground": (theme) =>
+              theme.vars.palette.primary.softBg,
+            "& thead th:nth-child(1)": {
+              width: "40px",
+            },
+            "& thead th:nth-child(3)": {
+              width: "20%",
+            },
+            "& thead th:nth-child(4)": {
+              width: "30%",
+            },
+            "& tr > *:nth-child(n+3)": { textAlign: "center" },
+          }}
+        >
+          <thead>
+            <tr>
+              <th>
+                <Checkbox
+                  onChange={handleSelectAllClick}
+                  sx={{ verticalAlign: "sub" }}
+                />
+              </th>
+              <th>Logs</th>
+              <th>Content Request</th>
+              <th>Date Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[].map((log: any, index: number) => {
+              const isItemSelected = isSelected(log.id);
+              return (
+                <tr
+                  key={index}
+                  onClick={(event) => handleClick(event, log.id)}
+                  role="checkbox"
+                  tabIndex={-1}
+                  aria-checked={isItemSelected}
+                  style={
+                    isItemSelected
+                      ? ({
+                          "--TableCell-dataBackground":
+                            "var(--TableCell-selectedBackground)",
+                          "--TableCell-headBackground":
+                            "var(--TableCell-selectedBackground)",
+                        } as React.CSSProperties)
+                      : {}
+                  }
                 >
-                  Download
-                </Button>
-              </Tooltip>
-            </Stack>
-          </Box>
-          <Table
-            aria-label="stripe table"
-            stripe="even"
-            stickyHeader
-            hoverRow
-            sx={{
-              "--TableCell-headBackground": "transparent",
-              "--TableCell-selectedBackground": (theme) =>
-                theme.vars.palette.primary.softBg,
-              "& thead th:nth-child(1)": {
-                width: "40px",
-              },
-              "& thead th:nth-child(3)": {
-                width: "20%",
-              },
-              "& thead th:nth-child(4)": {
-                width: "30%",
-              },
-              "& tr > *:nth-child(n+3)": { textAlign: "center" },
-            }}
-          >
-            <thead>
-              <tr>
-                <th>
-                  <Checkbox
-                    onChange={handleSelectAllClick}
-                    sx={{ verticalAlign: "sub" }}
-                  />
-                </th>
-                <th>Logs</th>
-                <th>Content Request</th>
-                <th>Date Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[].map((log: any, index: number) => {
-                const isItemSelected = isSelected(log.id);
-                return (
-                  <tr
-                    key={index}
-                    onClick={(event) => handleClick(event, log.id)}
-                    role="checkbox"
-                    tabIndex={-1}
-                    aria-checked={isItemSelected}
-                    style={
-                      isItemSelected
-                        ? ({
-                            "--TableCell-dataBackground":
-                              "var(--TableCell-selectedBackground)",
-                            "--TableCell-headBackground":
-                              "var(--TableCell-selectedBackground)",
-                          } as React.CSSProperties)
-                        : {}
-                    }
-                  >
-                    <th scope="row">
-                      <Checkbox
-                        checked={isItemSelected}
-                        sx={{ verticalAlign: "top" }}
-                      />
-                    </th>
-                    <td>
-                      <Typography level="h4">{log.log}</Typography>
-                    </td>
-                    <td>{log.Contents.length}</td>
-                    <td>
-                      <Typography color="neutral">
-                        {new Date(log.created_at).toDateString()}
-                      </Typography>
-                    </td>
-                  </tr>
-                );
-              })}
-              <tr></tr>
-            </tbody>
-          </Table>
-        </Stack>
-      </Box>
-    </Layout>
+                  <th scope="row">
+                    <Checkbox
+                      checked={isItemSelected}
+                      sx={{ verticalAlign: "top" }}
+                    />
+                  </th>
+                  <td>
+                    <Typography level="h4">{log.log}</Typography>
+                  </td>
+                  <td>{log.Contents.length}</td>
+                  <td>
+                    <Typography color="neutral">
+                      {new Date(log.created_at).toDateString()}
+                    </Typography>
+                  </td>
+                </tr>
+              );
+            })}
+            <tr></tr>
+          </tbody>
+        </Table>
+      </Stack>
+    </Box>
   );
 };
 
