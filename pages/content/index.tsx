@@ -182,7 +182,6 @@ const ContentList = ({
       : Math.min(contentList.length, (page + 1) * rowsPerPage);
   };
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contentList.length) : 0;
 
@@ -360,7 +359,7 @@ const ContentList = ({
         <MainModal
           open={openMain}
           setOpen={setOpenMain}
-          tableHeading="Add an new Content Item"
+          tableHeading="Add New Content Item"
           placeholder="Select an address"
           items={addresses}
           handleSubmit={handleSubmit}

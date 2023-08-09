@@ -333,7 +333,7 @@ const AddressList = ({
         <MainModal
           open={openMain}
           setOpen={setOpenMain}
-          tableHeading="Add an new Address"
+          tableHeading="Add New Address"
           placeholder="Select a content item"
           items={contentItems}
           handleSubmit={handleSubmit}

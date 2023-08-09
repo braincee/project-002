@@ -42,7 +42,6 @@ const TableBody = (props: TableBodyProps) => {
               aria-checked={isItemSelected}
               tabIndex={-1}
               key={item.id}
-              // selected={isItemSelected}
               style={
                 isItemSelected
                   ? ({
