@@ -32,6 +32,7 @@ import {
 import MainModal from "@/components/MainModal";
 import { v4 as uuidV4 } from "uuid";
 import TableBody from "@/components/TableBody";
+import TableFoot from "@/components/TableFoot";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contentItems = JSON.stringify(
@@ -336,68 +337,15 @@ const ContentList = ({
               handleClick={handleClick}
               emptyRows={emptyRows}
             />
-            <tfoot>
-              <tr>
-                <td colSpan={6}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <FormControl orientation="horizontal" size="sm">
-                      <FormLabel>Rows per page:</FormLabel>
-                      <Select
-                        onChange={handleChangeRowsPerPage}
-                        value={rowsPerPage}
-                      >
-                        <Option value={5}>5</Option>
-                        <Option value={10}>10</Option>
-                        <Option value={25}>25</Option>
-                      </Select>
-                    </FormControl>
-                    <Typography textAlign="center" sx={{ minWidth: 80 }}>
-                      {labelDisplayedRows({
-                        from:
-                          contentList.length === 0 ? 0 : page * rowsPerPage + 1,
-                        to: getLabelDisplayedRowsTo(),
-                        count:
-                          contentList.length === -1 ? -1 : contentList.length,
-                      })}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(page - 1)}
-                        sx={{ bgcolor: "background.surface" }}
-                      >
-                        <KeyboardArrowLeftIcon />
-                      </IconButton>
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={
-                          contentList.length !== -1
-                            ? page >=
-                              Math.ceil(contentList.length / rowsPerPage) - 1
-                            : false
-                        }
-                        onClick={() => handleChangePage(page + 1)}
-                        sx={{ bgcolor: "background.surface" }}
-                      >
-                        <KeyboardArrowRightIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </td>
-              </tr>
-            </tfoot>
+            <TableFoot
+              list={contentList}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
+              labelDisplayedRows={labelDisplayedRows}
+            />
           </Table>
         </Sheet>
         <MyModal
