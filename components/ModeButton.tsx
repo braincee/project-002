@@ -13,7 +13,6 @@ export default function ModeButton() {
   }, []);
 
   if (!mounted) {
-    // to avoid layout shift, render a placeholder button
     return (
       <IconButton
         variant="plain"

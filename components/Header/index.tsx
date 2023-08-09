@@ -11,7 +11,6 @@ import {
 import NextLink from "next/link";
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
-// import Link from 'next/link';
 
 const Header: React.FC = () => {
   const router = useRouter();

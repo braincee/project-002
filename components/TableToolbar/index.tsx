@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Box, Button, IconButton, Tooltip, Typography } from "@mui/joy";
+import { Box, Button, Tooltip, Typography } from "@mui/joy";
 
 interface TableToolbarProps {
   numSelected: number;

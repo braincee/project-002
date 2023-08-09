@@ -1,7 +1,7 @@
 import { Button, Grid, AspectRatio } from "@mui/joy";
 import { useRouter } from "next/router";
 import Input from "@mui/joy/Input";
-import NFTImage from "@/public/nft_image.png";
+import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
 import { initDb } from "@/libs/api";
 
