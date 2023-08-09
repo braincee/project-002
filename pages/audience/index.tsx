@@ -76,6 +76,7 @@ const AddressList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [addressList, setAddressList] = useState<any[]>(addresses);
+  const [selectedContents, setSelectedContents] = useState<any[]>([]);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -339,6 +340,8 @@ const AddressList = ({
           setSelectedOption={setSelectedOption}
           disable={disable}
           name="Address"
+          setSelectedValues={setSelectedContents}
+          selectedValues={selectedContents}
         />
       </Stack>
     </Box>

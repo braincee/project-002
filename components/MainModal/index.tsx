@@ -50,7 +50,15 @@ const MainModal = (props: MyModalProps) => {
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
     if (newValue !== null) {
-      setSelectedValues?.((prev: any) => [...prev, newValue]);
+      setSelectedValues?.((prev: any) => {
+        const set = new Set(prev);
+        const set2 = new Set(prev);
+        set2.add(newValue);
+        if (set2.size > set.size) {
+          return [...prev, newValue];
+        }
+        return [...prev];
+      });
     }
   };
 
@@ -130,21 +138,28 @@ const MainModal = (props: MyModalProps) => {
               slotProps={{
                 listbox: {
                   sx: {
-                    paddingX: 2,
-                    maxHeight: "fit-content",
+                    maxHeight: "180px",
+                    overflow: "auto",
                   },
                 },
               }}
             >
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <Option value={item} key={item.id}>
-                  {item.title ? item.title : item.address}{" "}
+                  <Typography sx={{ px: 2 }}>
+                    {index + 1}. {item.title ? item.title : item.address}
+                  </Typography>
                 </Option>
               ))}
             </Select>
             <Stack
-              spacing={1}
-              sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: 1,
+                alignItems: "center",
+              }}
             >
               {selectedValues &&
                 selectedValues?.length > 0 &&
@@ -157,8 +172,9 @@ const MainModal = (props: MyModalProps) => {
                         px: "4px",
                         borderRadius: "5px",
                       }}
+                      key={value.id}
                     >
-                      {value.address}
+                      {value.address ? value.address : value.title}
                     </Typography>
                   );
                 })}
