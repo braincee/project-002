@@ -31,6 +31,7 @@ import {
 } from "@mui/icons-material";
 import MainModal from "@/components/MainModal";
 import { v4 as uuidV4 } from "uuid";
+import TableBody from "@/components/TableBody";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const contentItems = JSON.stringify(
@@ -323,67 +324,18 @@ const ContentList = ({
               rowCount={contentList.length}
               name="Content"
             />
-            <tbody>
-              {stableSort(contentList, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((content: any, index) => {
-                  const isItemSelected = isSelected(content.id.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <tr
-                      onClick={(event) =>
-                        handleClick(event, content.id.toString())
-                      }
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={content.id}
-                      // selected={isItemSelected}
-                      style={
-                        isItemSelected
-                          ? ({
-                              "--TableCell-dataBackground":
-                                "var(--TableCell-selectedBackground)",
-                              "--TableCell-headBackground":
-                                "var(--TableCell-selectedBackground)",
-                            } as React.CSSProperties)
-                          : {}
-                      }
-                    >
-                      <th scope="row">
-                        <Checkbox
-                          checked={isItemSelected}
-                          slotProps={{
-                            input: {
-                              "aria-labelledby": labelId,
-                            },
-                          }}
-                          sx={{ verticalAlign: "top" }}
-                        />
-                      </th>
-                      <th id={labelId} scope="row">
-                        {content.title}
-                      </th>
-                      <td>{content.description}</td>
-                      <td>{content.Addresses.length}</td>
-                      <td>{new Date(content.created_at).toDateString()}</td>
-                    </tr>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <tr
-                  style={
-                    {
-                      height: `calc(${emptyRows} * 40px)`,
-                      "--TableRow-hoverBackground": "transparent",
-                    } as React.CSSProperties
-                  }
-                >
-                  <td colSpan={6} />
-                </tr>
-              )}
-            </tbody>
+            <TableBody
+              stableSort={stableSort}
+              list={contentList}
+              getComparator={getComparator}
+              order={order}
+              orderBy={orderBy}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              isSelected={isSelected}
+              handleClick={handleClick}
+              emptyRows={emptyRows}
+            />
             <tfoot>
               <tr>
                 <td colSpan={6}>

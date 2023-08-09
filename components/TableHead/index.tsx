@@ -69,7 +69,7 @@ const headCells2: readonly HeadCell[] = [
 
 type Order = "asc" | "desc";
 
-interface EnhancedTableProps {
+interface TableHeadProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -82,7 +82,7 @@ interface EnhancedTableProps {
   name: string;
 }
 
-const TableHead = (props: EnhancedTableProps) => {
+const TableHead = (props: TableHeadProps) => {
   const {
     onSelectAllClick,
     order,

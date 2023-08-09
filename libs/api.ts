@@ -61,7 +61,6 @@ export const addContent = async ({
       urlString,
     };
   }
-
   const response = await fetch("/api/content/add", {
     headers: {
       "Content-Type": "application/json",
