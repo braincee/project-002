@@ -30,6 +30,8 @@ import {
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
 import MainModal from "@/components/MainModal";
+import TableBody from "@/components/TableBody";
+import TableFoot from "@/components/TableFoot";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
@@ -279,128 +281,42 @@ const AddressList = ({
               rowCount={addressList.length}
               name="Address"
             />
-            <tbody>
-              {stableSort(addressList, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((address: any, index) => {
-                  const isItemSelected = isSelected(address.id.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <tr
-                      onClick={(event) =>
-                        handleClick(event, address.id.toString())
-                      }
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={address.id}
-                      // selected={isItemSelected}
-                      style={
-                        isItemSelected
-                          ? ({
-                              "--TableCell-dataBackground":
-                                "var(--TableCell-selectedBackground)",
-                              "--TableCell-headBackground":
-                                "var(--TableCell-selectedBackground)",
-                            } as React.CSSProperties)
-                          : {}
-                      }
-                    >
-                      <th scope="row">
-                        <Checkbox
-                          checked={isItemSelected}
-                          slotProps={{
-                            input: {
-                              "aria-labelledby": labelId,
-                            },
-                          }}
-                          sx={{ verticalAlign: "top" }}
-                        />
-                      </th>
-                      <th id={labelId} scope="row">
-                        {address.address}
-                      </th>
-                      <td>{address.Contents.length}</td>
-                      <td>{new Date(address.created_at).toDateString()}</td>
-                    </tr>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <tr
-                  style={
-                    {
-                      height: `calc(${emptyRows} * 40px)`,
-                      "--TableRow-hoverBackground": "transparent",
-                    } as React.CSSProperties
-                  }
-                >
-                  <td colSpan={6} />
-                </tr>
-              )}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={6}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <FormControl orientation="horizontal" size="sm">
-                      <FormLabel>Rows per page:</FormLabel>
-                      <Select
-                        onChange={handleChangeRowsPerPage}
-                        value={rowsPerPage}
-                      >
-                        <Option value={5}>5</Option>
-                        <Option value={10}>10</Option>
-                        <Option value={25}>25</Option>
-                      </Select>
-                    </FormControl>
-                    <Typography textAlign="center" sx={{ minWidth: 80 }}>
-                      {labelDisplayedRows({
-                        from:
-                          addressList.length === 0 ? 0 : page * rowsPerPage + 1,
-                        to: getLabelDisplayedRowsTo(),
-                        count:
-                          addressList.length === -1 ? -1 : addressList.length,
-                      })}
+            {addressList.length > 0 ? (
+              <>
+                <TableBody
+                  stableSort={stableSort}
+                  list={addressList}
+                  getComparator={getComparator}
+                  order={order}
+                  orderBy={orderBy}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  isSelected={isSelected}
+                  handleClick={handleClick}
+                  emptyRows={emptyRows}
+                  name="Address"
+                />
+                <TableFoot
+                  list={addressList}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  handleChangePage={handleChangePage}
+                  handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
+                  labelDisplayedRows={labelDisplayedRows}
+                />
+              </>
+            ) : (
+              <tbody>
+                <tr>
+                  <th scope="row" colSpan={12}>
+                    <Typography level="h4" color="neutral">
+                      No Address available
                     </Typography>
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(page - 1)}
-                        sx={{ bgcolor: "background.surface" }}
-                      >
-                        <KeyboardArrowLeftIcon />
-                      </IconButton>
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={
-                          addressList.length !== -1
-                            ? page >=
-                              Math.ceil(addressList.length / rowsPerPage) - 1
-                            : false
-                        }
-                        onClick={() => handleChangePage(page + 1)}
-                        sx={{ bgcolor: "background.surface" }}
-                      >
-                        <KeyboardArrowRightIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </td>
-              </tr>
-            </tfoot>
+                  </th>
+                </tr>
+              </tbody>
+            )}
           </Table>
         </Sheet>
         <MyModal

@@ -325,27 +325,42 @@ const ContentList = ({
               rowCount={contentList.length}
               name="Content"
             />
-            <TableBody
-              stableSort={stableSort}
-              list={contentList}
-              getComparator={getComparator}
-              order={order}
-              orderBy={orderBy}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              isSelected={isSelected}
-              handleClick={handleClick}
-              emptyRows={emptyRows}
-            />
-            <TableFoot
-              list={contentList}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              handleChangePage={handleChangePage}
-              handleChangeRowsPerPage={handleChangeRowsPerPage}
-              getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
-              labelDisplayedRows={labelDisplayedRows}
-            />
+            {contentList.length > 0 ? (
+              <>
+                <TableBody
+                  stableSort={stableSort}
+                  list={contentList}
+                  getComparator={getComparator}
+                  order={order}
+                  orderBy={orderBy}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  isSelected={isSelected}
+                  handleClick={handleClick}
+                  emptyRows={emptyRows}
+                  name="Content"
+                />
+                <TableFoot
+                  list={contentList}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  handleChangePage={handleChangePage}
+                  handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
+                  labelDisplayedRows={labelDisplayedRows}
+                />
+              </>
+            ) : (
+              <tbody>
+                <tr>
+                  <th scope="row" colSpan={12}>
+                    <Typography level="h4" color="neutral">
+                      No Content available
+                    </Typography>
+                  </th>
+                </tr>
+              </tbody>
+            )}
           </Table>
         </Sheet>
         <MyModal

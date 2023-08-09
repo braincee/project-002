@@ -11,6 +11,7 @@ interface TableBodyProps {
   isSelected: (value: string) => boolean;
   handleClick: (value1: React.MouseEvent<unknown>, value2: string) => void;
   emptyRows: number;
+  name: string;
 }
 const TableBody = (props: TableBodyProps) => {
   const {
@@ -24,22 +25,23 @@ const TableBody = (props: TableBodyProps) => {
     isSelected,
     handleClick,
     emptyRows,
+    name,
   } = props;
   return (
     <tbody>
       {stableSort(list, getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((content: any, index) => {
-          const isItemSelected = isSelected(content.id.toString());
+        .map((item: any, index) => {
+          const isItemSelected = isSelected(item.id.toString());
           const labelId = `enhanced-table-checkbox-${index}`;
 
           return (
             <tr
-              onClick={(event) => handleClick(event, content.id.toString())}
+              onClick={(event) => handleClick(event, item.id.toString())}
               role="checkbox"
               aria-checked={isItemSelected}
               tabIndex={-1}
-              key={content.id}
+              key={item.id}
               // selected={isItemSelected}
               style={
                 isItemSelected
@@ -63,12 +65,23 @@ const TableBody = (props: TableBodyProps) => {
                   sx={{ verticalAlign: "top" }}
                 />
               </th>
-              <th id={labelId} scope="row">
-                {content.title}
-              </th>
-              <td>{content.description}</td>
-              <td>{content.Addresses.length}</td>
-              <td>{new Date(content.created_at).toDateString()}</td>
+              {name && name === "Content" ? (
+                <>
+                  <th id={labelId} scope="row">
+                    {item.title}
+                  </th>
+                  <td>{item.description}</td>
+                  <td>{item.Addresses.length}</td>
+                </>
+              ) : (
+                <>
+                  <th id={labelId} scope="row">
+                    {item.address}
+                  </th>
+                  <td>{item.Contents.length}</td>
+                </>
+              )}
+              <td>{new Date(item.created_at).toDateString()}</td>
             </tr>
           );
         })}
