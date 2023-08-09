@@ -44,7 +44,7 @@ const Header: React.FC = () => {
               justifyContent: "space-between",
             },
             gap: 3,
-            paddingY: 2,
+            padding: 2,
           }}
           aria-label="spacing primary button group"
         >
@@ -52,54 +52,54 @@ const Header: React.FC = () => {
           <Button variant="outlined">Logout</Button>
         </ButtonGroup>
         <NextLink href="/">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="login">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Login
               </Typography>
             </Option>
           </Link>
         </NextLink>
         <NextLink href="/dashboard">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="dashboard">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Dashboard
               </Typography>
             </Option>
           </Link>
         </NextLink>
         <NextLink href="/audience">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="audience">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Address List
               </Typography>
             </Option>
           </Link>
         </NextLink>
         <NextLink href="/content">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="content">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Content List
               </Typography>
             </Option>
           </Link>
         </NextLink>
         <NextLink href="/logs">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="logs">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Logs
               </Typography>
             </Option>
           </Link>
         </NextLink>
         <NextLink href="/manage">
-          <Link underline="none">
+          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="manage">
-              <Typography sx={{ padding: 1 }} level="h3">
+              <Typography sx={{ paddingX: 2 }} level="h3">
                 Manage
               </Typography>
             </Option>

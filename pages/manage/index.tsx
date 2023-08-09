@@ -36,7 +36,7 @@ const Manage = () => {
         >
           Add User
         </Button>
-        <Sheet sx={{ height: 100, overflow: "auto" }}>
+        <Sheet sx={{ height: 200, overflow: "auto" }}>
           <Table
             aria-label="stripe table"
             stripe="even"
@@ -60,9 +60,17 @@ const Manage = () => {
                 <th>Users</th>
               </tr>
             </thead>
-            <tbody>test@test.com</tbody>
-            <tbody>test@test.com</tbody>
-            <tbody>test@test.com</tbody>
+            <tbody>
+              <tr>
+                <td>test@test.com</td>
+              </tr>
+              <tr>
+                <td>test@test.com</td>
+              </tr>
+              <tr>
+                <td>test@test.com</td>
+              </tr>
+            </tbody>
           </Table>
         </Sheet>
       </Box>
