@@ -144,32 +144,69 @@ export const removeContentIdAddressIds = async ({
   return response.json();
 };
 
-export const addFileToContentsStorage = async (file: any) => {
-  const filename = `${uuidV4()}.${file.name.substring(
-    file.name.lastIndexOf(".") + 1,
-    file.name.length
-  )}`;
+const getFileFromUrl = async (
+  url: any,
+  name: string,
+  defaultType = "image/png"
+) => {
+  const response = await fetch(url);
+  const data = await response.blob();
+  const ext =
+    (data?.type && data?.type.slice(data.type.indexOf("/") + 1)) || "png";
+  const file = new File([data], `${name}.${ext}`, {
+    type: data.type || defaultType,
+  });
+  return file;
+};
 
-  const response = await supabase.storage
-    .from("contents")
-    .upload(filename, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-  if (response?.error && response?.error?.message) {
-    return response.error.message;
+export const addFileToContentsStorage = async ({
+  file,
+  urlString,
+}: {
+  file?: any;
+  urlString?: any;
+}) => {
+  if (urlString) {
+    const myFile = await getFileFromUrl(
+      urlString,
+      new Date().getTime().toString()
+    );
+    const filename = `${uuidV4()}.${myFile.name.substring(
+      myFile.name.lastIndexOf(".") + 1,
+      myFile.name.length
+    )}`;
+
+    const response = await supabase.storage
+      .from("contents")
+      .upload(filename, myFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    if (response?.error && response?.error?.message) {
+      return response.error.message;
+    }
+    return filename;
+  } else {
+    const filename = `${uuidV4()}.${file.name.substring(
+      file.name.lastIndexOf(".") + 1,
+      file.name.length
+    )}`;
+
+    const response = await supabase.storage
+      .from("contents")
+      .upload(filename, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    if (response?.error && response?.error?.message) {
+      return response.error.message;
+    }
+    return filename;
   }
-  return filename;
 };
 
 export const getFilePublicURL = async (filename: string) => {
   const contentId = uuidV4();
-  const response = await fetch(`/api/content/{${contentId}}/requestContent`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify(filename),
-  });
-  return { url: response.url, contentId };
+  const { data } = supabase.storage.from("contents").getPublicUrl(filename);
+  return data;
 };

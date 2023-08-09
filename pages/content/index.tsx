@@ -84,7 +84,7 @@ const ContentList = ({
 
   const handleSubmit = async (event: any) => {
     let urlString = "";
-    if (event.target[0].type === "text") {
+    if (event.target[0].type === "url") {
       urlString = event.target[0].value;
     }
 
@@ -95,10 +95,12 @@ const ContentList = ({
     event.target[0].value = "";
     event.target[1].value = "";
     event.target[2].value = "";
-    if (file) {
-      const filename = await addFileToContentsStorage(file);
-      const { url, contentId } = await getFilePublicURL(filename);
-      addContent({ id: contentId, title, description, url }).then(() => {
+
+    const filename = await addFileToContentsStorage({ file, urlString });
+    const { publicUrl } = await getFilePublicURL(filename);
+    const contentId = uuidV4();
+    addContent({ id: contentId, title, description, url: publicUrl }).then(
+      () => {
         if (selectedAddresses.length > 0) {
           const addressIds = selectedAddresses.map((address) => address.id);
           addContentIdAddressIds({
@@ -120,26 +122,8 @@ const ContentList = ({
             setFile("");
           });
         }
-      });
-    } else {
-      const contentId = uuidV4();
-      addContent({ id: contentId, title, description, urlString }).then(() => {
-        if (selectedAddresses.length > 0) {
-          const addressIds = selectedAddresses.map((address) => address.id);
-          addContentIdAddressIds({
-            contentId,
-            addressIds,
-          });
-        }
-        getContentItems().then((res) => {
-          setContentList(res.response);
-          console.log(res.response);
-          setDisable(false);
-          setOpenMain(false);
-          setFile("");
-        });
-      });
-    }
+      }
+    );
   };
 
   const handleRequestSort = (

@@ -6,8 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const filename = req.body;
-  const response = await supabase.storage
-    .from("contents")
-    .getPublicUrl(filename);
-  res.status(200).json({ response: response });
+  const { data } = supabase.storage.from("contents").getPublicUrl(filename);
+  res.status(200).json({ response: data });
 }
