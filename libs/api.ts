@@ -206,7 +206,6 @@ export const addFileToContentsStorage = async ({
 };
 
 export const getFilePublicURL = async (filename: string) => {
-  const contentId = uuidV4();
   const { data } = supabase.storage.from("contents").getPublicUrl(filename);
   return data;
 };
