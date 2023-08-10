@@ -3,12 +3,12 @@ import { FileUploader } from "react-drag-drop-files";
 
 // const fileTypes = ["JPG", "PNG", "GIF"];
 
-function DragDrop({ setFile }: { setFile: any }) {
+function DragDrop({ setFile, checked }: { setFile: any; checked: boolean }) {
   const handleChange = (file: any) => {
     setFile(file);
   };
   return (
-    <div>
+    <div style={{ display: checked ? "none" : "block" }}>
       <FileUploader required handleChange={handleChange} name="file" />
     </div>
   );

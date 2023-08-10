@@ -102,20 +102,24 @@ const MainModal = (props: MyModalProps) => {
           <Stack spacing={2} direction={{ xs: "column" }}>
             {name === "Content" ? (
               <>
-                {!checked ? (
-                  <DragDrop setFile={setFile} />
-                ) : (
-                  <Input
-                    placeholder="Add URL"
-                    type="url"
-                    required
-                    sx={{ width: { xs: "100%" } }}
-                  />
-                )}
+                <DragDrop setFile={setFile} checked={checked} />
+                <Input
+                  placeholder="Add URL"
+                  type="url"
+                  required
+                  sx={{
+                    width: {
+                      xs: "100%",
+                      display: checked ? "flex" : "none",
+                    },
+                  }}
+                />
                 <Input
                   required
                   placeholder="Add title"
-                  sx={{ width: { xs: "100%" } }}
+                  sx={{
+                    width: { xs: "100%" },
+                  }}
                 />
                 <Textarea
                   required

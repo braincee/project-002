@@ -5,8 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { contentId, addressIds } = req.body;
-  const response = await addressIds.forEach((addressId: string) => {
+  const { contentIds, addressId } = req.body;
+  const response = await contentIds.forEach((contentId: string) => {
     ContentAddress.destroy({
       where: {
         address_id: addressId,

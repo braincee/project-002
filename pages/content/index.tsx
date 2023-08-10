@@ -9,6 +9,7 @@ import {
   addFileToContentsStorage,
   getContentItems,
   getFilePublicURL,
+  removeAddressIdContentIds,
 } from "@/libs/api";
 import { Address, Content } from "@/libs/models";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -71,10 +72,8 @@ const ContentList = ({
     if (event.target[0].type === "url") {
       urlString = event.target[0].value;
     }
-
     let title = event.target[1].value;
     let description = event.target[2].value;
-
     setDisable(true);
     event.target[0].value = "";
     event.target[1].value = "";
@@ -109,6 +108,8 @@ const ContentList = ({
       }
     );
   };
+
+  const handleRemoveContent = (contentId: string) => {};
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -172,6 +173,7 @@ const ContentList = ({
   const handleAddressAccess = () => {
     setOpen(true);
   };
+
   const handleAddContent = () => {
     setOpenMain(true);
   };
@@ -189,7 +191,18 @@ const ContentList = ({
     });
   };
 
-  const handleRemoveAddressAccess = () => {};
+  const handleRemoveAddressAccess = () => {
+    removeAddressIdContentIds({
+      addressId: selectedOption,
+      contentIds: selected,
+    }).then(() => {
+      getContentItems().then((res) => {
+        setContentList(res.response);
+        setSelected([]);
+        setOpen(false);
+      });
+    });
+  };
 
   const labelDisplayedRows = ({
     from,

@@ -56,7 +56,6 @@ const MyModal = (props: MyModalProps) => {
         <Typography id="nested-modal-title" level="h2">
           {tableHeading}
         </Typography>
-        {/* < Input placeholder={placeholder} /> */}
         <Select
           placeholder={placeholder}
           onChange={handleChange}
@@ -64,15 +63,17 @@ const MyModal = (props: MyModalProps) => {
           slotProps={{
             listbox: {
               sx: {
-                paddingX: 2,
-                maxHeight: "fit-content",
+                maxHeight: "180px",
+                overflow: "auto",
               },
             },
           }}
         >
-          {items.map((item) => (
+          {items.map((item, index) => (
             <Option value={item.id} key={item.id}>
-              {item.title ? item.title : item.address}{" "}
+              <Typography sx={{ px: 2 }}>
+                {index + 1}. {item.title ? item.title : item.address}{" "}
+              </Typography>
             </Option>
           ))}
         </Select>

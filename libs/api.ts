@@ -144,6 +144,27 @@ export const removeContentIdAddressIds = async ({
   return response.json();
 };
 
+export const removeAddressIdContentIds = async ({
+  contentIds,
+  addressId,
+}: {
+  contentIds: readonly string[];
+  addressId: string | null;
+}) => {
+  const data = {
+    contentIds,
+    addressId,
+  };
+  const response = await fetch(`/api/address/removeAllowed`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+
 const getFileFromUrl = async (
   url: any,
   name: string,
