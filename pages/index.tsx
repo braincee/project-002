@@ -4,20 +4,17 @@ import Input from "@mui/joy/Input";
 import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
 import { initDb } from "@/libs/api";
-import { Spinner } from '@nextui-org/react';
-import { useState } from 'react';
+import { useState } from "react";
 
 initDb();
 
-
 export default function Index() {
-
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
+    setLoading(true);
     router.push("/dashboard");
-    setLoading(true)
   };
 
   return (
@@ -51,9 +48,12 @@ export default function Index() {
             sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
             size="lg"
           />
-          <Button type="submit" onClick={handleLogin} loading>
+          <Button
+            type="submit"
+            onClick={handleLogin}
+            loading={loading ? true : false}
+          >
             Submit
-            { loading && <Spinner  size='sm'/> }
           </Button>
         </form>
       </Grid>

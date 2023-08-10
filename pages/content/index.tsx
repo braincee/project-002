@@ -79,7 +79,7 @@ const ContentList = ({
   }, [openMain]);
 
   const handleSubmit = async (event: any) => {
-    setLoading(true)
+    setLoading(true);
     let urlString = "";
     if (event.target[1].type === "url") {
       urlString = event.target[1].value;
@@ -194,6 +194,7 @@ const ContentList = ({
   };
 
   const handleAddAddressAccess = async () => {
+    setLoading(true);
     await addAddressIdContentIds({
       contentIds: selected,
       addressId: selectedOption,
@@ -202,10 +203,11 @@ const ContentList = ({
     setContentList(response);
     setSelected([]);
     setOpen(false);
-    setLoading(true);
+    setLoading(false);
   };
 
   const handleRemoveAddressAccess = async () => {
+    setLoading(true);
     await removeAddressIdContentIds({
       addressId: selectedOption,
       contentIds: selected,
@@ -214,7 +216,7 @@ const ContentList = ({
     setContentList(response);
     setSelected([]);
     setOpen(false);
-    setLoading(true);
+    setLoading(false);
   };
 
   const labelDisplayedRows = ({
@@ -366,7 +368,7 @@ const ContentList = ({
           handleAddItem={handleAddAddressAccess}
           handleRemoveItem={handleRemoveAddressAccess}
           setSelectedOption={setSelectedOption}
-          loading
+          loading={loading}
         />
         <MainModal
           open={openMain}
@@ -381,7 +383,7 @@ const ContentList = ({
           setFile={setFile}
           setSelectedValues={setSelectedAddresses}
           selectedValues={selectedAddresses}
-          loading
+          loading={loading}
         />
       </Stack>
     </Box>

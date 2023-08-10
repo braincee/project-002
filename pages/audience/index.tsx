@@ -78,7 +78,7 @@ const AddressList = ({
   const handleSubmit = async (event: any) => {
     let inputValue = event.target[0].value;
     setDisable(true);
-    setLoading(true)
+    setLoading(true);
     event.target[0].value = "";
     const addressId = uuidV4();
     await addAddress({ id: addressId, address: inputValue });
@@ -88,11 +88,15 @@ const AddressList = ({
       const { response } = await getAddresses();
       setAddressList(response);
       setDisable(false);
+      setOpenMain(false);
+      setSelectedContents([]);
     } else {
       const { response } = await getAddresses();
       setAddressList(response);
+      setOpenMain(false);
       setDisable(false);
     }
+    setLoading(false);
   };
 
   const handleRemoveAddress = (id: string) => {};
@@ -165,6 +169,7 @@ const AddressList = ({
   };
 
   const handleAddContentItemAccess = async () => {
+    setLoading(true);
     await addContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
@@ -173,10 +178,11 @@ const AddressList = ({
     setAddressList(response);
     setSelected([]);
     setOpen(false);
-    setLoading(true)
+    setLoading(false);
   };
 
   const handleRemoveContentItemAccess = async () => {
+    setLoading(true);
     await removeContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
@@ -185,7 +191,7 @@ const AddressList = ({
     setAddressList(response);
     setSelected([]);
     setOpen(false);
-    setLoading(true);
+    setLoading(false);
   };
 
   const labelDisplayedRows = ({
@@ -333,7 +339,7 @@ const AddressList = ({
           handleAddItem={handleAddContentItemAccess}
           handleRemoveItem={handleRemoveContentItemAccess}
           setSelectedOption={setSelectedOption}
-          loading
+          loading={loading}
         />
         <MainModal
           open={openMain}

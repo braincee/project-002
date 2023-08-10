@@ -12,7 +12,7 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
-import { Spinner } from '@nextui-org/react';
+import { Spinner } from "@nextui-org/react";
 
 interface MyModalProps {
   open: boolean;
@@ -44,7 +44,7 @@ const MainModal = (props: MyModalProps) => {
     setFile,
     setSelectedValues,
     selectedValues,
-    loading
+    loading,
   } = props;
 
   const [checked, setChecked] = useState<boolean>(false);
@@ -189,9 +189,12 @@ const MainModal = (props: MyModalProps) => {
                   );
                 })}
             </Stack>
-            <Button type="submit" disabled={disable} loading>
+            <Button
+              type="submit"
+              disabled={disable}
+              loading={loading ? true : false}
+            >
               Add Item
-              { loading && <Spinner size="sm"/>}
             </Button>
           </Stack>
         </form>
