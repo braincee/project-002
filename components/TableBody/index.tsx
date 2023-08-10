@@ -1,4 +1,5 @@
-import { Checkbox } from "@mui/joy";
+import { Delete } from "@mui/icons-material";
+import { Checkbox, IconButton } from "@mui/joy";
 
 interface TableBodyProps {
   stableSort: (value1: any[], value2: any) => any[];
@@ -12,6 +13,7 @@ interface TableBodyProps {
   handleClick: (value1: React.MouseEvent<unknown>, value2: string) => void;
   emptyRows: number;
   name: string;
+  handleRemove: (value: string) => void;
 }
 const TableBody = (props: TableBodyProps) => {
   const {
@@ -26,6 +28,7 @@ const TableBody = (props: TableBodyProps) => {
     handleClick,
     emptyRows,
     name,
+    handleRemove,
   } = props;
   return (
     <tbody>
@@ -71,6 +74,12 @@ const TableBody = (props: TableBodyProps) => {
                   </th>
                   <td>{item.description}</td>
                   <td>{item.Addresses.length}</td>
+                  <td>{new Date(item.created_at).toDateString()}</td>
+                  <td>
+                    <IconButton onClick={() => handleRemove(item.id)}>
+                      <Delete />
+                    </IconButton>
+                  </td>
                 </>
               ) : (
                 <>
@@ -78,9 +87,9 @@ const TableBody = (props: TableBodyProps) => {
                     {item.address}
                   </th>
                   <td>{item.Contents.length}</td>
+                  <td>{new Date(item.created_at).toDateString()}</td>
                 </>
               )}
-              <td>{new Date(item.created_at).toDateString()}</td>
             </tr>
           );
         })}

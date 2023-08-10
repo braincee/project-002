@@ -19,8 +19,7 @@ const TableToolbar = (props: TableToolbarProps) => {
         display: "flex",
         alignItems: "center",
         py: 1,
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
+        px: { sm: 2 },
         ...(numSelected > 0 && {
           bgcolor: "background.level1",
         }),
@@ -57,6 +56,7 @@ const TableToolbar = (props: TableToolbarProps) => {
             color="neutral"
             variant="solid"
             onClick={() => handleAccess()}
+            sx={{ minWidth: "fit-content" }}
           >
             {buttonName}
           </Button>
@@ -67,8 +67,9 @@ const TableToolbar = (props: TableToolbarProps) => {
           color="primary"
           variant="solid"
           onClick={() => handleAdd()}
+          sx={{ minWidth: "fit-content" }}
         >
-          {`Add ${buttonName === "Address" ? "Content" : "Address"}`}
+          {buttonName === "Address" ? "Add Content" : "Add Address"}
         </Button>
       )}
     </Box>

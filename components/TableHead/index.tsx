@@ -10,6 +10,7 @@ interface Data {
   Contents?: any[];
   Addresses?: any[];
   created_at: Date;
+  action?: any;
 }
 
 interface HeadCell {
@@ -64,6 +65,12 @@ const headCells2: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: "Date Created",
+  },
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: false,
+    label: "Action",
   },
 ];
 

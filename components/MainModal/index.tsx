@@ -145,7 +145,7 @@ const MainModal = (props: MyModalProps) => {
               slotProps={{
                 listbox: {
                   sx: {
-                    maxHeight: "180px",
+                    maxHeight: "220px",
                     overflow: "auto",
                   },
                 },

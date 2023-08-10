@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Sheet, Stack, Table, Typography } from "@mui/joy";
 import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
@@ -10,12 +10,12 @@ import {
   getContentItems,
   getFilePublicURL,
   removeAddressIdContentIds,
+  removeContent,
 } from "@/libs/api";
 import { Address, Content } from "@/libs/models";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import TableHead from "@/components/TableHead";
 import MainModal from "@/components/MainModal";
-import { v4 as uuidV4 } from "uuid";
 import TableBody from "@/components/TableBody";
 import TableFoot from "@/components/TableFoot";
 
@@ -27,7 +27,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
     })
   );
   const addresses = JSON.stringify(
-    await Address.findAll({ order: [["created_at", "DESC"]] })
+    await Address.findAll({
+      order: [["created_at", "DESC"]],
+      include: { model: Content },
+    })
   );
 
   return {
@@ -46,6 +49,7 @@ interface Data {
   Contents?: any[];
   Addresses?: any[];
   created_at: Date;
+  action?: any;
 }
 
 const ContentList = ({
@@ -66,6 +70,12 @@ const ContentList = ({
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
+
+  useEffect(() => {
+    if (openMain === false) {
+      setSelectedAddresses([]);
+    }
+  }, [openMain]);
 
   const handleSubmit = async (event: any) => {
     let urlString = "";
@@ -108,7 +118,11 @@ const ContentList = ({
     }
   };
 
-  const handleRemoveContent = (contentId: string) => {};
+  const handleRemoveContent = async (id: string) => {
+    await removeContent({ id });
+    const { response } = await getContentItems();
+    setContentList(response);
+  };
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -283,7 +297,7 @@ const ContentList = ({
                 width: "30%",
               },
               "& thead th:nth-child(4)": {
-                width: "20%",
+                width: "13%",
               },
               "& thead th:nth-child(5)": {
                 width: "20%",
@@ -314,6 +328,7 @@ const ContentList = ({
                   handleClick={handleClick}
                   emptyRows={emptyRows}
                   name="Content"
+                  handleRemove={handleRemoveContent}
                 />
                 <TableFoot
                   list={contentList}

@@ -1,5 +1,5 @@
 import { Box, Sheet, Stack, Table, Typography } from "@mui/joy";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
 import {
@@ -25,7 +25,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
     })
   );
   const contentItems = JSON.stringify(
-    await Content.findAll({ order: [["created_at", "DESC"]] })
+    await Content.findAll({
+      order: [["created_at", "DESC"]],
+      include: { model: Address },
+    })
   );
 
   return {
@@ -44,6 +47,7 @@ interface Data {
   Contents?: any[];
   Addresses?: any[];
   created_at: Date;
+  action?: any;
 }
 
 const AddressList = ({
@@ -64,6 +68,12 @@ const AddressList = ({
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
+  useEffect(() => {
+    if (openMain === false) {
+      setSelectedContents([]);
+    }
+  }, [openMain]);
+
   const handleSubmit = async (event: any) => {
     let inputValue = event.target[0].value;
     setDisable(true);
@@ -82,6 +92,8 @@ const AddressList = ({
       setDisable(false);
     }
   };
+
+  const handleRemoveAddress = (id: string) => {};
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -283,6 +295,7 @@ const AddressList = ({
                   handleClick={handleClick}
                   emptyRows={emptyRows}
                   name="Address"
+                  handleRemove={handleRemoveAddress}
                 />
                 <TableFoot
                   list={addressList}
