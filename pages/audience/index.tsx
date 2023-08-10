@@ -65,6 +65,7 @@ const AddressList = ({
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [addressList, setAddressList] = useState<any[]>(addresses);
   const [selectedContents, setSelectedContents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -77,6 +78,7 @@ const AddressList = ({
   const handleSubmit = async (event: any) => {
     let inputValue = event.target[0].value;
     setDisable(true);
+    setLoading(true)
     event.target[0].value = "";
     const addressId = uuidV4();
     await addAddress({ id: addressId, address: inputValue });
@@ -171,6 +173,7 @@ const AddressList = ({
     setAddressList(response);
     setSelected([]);
     setOpen(false);
+    setLoading(true)
   };
 
   const handleRemoveContentItemAccess = async () => {
@@ -182,6 +185,7 @@ const AddressList = ({
     setAddressList(response);
     setSelected([]);
     setOpen(false);
+    setLoading(true);
   };
 
   const labelDisplayedRows = ({
@@ -329,6 +333,7 @@ const AddressList = ({
           handleAddItem={handleAddContentItemAccess}
           handleRemoveItem={handleRemoveContentItemAccess}
           setSelectedOption={setSelectedOption}
+          loading
         />
         <MainModal
           open={openMain}
@@ -342,6 +347,7 @@ const AddressList = ({
           name="Address"
           setSelectedValues={setSelectedContents}
           selectedValues={selectedContents}
+          loading={loading}
         />
       </Stack>
     </Box>

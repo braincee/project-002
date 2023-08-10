@@ -8,6 +8,7 @@ import {
   Select,
   Typography,
 } from "@mui/joy";
+import { Spinner } from '@nextui-org/react';
 
 interface MyModalProps {
   open: boolean;
@@ -18,6 +19,7 @@ interface MyModalProps {
   handleAddItem: () => void;
   handleRemoveItem: () => void;
   setSelectedOption: (value: string | null) => void;
+  loading: boolean
 }
 
 const MyModal = (props: MyModalProps) => {
@@ -30,6 +32,7 @@ const MyModal = (props: MyModalProps) => {
     handleAddItem,
     handleRemoveItem,
     setSelectedOption,
+    loading
   } = props;
 
   const handleChange = (event: any, newValue: string | null) => {
@@ -89,15 +92,19 @@ const MyModal = (props: MyModalProps) => {
             variant="solid"
             color="primary"
             onClick={() => handleAddItem()}
+            loading
           >
             Add Access
+            { loading && <Spinner size="sm" /> }
           </Button>
           <Button
             variant="solid"
             color="danger"
             onClick={() => handleRemoveItem()}
+            loading
           >
             Remove Access
+            { loading && <Spinner size="sm" /> }
           </Button>
         </Box>
       </ModalDialog>
