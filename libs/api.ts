@@ -16,8 +16,13 @@ export const getContent = async ({ contentId }: { contentId: string }) => {
   return response.json();
 };
 
-export const addAddress = async ({ address }: { address: string }) => {
-  const id = uuidV4();
+export const addAddress = async ({
+  id,
+  address,
+}: {
+  id: string;
+  address: string;
+}) => {
   const data = {
     id,
     address,

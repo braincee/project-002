@@ -4,6 +4,7 @@ import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
 import {
   addAddress,
+  addAddressIdContentIds,
   addContentIdAddressIds,
   getAddresses,
   removeContentIdAddressIds,
@@ -14,6 +15,7 @@ import TableHead from "@/components/TableHead";
 import MainModal from "@/components/MainModal";
 import TableBody from "@/components/TableBody";
 import TableFoot from "@/components/TableFoot";
+import { v4 as uuidV4 } from "uuid";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
@@ -62,16 +64,23 @@ const AddressList = ({
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: any) => {
     let inputValue = event.target[0].value;
     setDisable(true);
     event.target[0].value = "";
-    addAddress({ address: inputValue }).then(() => {
-      getAddresses().then((res) => {
-        setAddressList(res.response);
-        setDisable(false);
-      });
-    });
+    const addressId = uuidV4();
+    await addAddress({ id: addressId, address: inputValue });
+    if (selectedContents.length > 0) {
+      const contentIds = selectedContents.map((content) => content.id);
+      await addAddressIdContentIds({ addressId, contentIds });
+      const { response } = await getAddresses();
+      setAddressList(response);
+      setDisable(false);
+    } else {
+      const { response } = await getAddresses();
+      setAddressList(response);
+      setDisable(false);
+    }
   };
 
   const handleRequestSort = (
@@ -141,30 +150,26 @@ const AddressList = ({
     setOpenMain(true);
   };
 
-  const handleAddContentItemAccess = () => {
-    addContentIdAddressIds({
+  const handleAddContentItemAccess = async () => {
+    await addContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
-    }).then(() => {
-      getAddresses().then((res) => {
-        setAddressList(res.response);
-        setSelected([]);
-        setOpen(false);
-      });
     });
+    const { response } = await getAddresses();
+    setAddressList(response);
+    setSelected([]);
+    setOpen(false);
   };
 
-  const handleRemoveContentItemAccess = () => {
-    removeContentIdAddressIds({
+  const handleRemoveContentItemAccess = async () => {
+    await removeContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
-    }).then(() => {
-      getAddresses().then((res) => {
-        setAddressList(res.response);
-        setSelected([]);
-        setOpen(false);
-      });
     });
+    const { response } = await getAddresses();
+    setAddressList(response);
+    setSelected([]);
+    setOpen(false);
   };
 
   const labelDisplayedRows = ({

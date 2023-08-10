@@ -17,6 +17,12 @@ export default function ModeButton() {
       <IconButton
         variant="plain"
         color="neutral"
+        sx={{
+          border:
+            mode === "light"
+              ? "1px solid #CDD7E1 !important"
+              : "1px solid #32383e !important",
+        }}
         aria-label="Toggle light and dark mode"
       />
     );
@@ -26,6 +32,12 @@ export default function ModeButton() {
       variant="plain"
       color="neutral"
       aria-label="Toggle light and dark mode"
+      sx={{
+        border:
+          mode === "light"
+            ? "1px solid #CDD7E1 !important"
+            : "1px solid #32383e !important",
+      }}
       onClick={() => setMode(mode === "dark" ? "light" : "dark")}
     >
       {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
