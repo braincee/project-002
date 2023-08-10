@@ -227,6 +227,15 @@ export const addFileToContentsStorage = async ({
 };
 
 export const getFilePublicURL = async (filename: string) => {
-  const { data } = supabase.storage.from("contents").getPublicUrl(filename);
-  return data;
+  // const { data } = supabase.storage.from("contents").getPublicUrl(filename);
+  const contentId = uuidV4();
+  const response = await fetch(`/api/content/${contentId}/requestContent`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(filename),
+  });
+  const data = await response.json();
+  return { data, contentId };
 };

@@ -9,7 +9,11 @@ function DragDrop({ setFile, checked }: { setFile: any; checked: boolean }) {
   };
   return (
     <div style={{ display: checked ? "none" : "block" }}>
-      <FileUploader required handleChange={handleChange} name="file" />
+      <FileUploader
+        required={checked ? false : true}
+        handleChange={handleChange}
+        name="file"
+      />
     </div>
   );
 }

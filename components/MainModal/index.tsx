@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Input,
   Modal,
@@ -77,6 +76,10 @@ const MainModal = (props: MyModalProps) => {
             transform: "none",
             maxWidth: "unset",
           },
+          [theme.breakpoints.not("xs")]: {
+            maxHeight: "98%",
+            overflow: "auto",
+          },
         })}
       >
         <Typography id="nested-modal-title" level="h2">
@@ -106,7 +109,7 @@ const MainModal = (props: MyModalProps) => {
                 <Input
                   placeholder="Add URL"
                   type="url"
-                  required
+                  required={checked ? true : false}
                   sx={{
                     width: {
                       xs: "100%",

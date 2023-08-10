@@ -69,44 +69,43 @@ const ContentList = ({
 
   const handleSubmit = async (event: any) => {
     let urlString = "";
-    if (event.target[0].type === "url") {
-      urlString = event.target[0].value;
+    if (event.target[1].type === "url") {
+      urlString = event.target[1].value;
     }
-    let title = event.target[1].value;
-    let description = event.target[2].value;
+    let title = event.target[2].value;
+    let description = event.target[3].value;
     setDisable(true);
-    event.target[0].value = "";
     event.target[1].value = "";
     event.target[2].value = "";
+    event.target[3].value = "";
 
     const filename = await addFileToContentsStorage({ file, urlString });
-    const { publicUrl } = await getFilePublicURL(filename);
-    const contentId = uuidV4();
-    addContent({ id: contentId, title, description, url: publicUrl }).then(
-      () => {
-        if (selectedAddresses.length > 0) {
-          const addressIds = selectedAddresses.map((address) => address.id);
-          addContentIdAddressIds({
-            contentId,
-            addressIds,
-          }).then(() => {
-            getContentItems().then((res) => {
-              setContentList(res.response);
-              setDisable(false);
-              setOpenMain(false);
-              setFile("");
-            });
-          });
-        } else {
-          getContentItems().then((res) => {
-            setContentList(res.response);
-            setDisable(false);
-            setOpenMain(false);
-            setFile("");
-          });
-        }
-      }
-    );
+    const {
+      data: {
+        response: {
+          data: { publicUrl },
+        },
+      },
+      contentId,
+    } = await getFilePublicURL(filename);
+
+    await addContent({ id: contentId, title, description, url: publicUrl });
+    if (selectedAddresses.length > 0) {
+      const addressIds = selectedAddresses.map((address) => address.id);
+      await addContentIdAddressIds({ contentId, addressIds });
+      const { response } = await getContentItems();
+      setContentList(response);
+      setDisable(false);
+      setOpenMain(false);
+      setFile("");
+      setSelectedAddresses([]);
+    } else {
+      const { response } = await getContentItems();
+      setContentList(response);
+      setDisable(false);
+      setOpenMain(false);
+      setFile("");
+    }
   };
 
   const handleRemoveContent = (contentId: string) => {};
@@ -178,30 +177,26 @@ const ContentList = ({
     setOpenMain(true);
   };
 
-  const handleAddAddressAccess = () => {
-    addAddressIdContentIds({
+  const handleAddAddressAccess = async () => {
+    await addAddressIdContentIds({
       contentIds: selected,
       addressId: selectedOption,
-    }).then(() => {
-      getContentItems().then((res) => {
-        setContentList(res.response);
-        setSelected([]);
-        setOpen(false);
-      });
     });
+    const { response } = await getContentItems();
+    setContentList(response);
+    setSelected([]);
+    setOpen(false);
   };
 
-  const handleRemoveAddressAccess = () => {
-    removeAddressIdContentIds({
+  const handleRemoveAddressAccess = async () => {
+    await removeAddressIdContentIds({
       addressId: selectedOption,
       contentIds: selected,
-    }).then(() => {
-      getContentItems().then((res) => {
-        setContentList(res.response);
-        setSelected([]);
-        setOpen(false);
-      });
     });
+    const { response } = await getContentItems();
+    setContentList(response);
+    setSelected([]);
+    setOpen(false);
   };
 
   const labelDisplayedRows = ({
