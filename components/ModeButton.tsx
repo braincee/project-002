@@ -19,9 +19,9 @@ export default function ModeButton() {
         color="neutral"
         sx={{
           border:
-            mode === "light"
-              ? "1px solid #CDD7E1 !important"
-              : "1px solid #32383e !important",
+            mode == "dark"
+              ? "1px solid #32383e !important"
+              : "1px solid #CDD7E1 !important",
         }}
         aria-label="Toggle light and dark mode"
       />
@@ -34,9 +34,9 @@ export default function ModeButton() {
       aria-label="Toggle light and dark mode"
       sx={{
         border:
-          mode === "light"
-            ? "1px solid #CDD7E1 !important"
-            : "1px solid #32383e !important",
+          mode === "dark"
+            ? "1px solid #32383e !important"
+            : "1px solid #CDD7E1 !important",
       }}
       onClick={() => setMode(mode === "dark" ? "light" : "dark")}
     >

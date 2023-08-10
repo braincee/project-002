@@ -170,13 +170,19 @@ export const removeAddressIdContentIds = async ({
   return response.json();
 };
 
-export const removeContent = async ({ id }: { id: string }) => {
+export const removeContent = async ({
+  id,
+  orfans,
+}: {
+  id: string;
+  orfans: any[];
+}) => {
   const response = await fetch(`/api/content/${id}/removeContent`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify(id),
+    body: JSON.stringify({ id, orfans }),
   });
   return response;
 };

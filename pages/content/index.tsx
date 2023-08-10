@@ -121,7 +121,10 @@ const ContentList = ({
   };
 
   const handleRemoveContent = async (id: string) => {
-    await removeContent({ id });
+    const orfans = addresses.filter(
+      (address: any) => address.Contents.length === 0
+    );
+    await removeContent({ id, orfans });
     const { response } = await getContentItems();
     setContentList(response);
   };
