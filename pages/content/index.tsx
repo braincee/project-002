@@ -121,7 +121,7 @@ const ContentList = ({
   };
 
   const handleRemoveContent = async (id: string) => {
-    setLoading(false)
+    setLoading(false);
     const orfans = addresses.filter(
       (address: any) => address.Contents.length === 0
     );
@@ -209,6 +209,7 @@ const ContentList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
+    setAddButtonClick(false);
   };
 
   const handleRemoveAddressAccess = async (setRemoveButtonClick: any) => {
@@ -223,6 +224,7 @@ const ContentList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
+    setRemoveButtonClick(false);
   };
 
   const labelDisplayedRows = ({

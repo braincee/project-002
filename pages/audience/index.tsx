@@ -180,6 +180,7 @@ const AddressList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
+    setAddButtonClick(false);
   };
 
   const handleRemoveContentItemAccess = async (setRemoveButtonClick: any) => {
@@ -194,6 +195,7 @@ const AddressList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
+    setRemoveButtonClick(false);
   };
 
   const labelDisplayedRows = ({
