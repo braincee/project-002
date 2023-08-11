@@ -197,8 +197,9 @@ const ContentList = ({
     setOpenMain(true);
   };
 
-  const handleAddAddressAccess = async () => {
+  const handleAddAddressAccess = async (setAddButtonClick: any) => {
     setLoading(true);
+    setAddButtonClick(true);
     await addAddressIdContentIds({
       contentIds: selected,
       addressId: selectedOption,
@@ -210,8 +211,9 @@ const ContentList = ({
     setLoading(false);
   };
 
-  const handleRemoveAddressAccess = async () => {
+  const handleRemoveAddressAccess = async (setRemoveButtonClick: any) => {
     setLoading(true);
+    setRemoveButtonClick(true);
     await removeAddressIdContentIds({
       addressId: selectedOption,
       contentIds: selected,

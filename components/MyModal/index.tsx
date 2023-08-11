@@ -7,6 +7,7 @@ import {
   Select,
   Typography,
 } from "@mui/joy";
+import { useState } from "react";
 
 interface MyModalProps {
   open: boolean;
@@ -14,8 +15,8 @@ interface MyModalProps {
   tableHeading: string;
   placeholder: string;
   items: any[];
-  handleAddItem: () => void;
-  handleRemoveItem: () => void;
+  handleAddItem: (value: any) => void;
+  handleRemoveItem: (value: any) => void;
   setSelectedOption: (value: string | null) => void;
   loading: boolean;
 }
@@ -32,6 +33,9 @@ const MyModal = (props: MyModalProps) => {
     setSelectedOption,
     loading,
   } = props;
+
+  const [removeButtonClick, setRemoveButtonClick] = useState(false);
+  const [addButtonClick, setAddButtonClick] = useState(false);
 
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
@@ -89,16 +93,16 @@ const MyModal = (props: MyModalProps) => {
           <Button
             variant="solid"
             color="primary"
-            onClick={() => handleAddItem()}
-            loading={loading ? true : false}
+            onClick={() => handleAddItem(setAddButtonClick)}
+            loading={loading && addButtonClick ? true : false}
           >
             Add Access
           </Button>
           <Button
             variant="solid"
             color="danger"
-            onClick={() => handleRemoveItem()}
-            loading={loading ? true : false}
+            onClick={() => handleRemoveItem(setRemoveButtonClick)}
+            loading={loading && removeButtonClick ? true : false}
           >
             Remove Access
           </Button>
