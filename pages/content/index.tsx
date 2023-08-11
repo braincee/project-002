@@ -69,6 +69,7 @@ const ContentList = ({
   const [file, setFile] = useState<any>("");
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [iconButtonId, setIconButtonId] = useState("");
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -122,7 +123,8 @@ const ContentList = ({
   };
 
   const handleRemoveContent = async (id: string) => {
-    setLoading(false);
+    setIconButtonId(id);
+    setLoading(true);
     const allAddresses = await getAddresses();
     const orfans = allAddresses.response
       .filter((address: any) => address.Contents.length === 0)
@@ -130,6 +132,8 @@ const ContentList = ({
     await removeContent({ id, orfans });
     const { response } = await getContentItems();
     setContentList(response);
+    setIconButtonId("");
+    setLoading(false);
   };
 
   const handleRequestSort = (
@@ -346,6 +350,7 @@ const ContentList = ({
                   name="Content"
                   handleRemove={handleRemoveContent}
                   loading={loading}
+                  iconButtonId={iconButtonId}
                 />
                 <TableFoot
                   list={contentList}

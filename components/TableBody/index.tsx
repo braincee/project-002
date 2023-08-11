@@ -1,5 +1,5 @@
 import { Delete } from "@mui/icons-material";
-import { Checkbox, IconButton } from "@mui/joy";
+import { Checkbox, CircularProgress, IconButton } from "@mui/joy";
 
 interface TableBodyProps {
   stableSort: (value1: any[], value2: any) => any[];
@@ -14,7 +14,8 @@ interface TableBodyProps {
   emptyRows: number;
   name: string;
   handleRemove: (value: string) => void;
-  loading: boolean;
+  iconButtonId?: string;
+  loading?: boolean;
 }
 
 const TableBody = (props: TableBodyProps) => {
@@ -31,6 +32,7 @@ const TableBody = (props: TableBodyProps) => {
     emptyRows,
     name,
     handleRemove,
+    iconButtonId,
     loading,
   } = props;
 
@@ -80,8 +82,15 @@ const TableBody = (props: TableBodyProps) => {
                   <td>{item.Addresses.length}</td>
                   <td>{new Date(item.created_at).toDateString()}</td>
                   <td>
-                    <IconButton onClick={() => handleRemove(item.id)}>
-                      <Delete />
+                    <IconButton
+                      onClick={() => handleRemove(item.id)}
+                      disabled={loading}
+                    >
+                      {iconButtonId === item.id ? (
+                        <CircularProgress size="sm" variant="plain" />
+                      ) : (
+                        <Delete />
+                      )}
                     </IconButton>
                   </td>
                 </>
