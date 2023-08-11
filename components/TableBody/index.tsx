@@ -14,7 +14,9 @@ interface TableBodyProps {
   emptyRows: number;
   name: string;
   handleRemove: (value: string) => void;
+  loading: boolean;
 }
+
 const TableBody = (props: TableBodyProps) => {
   const {
     stableSort,
@@ -29,7 +31,9 @@ const TableBody = (props: TableBodyProps) => {
     emptyRows,
     name,
     handleRemove,
+    loading
   } = props;
+
   return (
     <tbody>
       {stableSort(list, getComparator(order, orderBy))
@@ -77,7 +81,7 @@ const TableBody = (props: TableBodyProps) => {
                   <td>{new Date(item.created_at).toDateString()}</td>
                   <td>
                     <IconButton onClick={() => handleRemove(item.id)}>
-                      <Delete />
+                      <Delete loading={loading ? true: false}/>
                     </IconButton>
                   </td>
                 </>

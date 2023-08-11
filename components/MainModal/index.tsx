@@ -12,7 +12,6 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
-import { Spinner } from "@nextui-org/react";
 
 interface MyModalProps {
   open: boolean;

@@ -121,6 +121,7 @@ const ContentList = ({
   };
 
   const handleRemoveContent = async (id: string) => {
+    setLoading(false)
     const orfans = addresses.filter(
       (address: any) => address.Contents.length === 0
     );
@@ -338,6 +339,7 @@ const ContentList = ({
                   emptyRows={emptyRows}
                   name="Content"
                   handleRemove={handleRemoveContent}
+                  loading={loading}
                 />
                 <TableFoot
                   list={contentList}

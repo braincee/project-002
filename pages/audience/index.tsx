@@ -306,6 +306,7 @@ const AddressList = ({
                   emptyRows={emptyRows}
                   name="Address"
                   handleRemove={handleRemoveAddress}
+                  loading={loading}
                 />
                 <TableFoot
                   list={addressList}
