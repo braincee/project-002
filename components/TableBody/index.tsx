@@ -31,7 +31,7 @@ const TableBody = (props: TableBodyProps) => {
     emptyRows,
     name,
     handleRemove,
-    loading
+    loading,
   } = props;
 
   return (
@@ -81,7 +81,7 @@ const TableBody = (props: TableBodyProps) => {
                   <td>{new Date(item.created_at).toDateString()}</td>
                   <td>
                     <IconButton onClick={() => handleRemove(item.id)}>
-                      <Delete loading={loading ? true: false}/>
+                      <Delete />
                     </IconButton>
                   </td>
                 </>

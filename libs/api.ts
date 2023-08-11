@@ -182,7 +182,7 @@ export const removeContent = async ({
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ id, orfans }),
+    body: JSON.stringify({ id, keep_orfans: orfans }),
   });
   return response;
 };

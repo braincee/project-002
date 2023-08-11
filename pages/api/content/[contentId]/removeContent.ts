@@ -5,7 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id, orfans } = req.body;
+  const { id, keep_orfans } = req.body;
+
   await Content.destroy({
     where: {
       id,
@@ -16,17 +17,17 @@ export default async function handler(
   });
   let addresses = JSON.stringify(allAddresses);
 
-  const filteredAddresses = JSON.parse(addresses).filter(
-    (address: any) => address.Contents.length == 0
-  );
-  filteredAddresses.forEach((address: any) => {
-    let set1 = new Set(orfans);
-    let set2 = new Set(orfans);
-    set2.add(address);
+  const filteredAddressesIds = JSON.parse(addresses)
+    .filter((address: any) => address.Contents.length === 0)
+    .map((address: any) => address.id);
+  filteredAddressesIds.forEach((id: any) => {
+    let set1 = new Set(keep_orfans);
+    let set2 = new Set(keep_orfans);
+    set2.add(id);
     if (set2.size > set1.size) {
       Address.destroy({
         where: {
-          id: address.id,
+          id: id,
         },
       });
     }
