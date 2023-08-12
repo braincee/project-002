@@ -54,7 +54,7 @@ const AddressList = ({
   addresses,
   contentItems,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("Contents");
   const [page, setPage] = useState(0);
@@ -121,7 +121,7 @@ const AddressList = ({
 
   const handleClick = (event: React.MouseEvent<unknown>, index: string) => {
     const selectedIndex = selected.indexOf(index);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, index);
@@ -168,9 +168,8 @@ const AddressList = ({
     setOpenMain(true);
   };
 
-  const handleAddContentItemAccess = async (setAddButtonClick: any) => {
+  const handleAddContentItemAccess = async () => {
     setLoading(true);
-    setAddButtonClick(true);
     await addContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
@@ -180,12 +179,10 @@ const AddressList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
-    setAddButtonClick(false);
   };
 
-  const handleRemoveContentItemAccess = async (setRemoveButtonClick: any) => {
+  const handleRemoveContentItemAccess = async () => {
     setLoading(true);
-    setRemoveButtonClick(true);
     await removeContentIdAddressIds({
       addressIds: selected,
       contentId: selectedOption,
@@ -195,7 +192,6 @@ const AddressList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
-    setRemoveButtonClick(false);
   };
 
   const labelDisplayedRows = ({
@@ -250,117 +246,132 @@ const AddressList = ({
   };
 
   return (
-    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
-      <Stack spacing={2}>
-        <Sheet
-          variant="outlined"
-          sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+    <Box
+      sx={{
+        px: { md: 4 },
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        width: "100%",
+      }}
+    >
+      <Sheet
+        variant="outlined"
+        sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+      >
+        <TableToolbar
+          numSelected={selected.length}
+          handleAccess={handleContentAccess}
+          buttonName={"Content"}
+          tableHeader={"Address List"}
+          handleAdd={handleAddAddress}
+        />
+        <Table
+          aria-label="stripe table"
+          stripe="even"
+          hoverRow
+          sx={{
+            "--TableCell-headBackground": "transparent",
+            "--TableCell-selectedBackground": (theme) =>
+              theme.vars.palette.primary.softBg,
+            "& thead th:nth-child(1)": {
+              width: "40px",
+            },
+            "& thead th:nth-child(2)": {
+              width: "55%",
+            },
+            "& thead th:nth-child(3)": {
+              width: "20%",
+            },
+            "& thead th:nth-child(4)": {
+              width: "21%",
+            },
+            "& tr > *:nth-child(n+3)": { textAlign: "center" },
+            "& tr > *:first-child": {
+              position: "sticky",
+              left: 0,
+            },
+            "& tr > *:last-child": {
+              position: "sticky",
+              right: 0,
+            },
+          }}
         >
-          <TableToolbar
+          <TableHead
             numSelected={selected.length}
-            handleAccess={handleContentAccess}
-            buttonName={"Content"}
-            tableHeader={"Address List"}
-            handleAdd={handleAddAddress}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={addressList.length}
+            name="Address"
           />
-          <Table
-            aria-label="stripe table"
-            stripe="even"
-            hoverRow
-            sx={{
-              "--TableCell-headBackground": "transparent",
-              "--TableCell-selectedBackground": (theme) =>
-                theme.vars.palette.primary.softBg,
-              "& thead th:nth-child(1)": {
-                width: "5%",
-              },
-              "& thead th:nth-child(2)": {
-                width: "55%",
-              },
-              "& thead th:nth-child(3)": {
-                width: "20%",
-              },
-              "& thead th:nth-child(4)": {
-                width: "20%",
-              },
-              "& tr > *:nth-child(n+3)": { textAlign: "center" },
-            }}
-          >
-            <TableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={addressList.length}
-              name="Address"
-            />
-            {addressList.length > 0 ? (
-              <>
-                <TableBody
-                  stableSort={stableSort}
-                  list={addressList}
-                  getComparator={getComparator}
-                  order={order}
-                  orderBy={orderBy}
-                  page={page}
-                  rowsPerPage={rowsPerPage}
-                  isSelected={isSelected}
-                  handleClick={handleClick}
-                  emptyRows={emptyRows}
-                  name="Address"
-                  handleRemove={handleRemoveAddress}
-                  loading={loading}
-                />
-                <TableFoot
-                  list={addressList}
-                  page={page}
-                  rowsPerPage={rowsPerPage}
-                  handleChangePage={handleChangePage}
-                  handleChangeRowsPerPage={handleChangeRowsPerPage}
-                  getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
-                  labelDisplayedRows={labelDisplayedRows}
-                />
-              </>
-            ) : (
-              <tbody>
-                <tr>
-                  <th scope="row" colSpan={12}>
-                    <Typography level="h4" color="neutral">
-                      No Address available
-                    </Typography>
-                  </th>
-                </tr>
-              </tbody>
-            )}
-          </Table>
-        </Sheet>
-        <MyModal
-          open={open}
-          setOpen={setOpen}
-          tableHeading="Add Content Access for selected Addresses"
-          placeholder="Select a content item"
-          items={contentItems}
-          handleAddItem={handleAddContentItemAccess}
-          handleRemoveItem={handleRemoveContentItemAccess}
-          setSelectedOption={setSelectedOption}
-          loading={loading}
-        />
-        <MainModal
-          open={openMain}
-          setOpen={setOpenMain}
-          tableHeading="Add New Address"
-          placeholder="Select a content item"
-          items={contentItems}
-          handleSubmit={handleSubmit}
-          setSelectedOption={setSelectedOption}
-          disable={disable}
-          name="Address"
-          setSelectedValues={setSelectedContents}
-          selectedValues={selectedContents}
-          loading={loading}
-        />
-      </Stack>
+          {addressList.length > 0 ? (
+            <>
+              <TableBody
+                stableSort={stableSort}
+                list={addressList}
+                getComparator={getComparator}
+                order={order}
+                orderBy={orderBy}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                isSelected={isSelected}
+                handleClick={handleClick}
+                emptyRows={emptyRows}
+                name="Address"
+                handleRemove={handleRemoveAddress}
+                loading={loading}
+              />
+              <TableFoot
+                list={addressList}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
+                labelDisplayedRows={labelDisplayedRows}
+              />
+            </>
+          ) : (
+            <tbody>
+              <tr>
+                <th scope="row" colSpan={12}>
+                  <Typography level="h4" color="neutral">
+                    No Address available
+                  </Typography>
+                </th>
+              </tr>
+            </tbody>
+          )}
+        </Table>
+      </Sheet>
+      <MyModal
+        open={open}
+        setOpen={setOpen}
+        tableHeading="Add Content Access for selected Addresses"
+        placeholder="Select a content item"
+        items={contentItems}
+        handleSaveItem={handleAddContentItemAccess}
+        setSelectedOption={setSelectedOption}
+        loading={loading}
+        selectedOption={selectedOption}
+        selected={selected}
+      />
+      <MainModal
+        open={openMain}
+        setOpen={setOpenMain}
+        tableHeading="Add New Address"
+        placeholder="Select a content item"
+        items={contentItems}
+        handleSubmit={handleSubmit}
+        setSelectedOption={setSelectedOption}
+        disable={disable}
+        name="Address"
+        setSelectedValues={setSelectedContents}
+        selectedValues={selectedContents}
+        loading={loading}
+      />
     </Box>
   );
 };

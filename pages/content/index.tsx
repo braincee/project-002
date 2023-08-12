@@ -30,6 +30,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
     await Address.findAll({
       order: [["created_at", "DESC"]],
+      include: { model: Content },
     })
   );
 
@@ -56,7 +57,7 @@ const ContentList = ({
   contentItems,
   addresses,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("Addresses");
   const [page, setPage] = useState(0);
@@ -156,7 +157,7 @@ const ContentList = ({
 
   const handleClick = (event: React.MouseEvent<unknown>, index: string) => {
     const selectedIndex = selected.indexOf(index);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, index);
@@ -203,9 +204,8 @@ const ContentList = ({
     setOpenMain(true);
   };
 
-  const handleAddAddressAccess = async (setAddButtonClick: any) => {
+  const handleAddAddressAccess = async () => {
     setLoading(true);
-    setAddButtonClick(true);
     await addAddressIdContentIds({
       contentIds: selected,
       addressId: selectedOption,
@@ -215,12 +215,10 @@ const ContentList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
-    setAddButtonClick(false);
   };
 
-  const handleRemoveAddressAccess = async (setRemoveButtonClick: any) => {
+  const handleRemoveAddressAccess = async () => {
     setLoading(true);
-    setRemoveButtonClick(true);
     await removeAddressIdContentIds({
       addressId: selectedOption,
       contentIds: selected,
@@ -230,7 +228,6 @@ const ContentList = ({
     setSelected([]);
     setOpen(false);
     setLoading(false);
-    setRemoveButtonClick(false);
   };
 
   const labelDisplayedRows = ({
@@ -285,7 +282,9 @@ const ContentList = ({
   };
 
   return (
-    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box
+      sx={{ px: { md: 4 }, display: "flex", flexDirection: "column", gap: 2 }}
+    >
       <Stack spacing={1}>
         <Sheet
           variant="outlined"
@@ -308,21 +307,32 @@ const ContentList = ({
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.primary.softBg,
               "& thead th:nth-child(1)": {
-                width: "5%",
+                width: "40px",
               },
               "& thead th:nth-child(2)": {
                 width: "25%",
               },
               "& thead th:nth-child(3)": {
-                width: "30%",
+                width: "25%",
               },
               "& thead th:nth-child(4)": {
-                width: "13%",
+                width: "20%",
               },
               "& thead th:nth-child(5)": {
                 width: "20%",
               },
+              "& thead th:nth-child(6)": {
+                width: "7%",
+              },
               "& tr > *:nth-child(n+4)": { textAlign: "center" },
+              "& tr > *:first-child": {
+                position: "sticky",
+                left: 0,
+              },
+              "& tr > *:last-child": {
+                position: "sticky",
+                right: 0,
+              },
             }}
           >
             <TableHead
@@ -381,10 +391,11 @@ const ContentList = ({
           tableHeading="Add / Remove Address Access for selected Content items"
           placeholder="Select an address"
           items={addresses}
-          handleAddItem={handleAddAddressAccess}
-          handleRemoveItem={handleRemoveAddressAccess}
+          handleSaveItem={handleAddAddressAccess}
           setSelectedOption={setSelectedOption}
           loading={loading}
+          selectedOption={selectedOption}
+          selected={selected}
         />
         <MainModal
           open={openMain}

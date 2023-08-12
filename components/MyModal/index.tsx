@@ -1,3 +1,4 @@
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import {
   Box,
   Button,
@@ -7,7 +8,7 @@ import {
   Select,
   Typography,
 } from "@mui/joy";
-import { useState } from "react";
+import truncateEthAddress from "truncate-eth-address";
 
 interface MyModalProps {
   open: boolean;
@@ -15,10 +16,11 @@ interface MyModalProps {
   tableHeading: string;
   placeholder: string;
   items: any[];
-  handleAddItem: (value: any) => void;
-  handleRemoveItem: (value: any) => void;
+  handleSaveItem: () => void;
   setSelectedOption: (value: string | null) => void;
   loading: boolean;
+  selectedOption: string | null;
+  selected: string[];
 }
 
 const MyModal = (props: MyModalProps) => {
@@ -28,14 +30,12 @@ const MyModal = (props: MyModalProps) => {
     tableHeading,
     placeholder,
     items,
-    handleAddItem,
-    handleRemoveItem,
+    handleSaveItem,
     setSelectedOption,
     loading,
+    selectedOption,
+    selected,
   } = props;
-
-  const [removeButtonClick, setRemoveButtonClick] = useState(false);
-  const [addButtonClick, setAddButtonClick] = useState(false);
 
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
@@ -74,37 +74,52 @@ const MyModal = (props: MyModalProps) => {
             },
           }}
         >
-          {items.map((item, index) => (
-            <Option value={item.id} key={item.id}>
-              <Typography sx={{ px: 2 }}>
-                {index + 1}. {item.title ? item.title : item.address}{" "}
-              </Typography>
-            </Option>
-          ))}
+          {items.map((item, index) => {
+            let status = false;
+            let itemIds: string[] = [];
+            if (item.title) {
+              item.Addresses.forEach((address: any) => {
+                itemIds.push(address.id);
+              });
+            } else if (item.address) {
+              item.Contents.forEach((content: any) => {
+                itemIds.push(content.id);
+              });
+            }
+            selected.forEach((value) => {
+              if (itemIds.includes(value)) {
+                status = true;
+                return;
+              }
+            });
+            return (
+              <Option value={item.id} key={item.id}>
+                <Typography
+                  sx={{ px: 2, display: "flex", alignItems: "center", gap: 1 }}
+                >
+                  {index + 1}.{" "}
+                  {item.title ? item.title : truncateEthAddress(item.address)}
+                  {status && <CheckBoxOutlinedIcon color="primary" />}
+                </Typography>
+              </Option>
+            );
+          })}
         </Select>
         <Box
           sx={{
             mt: 1,
             display: "flex",
             gap: 1,
-            flexDirection: { xs: "column", sm: "row-reverse" },
           }}
         >
           <Button
             variant="solid"
             color="primary"
-            onClick={() => handleAddItem(setAddButtonClick)}
-            loading={loading && addButtonClick ? true : false}
+            onClick={() => handleSaveItem()}
+            loading={loading}
+            disabled={selectedOption === null ? true : false}
           >
-            Add Access
-          </Button>
-          <Button
-            variant="solid"
-            color="danger"
-            onClick={() => handleRemoveItem(setRemoveButtonClick)}
-            loading={loading && removeButtonClick ? true : false}
-          >
-            Remove Access
+            Save
           </Button>
         </Box>
       </ModalDialog>

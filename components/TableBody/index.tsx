@@ -1,5 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { Checkbox, CircularProgress, IconButton } from "@mui/joy";
+import truncateEthAddress from "truncate-eth-address";
 
 interface TableBodyProps {
   stableSort: (value1: any[], value2: any) => any[];
@@ -97,7 +98,7 @@ const TableBody = (props: TableBodyProps) => {
               ) : (
                 <>
                   <th id={labelId} scope="row">
-                    {item.address}
+                    {truncateEthAddress(item.address)}
                   </th>
                   <td>{item.Contents.length}</td>
                   <td>{new Date(item.created_at).toDateString()}</td>
