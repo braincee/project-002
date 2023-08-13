@@ -109,6 +109,8 @@ const MyModal = (props: MyModalProps) => {
                   return;
                 }
               });
+            } else {
+              hasAccess.clear();
             }
             return (
               <Option value={item.id} key={item.id}>
