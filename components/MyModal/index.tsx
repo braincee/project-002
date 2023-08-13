@@ -8,6 +8,7 @@ import {
   Select,
   Typography,
 } from "@mui/joy";
+import { useEffect, useState } from "react";
 import truncateEthAddress from "truncate-eth-address";
 
 interface MyModalProps {
@@ -16,12 +17,15 @@ interface MyModalProps {
   tableHeading: string;
   placeholder: string;
   items: any[];
-  handleSaveItem: () => void;
+  handleAddAccess: () => void;
+  handleRemoveAccess: () => void;
   setSelectedOption: (value: string | null) => void;
   loading: boolean;
   selectedOption: string | null;
   selected: string[];
 }
+
+const hasAccess = new Set();
 
 const MyModal = (props: MyModalProps) => {
   const {
@@ -30,7 +34,8 @@ const MyModal = (props: MyModalProps) => {
     tableHeading,
     placeholder,
     items,
-    handleSaveItem,
+    handleAddAccess,
+    handleRemoveAccess,
     setSelectedOption,
     loading,
     selectedOption,
@@ -39,6 +44,15 @@ const MyModal = (props: MyModalProps) => {
 
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
+  };
+  console.log(selectedOption, hasAccess);
+
+  const handleAddOrRemove = () => {
+    if (hasAccess.size > 0 && hasAccess.has(selectedOption)) {
+      handleRemoveAccess();
+    } else {
+      handleAddAccess();
+    }
   };
 
   return (
@@ -77,21 +91,25 @@ const MyModal = (props: MyModalProps) => {
           {items.map((item, index) => {
             let status = false;
             let itemIds: string[] = [];
-            if (item.title) {
-              item.Addresses.forEach((address: any) => {
-                itemIds.push(address.id);
-              });
-            } else if (item.address) {
-              item.Contents.forEach((content: any) => {
-                itemIds.push(content.id);
+            if (open) {
+              if (item.title) {
+                item.Addresses.forEach((address: any) => {
+                  itemIds.push(address.id);
+                  console.log("test");
+                });
+              } else if (item.address) {
+                item.Contents.forEach((content: any) => {
+                  itemIds.push(content.id);
+                });
+              }
+              selected.forEach((value) => {
+                if (itemIds.includes(value)) {
+                  hasAccess.add(item.id);
+                  status = true;
+                  return;
+                }
               });
             }
-            selected.forEach((value) => {
-              if (itemIds.includes(value)) {
-                status = true;
-                return;
-              }
-            });
             return (
               <Option value={item.id} key={item.id}>
                 <Typography
@@ -115,7 +133,7 @@ const MyModal = (props: MyModalProps) => {
           <Button
             variant="solid"
             color="primary"
-            onClick={() => handleSaveItem()}
+            onClick={handleAddOrRemove}
             loading={loading}
             disabled={selectedOption === null ? true : false}
           >
