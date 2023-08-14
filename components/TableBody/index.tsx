@@ -1,5 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { Checkbox, CircularProgress, IconButton } from "@mui/joy";
+import { useEffect, useState } from "react";
 import truncateEthAddress from "truncate-eth-address";
 
 interface TableBodyProps {
@@ -17,6 +18,9 @@ interface TableBodyProps {
   handleRemove: (value: string) => void;
   iconButtonId?: string;
   loading?: boolean;
+  deleteOpen?: boolean;
+  setDeleteOpen?: (value: boolean) => void;
+  keepOrfans?: boolean | undefined;
 }
 
 const TableBody = (props: TableBodyProps) => {
@@ -35,7 +39,25 @@ const TableBody = (props: TableBodyProps) => {
     handleRemove,
     iconButtonId,
     loading,
+    deleteOpen,
+    setDeleteOpen,
+    keepOrfans,
   } = props;
+
+  const [removeId, setRemoveId] = useState<string>("");
+
+  const setOrfanValue = (id: string) => {
+    if (name === "Content") {
+      setDeleteOpen?.(true);
+      setRemoveId(id);
+    }
+  };
+
+  useEffect(() => {
+    if (keepOrfans !== undefined) {
+      handleRemove(removeId);
+    }
+  }, [keepOrfans]);
 
   return (
     <tbody>
@@ -84,7 +106,7 @@ const TableBody = (props: TableBodyProps) => {
                   <td>{new Date(item.created_at).toDateString()}</td>
                   <td>
                     <IconButton
-                      onClick={() => handleRemove(item.id)}
+                      onClick={() => setOrfanValue(item.id)}
                       disabled={loading}
                     >
                       {iconButtonId === item.id ? (

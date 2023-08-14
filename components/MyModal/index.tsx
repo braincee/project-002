@@ -8,7 +8,6 @@ import {
   Select,
   Typography,
 } from "@mui/joy";
-import { useEffect, useState } from "react";
 import truncateEthAddress from "truncate-eth-address";
 
 interface MyModalProps {
@@ -45,7 +44,6 @@ const MyModal = (props: MyModalProps) => {
   const handleChange = (event: any, newValue: string | null) => {
     setSelectedOption(newValue);
   };
-  console.log(selectedOption, hasAccess);
 
   const handleAddOrRemove = () => {
     if (hasAccess.size > 0 && hasAccess.has(selectedOption)) {
@@ -95,7 +93,6 @@ const MyModal = (props: MyModalProps) => {
               if (item.title) {
                 item.Addresses.forEach((address: any) => {
                   itemIds.push(address.id);
-                  console.log("test");
                 });
               } else if (item.address) {
                 item.Contents.forEach((content: any) => {

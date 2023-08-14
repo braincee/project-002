@@ -6,31 +6,43 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { id, keep_orfans } = req.body;
+  if (keep_orfans) {
+    await Content.destroy({
+      where: {
+        id,
+      },
+    });
+  } else {
+    let allAddresses = await Address.findAll({
+      include: { model: Content },
+    });
+    let addresses = JSON.stringify(allAddresses);
+    const unlinkedAddresses = JSON.parse(addresses)
+      .filter((address: any) => address.Contents.length === 0)
+      .map((address: any) => address.id);
 
-  await Content.destroy({
-    where: {
-      id,
-    },
-  });
-  const allAddresses = await Address.findAll({
-    include: { model: Content },
-  });
-  let addresses = JSON.stringify(allAddresses);
+    await Content.destroy({
+      where: {
+        id,
+      },
+    });
 
-  const filteredAddressesIds = JSON.parse(addresses)
-    .filter((address: any) => address.Contents.length === 0)
-    .map((address: any) => address.id);
-  filteredAddressesIds.forEach((id: any) => {
-    let set1 = new Set(keep_orfans);
-    let set2 = new Set(keep_orfans);
-    set2.add(id);
-    if (set2.size > set1.size) {
-      Address.destroy({
-        where: {
-          id: id,
-        },
-      });
-    }
-  });
+    allAddresses = await Address.findAll({
+      include: { model: Content },
+    });
+    addresses = JSON.stringify(allAddresses);
+    JSON.parse(addresses).forEach((address: any) => {
+      if (
+        address.Contents.length === 0 &&
+        !unlinkedAddresses.includes(address.id)
+      ) {
+        Address.destroy({
+          where: {
+            id: address.id,
+          },
+        });
+      }
+    });
+  }
   res.status(200).json({ response: "Success" });
 }

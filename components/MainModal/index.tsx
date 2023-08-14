@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
 
-interface MyModalProps {
+interface MainModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   tableHeading: string;
@@ -29,7 +29,7 @@ interface MyModalProps {
   loading: boolean;
 }
 
-const MainModal = (props: MyModalProps) => {
+const MainModal = (props: MainModalProps) => {
   const {
     open,
     setOpen,

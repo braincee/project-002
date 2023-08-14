@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Box, Sheet, Stack, Table, Typography } from "@mui/joy";
+import {
+  Box,
+  Modal,
+  ModalDialog,
+  Radio,
+  RadioGroup,
+  Sheet,
+  Stack,
+  Table,
+  Typography,
+} from "@mui/joy";
 import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
 import {
@@ -70,7 +80,9 @@ const ContentList = ({
   const [file, setFile] = useState<any>("");
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [iconButtonId, setIconButtonId] = useState("");
+  const [keepOrfans, setKeepOrfans] = useState();
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -127,14 +139,16 @@ const ContentList = ({
     setIconButtonId(id);
     setLoading(true);
     const allAddresses = await getAddresses();
+    const keep_orfans = keepOrfans;
     const orfans = allAddresses.response
       .filter((address: any) => address.Contents.length === 0)
       .map((address: any) => address.id);
-    await removeContent({ id, orfans });
+    await removeContent({ id, keep_orfans });
     const { response } = await getContentItems();
     setContentList(response);
     setIconButtonId("");
     setLoading(false);
+    setKeepOrfans(undefined);
   };
 
   const handleRequestSort = (
@@ -281,6 +295,14 @@ const ContentList = ({
     return stabilizedThis.map((el) => el[0]);
   };
 
+  const handleKeepOrfans = (event: any) => {
+    setKeepOrfans(event.target.value == "true");
+    setTimeout(() => {
+      setDeleteOpen(false);
+    }, 1000);
+  };
+
+  console.log(keepOrfans);
   return (
     <Box
       sx={{ px: { md: 4 }, display: "flex", flexDirection: "column", gap: 2 }}
@@ -361,6 +383,9 @@ const ContentList = ({
                   handleRemove={handleRemoveContent}
                   loading={loading}
                   iconButtonId={iconButtonId}
+                  deleteOpen={deleteOpen}
+                  setDeleteOpen={setDeleteOpen}
+                  keepOrfans={keepOrfans}
                 />
                 <TableFoot
                   list={contentList}
@@ -413,6 +438,40 @@ const ContentList = ({
           selectedValues={selectedAddresses}
           loading={loading}
         />
+        <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+          <ModalDialog
+            aria-labelledby="nested-modal-title"
+            aria-describedby="nested-modal-description"
+            sx={(theme) => ({
+              [theme.breakpoints.only("xs")]: {
+                top: "unset",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                borderRadius: 0,
+                transform: "none",
+                maxWidth: "unset",
+              },
+            })}
+          >
+            <Typography id="nested-modal-title" level="h2">
+              Do you want to Keep / Delete orfans
+            </Typography>
+            <RadioGroup
+              orientation="horizontal"
+              name="keep_orfans"
+              onChange={handleKeepOrfans}
+            >
+              <Radio value="true" label="Keep" variant="outlined" size="lg" />
+              <Radio
+                value="false"
+                label="Delete"
+                variant="outlined"
+                size="lg"
+              />
+            </RadioGroup>
+          </ModalDialog>
+        </Modal>
       </Stack>
     </Box>
   );

@@ -172,17 +172,17 @@ export const removeAddressIdContentIds = async ({
 
 export const removeContent = async ({
   id,
-  orfans,
+  keep_orfans,
 }: {
   id: string;
-  orfans: any[];
+  keep_orfans: boolean;
 }) => {
   const response = await fetch(`/api/content/${id}/removeContent`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ id, keep_orfans: orfans }),
+    body: JSON.stringify({ id, keep_orfans }),
   });
   return response;
 };
