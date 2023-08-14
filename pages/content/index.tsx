@@ -331,20 +331,18 @@ const ContentList = ({
                 width: "40px",
               },
               "& thead th:nth-child(2)": {
-                width: "25%",
+                width: { md: "25%" },
               },
               "& thead th:nth-child(3)": {
-                width: "25%",
+                width: { md: "25%" },
               },
               "& thead th:nth-child(4)": {
-                width: "20%",
+                width: { md: "20%" },
               },
               "& thead th:nth-child(5)": {
-                width: "20%",
+                width: { md: "20%" },
               },
-              "& thead th:nth-child(6)": {
-                width: "7%",
-              },
+
               "& tr > *:nth-child(n+4)": { textAlign: "center" },
               "& tr > *:first-child": {
                 position: "sticky",
