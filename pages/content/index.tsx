@@ -454,12 +454,13 @@ const ContentList = ({
               },
             })}
           >
+            {" "}
             <Typography
               id="nested-modal-title"
               level="h2"
               sx={{ mb: { xs: 2 } }}
             >
-              Do you want to Keep / Delete orfans
+              Keep / Delete Address(es)
             </Typography>
             <RadioGroup
               orientation="horizontal"
