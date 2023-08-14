@@ -175,7 +175,7 @@ export const removeContent = async ({
   keep_orfans,
 }: {
   id: string;
-  keep_orfans: boolean | undefined;
+  keep_orfans: boolean | null;
 }) => {
   const response = await fetch(`/api/content/${id}/removeContent`, {
     headers: {

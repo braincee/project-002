@@ -17,6 +17,7 @@ import {
   addContent,
   addContentIdAddressIds,
   addFileToContentsStorage,
+  getAddresses,
   getContentItems,
   getFilePublicURL,
   removeAddressIdContentIds,
@@ -76,12 +77,13 @@ const ContentList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [contentList, setContentList] = useState(contentItems);
+  const [addressList, setAddressList] = useState(addresses);
   const [file, setFile] = useState<any>("");
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [iconButtonId, setIconButtonId] = useState("");
-  const [keepOrfans, setKeepOrfans] = useState<boolean | undefined>();
+  const [keepOrfans, setKeepOrfans] = useState<boolean | null>(null);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -143,7 +145,10 @@ const ContentList = ({
     setContentList(response);
     setIconButtonId("");
     setLoading(false);
-    setKeepOrfans(undefined);
+    setKeepOrfans(null);
+    setSelected([]);
+    const allAddresses = await getAddresses();
+    setAddressList(allAddresses.response);
   };
 
   const handleRequestSort = (
@@ -297,7 +302,6 @@ const ContentList = ({
     }, 1000);
   };
 
-  console.log(keepOrfans);
   return (
     <Box
       sx={{ px: { md: 4 }, display: "flex", flexDirection: "column", gap: 2 }}
@@ -410,7 +414,7 @@ const ContentList = ({
           setOpen={setOpen}
           tableHeading="Add / Remove Address Access for selected Content items"
           placeholder="Select an address"
-          items={addresses}
+          items={addressList}
           handleAddAccess={handleAddAddressAccess}
           handleRemoveAccess={handleRemoveAddressAccess}
           setSelectedOption={setSelectedOption}
@@ -423,7 +427,7 @@ const ContentList = ({
           setOpen={setOpenMain}
           tableHeading="Add New Content Item"
           placeholder="Select an address"
-          items={addresses}
+          items={addressList}
           handleSubmit={handleSubmit}
           setSelectedOption={setSelectedOption}
           disable={disable}

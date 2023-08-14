@@ -20,7 +20,7 @@ interface TableBodyProps {
   loading?: boolean;
   deleteOpen?: boolean;
   setDeleteOpen?: (value: boolean) => void;
-  keepOrfans?: boolean | undefined;
+  keepOrfans?: boolean | null;
 }
 
 const TableBody = (props: TableBodyProps) => {
@@ -54,7 +54,7 @@ const TableBody = (props: TableBodyProps) => {
   };
 
   useEffect(() => {
-    if (keepOrfans !== undefined) {
+    if (keepOrfans !== null) {
       handleRemove(removeId);
     }
   }, [keepOrfans]);
