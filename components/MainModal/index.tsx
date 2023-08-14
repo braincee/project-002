@@ -81,6 +81,7 @@ const MainModal = (props: MainModalProps) => {
           [theme.breakpoints.not("xs")]: {
             maxHeight: "98%",
             overflow: "auto",
+            minWidth: "500px",
           },
         })}
       >
@@ -101,7 +102,6 @@ const MainModal = (props: MainModalProps) => {
             event.preventDefault();
             handleSubmit(event);
           }}
-          style={{ minWidth: "500px" }}
           method="POST"
         >
           <Stack spacing={2} direction={{ xs: "column" }}>

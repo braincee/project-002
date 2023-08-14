@@ -450,10 +450,15 @@ const ContentList = ({
                 borderRadius: 0,
                 transform: "none",
                 maxWidth: "unset",
+                paddingY: 3,
               },
             })}
           >
-            <Typography id="nested-modal-title" level="h2">
+            <Typography
+              id="nested-modal-title"
+              level="h2"
+              sx={{ mb: { xs: 2 } }}
+            >
               Do you want to Keep / Delete orfans
             </Typography>
             <RadioGroup
