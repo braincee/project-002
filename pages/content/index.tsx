@@ -17,7 +17,6 @@ import {
   addContent,
   addContentIdAddressIds,
   addFileToContentsStorage,
-  getAddresses,
   getContentItems,
   getFilePublicURL,
   removeAddressIdContentIds,
@@ -82,7 +81,7 @@ const ContentList = ({
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [iconButtonId, setIconButtonId] = useState("");
-  const [keepOrfans, setKeepOrfans] = useState();
+  const [keepOrfans, setKeepOrfans] = useState<boolean | undefined>();
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -138,11 +137,7 @@ const ContentList = ({
   const handleRemoveContent = async (id: string) => {
     setIconButtonId(id);
     setLoading(true);
-    const allAddresses = await getAddresses();
     const keep_orfans = keepOrfans;
-    const orfans = allAddresses.response
-      .filter((address: any) => address.Contents.length === 0)
-      .map((address: any) => address.id);
     await removeContent({ id, keep_orfans });
     const { response } = await getContentItems();
     setContentList(response);
