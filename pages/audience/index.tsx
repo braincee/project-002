@@ -257,7 +257,37 @@ const AddressList = ({
     >
       <Sheet
         variant="outlined"
-        sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+        sx={{
+          width: "100%",
+          boxShadow: "sm",
+          borderRadius: "sm",
+          overflow: "auto",
+          // background needs to have transparency to show the scrolling shadows
+          "--TableRow-stripeBackground": "rgba(0 0 0 / 0.04)",
+          "--TableRow-hoverBackground": "rgba(0 0 0 / 0.08)",
+          background: (
+            theme
+          ) => `linear-gradient(to right, ${theme.vars.palette.background.surface} 30%, rgba(255, 255, 255, 0)),
+          linear-gradient(to right, rgba(255, 255, 255, 0), ${theme.vars.palette.background.surface} 70%) 0 100%,
+          radial-gradient(
+            farthest-side at 0 50%,
+            rgba(0, 0, 0, 0.12),
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(
+              farthest-side at 100% 50%,
+              rgba(0, 0, 0, 0.12),
+              rgba(0, 0, 0, 0)
+            )
+            0 100%`,
+          backgroundSize:
+            "40px calc(100% - var(--TableCell-height)), 40px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height))",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "local, local, scroll, scroll",
+          backgroundPosition:
+            "var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height), var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height)",
+          backgroundColor: "background.surface",
+        }}
       >
         <TableToolbar
           numSelected={selected.length}
@@ -278,22 +308,24 @@ const AddressList = ({
               width: "40px",
             },
             "& thead th:nth-child(2)": {
-              width: "55%",
+              width: { xs: "150px", md: "55%" },
             },
             "& thead th:nth-child(3)": {
-              width: "20%",
+              width: { xs: "120px", md: "20%" },
             },
             "& thead th:nth-child(4)": {
-              width: "21%",
+              width: "100px",
             },
             "& tr > *:nth-child(n+3)": { textAlign: "center" },
             "& tr > *:first-child": {
               position: "sticky",
               left: 0,
+              bgcolor: "background.surface",
             },
             "& tr > *:last-child": {
               position: "sticky",
               right: 0,
+              bgcolor: "background.surface",
             },
           }}
         >
