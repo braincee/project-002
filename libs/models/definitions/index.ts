@@ -34,7 +34,7 @@ interface ContentAddress
 interface Log
   extends Model<InferAttributes<Log>, InferCreationAttributes<Log>> {
   id: UUIDV4;
-  log: string;
+  log: Date;
 }
 
 interface User
@@ -134,7 +134,7 @@ export const Log = sequelize.define<Log>(
       allowNull: false,
     },
     log: {
-      type: DataTypes.TEXT,
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },

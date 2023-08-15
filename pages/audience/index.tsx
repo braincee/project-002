@@ -64,6 +64,7 @@ const AddressList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [addressList, setAddressList] = useState<any[]>(addresses);
+  const [contentList, setContentList] = useState<any[]>(contentItems);
   const [selectedContents, setSelectedContents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -298,14 +299,13 @@ const AddressList = ({
         />
         <Table
           aria-label="stripe table"
-          stripe="even"
           hoverRow
           sx={{
             "--TableCell-headBackground": "transparent",
             "--TableCell-selectedBackground": (theme) =>
               theme.vars.palette.primary.softBg,
             "& thead th:nth-child(1)": {
-              width: "40px",
+              width: { xs: "40px", md: "5%" },
             },
             "& thead th:nth-child(2)": {
               width: { xs: "150px", md: "55%" },
@@ -314,7 +314,7 @@ const AddressList = ({
               width: { xs: "120px", md: "20%" },
             },
             "& thead th:nth-child(4)": {
-              width: "100px",
+              width: { xs: "100px", md: "20%" },
             },
             "& tr > *:nth-child(n+3)": { textAlign: "center" },
             "& tr > *:first-child": {
@@ -383,7 +383,7 @@ const AddressList = ({
         setOpen={setOpen}
         tableHeading="Add Content Access for selected Addresses"
         placeholder="Select a content item"
-        items={contentItems}
+        items={contentList}
         handleAddAccess={handleAddContentItemAccess}
         handleRemoveAccess={handleRemoveContentItemAccess}
         setSelectedOption={setSelectedOption}
@@ -396,7 +396,7 @@ const AddressList = ({
         setOpen={setOpenMain}
         tableHeading="Add New Address"
         placeholder="Select a content item"
-        items={contentItems}
+        items={contentList}
         handleSubmit={handleSubmit}
         setSelectedOption={setSelectedOption}
         disable={disable}
