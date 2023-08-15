@@ -13,13 +13,13 @@ export default async function handler(
       },
     });
   } else {
-    let allAddresses = await Address.findAll({
-      include: { model: Content },
+    const content = await Content.findByPk(id, {
+      include: {
+        model: Address,
+      },
     });
-    let addresses = JSON.stringify(allAddresses);
-    const unlinkedAddresses = JSON.parse(addresses)
-      .filter((address: any) => address.Contents.length === 0)
-      .map((address: any) => address.id);
+
+    const addresses = JSON.parse(JSON.stringify(content)).Addresses;
 
     await Content.destroy({
       where: {
@@ -27,22 +27,13 @@ export default async function handler(
       },
     });
 
-    allAddresses = await Address.findAll({
-      include: { model: Content },
-    });
-    addresses = JSON.stringify(allAddresses);
-    JSON.parse(addresses).forEach((address: any) => {
-      if (
-        address.Contents.length === 0 &&
-        !unlinkedAddresses.includes(address.id)
-      ) {
-        Address.destroy({
-          where: {
-            id: address.id,
-          },
-        });
-      }
-    });
+    if (addresses.length === 1) {
+      Address.destroy({
+        where: {
+          id: addresses[0].id,
+        },
+      });
+    }
   }
   res.status(200).json({ response: "Success" });
 }

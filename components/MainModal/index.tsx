@@ -12,6 +12,7 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
+import truncateEthAddress from "truncate-eth-address";
 
 interface MainModalProps {
   open: boolean;
@@ -156,7 +157,8 @@ const MainModal = (props: MainModalProps) => {
               {items.map((item, index) => (
                 <Option value={item} key={item.id}>
                   <Typography sx={{ px: 2 }}>
-                    {index + 1}. {item.title ? item.title : item.address}
+                    {index + 1}.{" "}
+                    {item.title ? item.title : truncateEthAddress(item.address)}
                   </Typography>
                 </Option>
               ))}
