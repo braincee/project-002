@@ -22,17 +22,17 @@ export default function Index() {
       container
       sx={{
         width: "100%",
-        maxWidth: "1000px",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
+        minHeight: "98vh",
         mx: "auto",
-        mt: { xs: "2rem", md: "6rem" },
-        p: "2rem",
       }}
       spacing={3}
     >
-      <Grid lg={4} md={6} xs={12}>
+      <Grid
+        lg={4}
+        md={6}
+        xs={12}
+        sx={{ alignItems: "center", display: "grid" }}
+      >
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -57,15 +57,13 @@ export default function Index() {
           </Button>
         </form>
       </Grid>
-      <Grid lg={8} md={6} xs={12}>
-        <AspectRatio variant="outlined" objectFit="fill">
-          <Image
-            className="nft-image"
-            src={NFTImage}
-            layout="fill"
-            alt="NTF Image"
-          />
-        </AspectRatio>
+      <Grid lg={8} md={6} xs={12} sx={{ minHeight: "100%" }}>
+        <Image
+          className="nft-image"
+          src={NFTImage}
+          alt="NTF Image"
+          style={{ height: "100%", width: "100%" }}
+        />
       </Grid>
     </Grid>
   );

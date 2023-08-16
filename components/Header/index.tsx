@@ -11,12 +11,14 @@ import {
 import NextLink from "next/link";
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
+import NextProgress from "next-progress";
 
 const Header: React.FC = () => {
   const router = useRouter();
 
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2 }}>
+      <NextProgress delay={100} options={{ showSpinner: false }} />
       <Select
         placeholder={
           router.pathname == "/"
