@@ -41,6 +41,7 @@ interface User
   extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   id: UUIDV4;
   name: string;
+  email: string;
   password: string;
 }
 
@@ -156,6 +157,10 @@ export const User = sequelize.define<User>(
       allowNull: false,
     },
     name: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    email: {
       type: DataTypes.TEXT,
       allowNull: false,
     },

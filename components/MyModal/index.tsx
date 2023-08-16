@@ -1,13 +1,15 @@
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import {
+  Autocomplete,
+  AutocompleteOption,
   Box,
   Button,
+  ListItemDecorator,
   Modal,
   ModalDialog,
-  Option,
-  Select,
   Typography,
 } from "@mui/joy";
+import { useEffect } from "react";
 import truncateEthAddress from "truncate-eth-address";
 
 interface MyModalProps {
@@ -25,6 +27,7 @@ interface MyModalProps {
 }
 
 const hasAccess = new Set();
+let options: any = [];
 
 const MyModal = (props: MyModalProps) => {
   const {
@@ -41,8 +44,8 @@ const MyModal = (props: MyModalProps) => {
     selected,
   } = props;
 
-  const handleChange = (event: any, newValue: string | null) => {
-    setSelectedOption(newValue);
+  const handleChange = (event: any, newValue: any | null) => {
+    setSelectedOption(newValue && newValue.id);
   };
 
   const handleAddOrRemove = () => {
@@ -52,6 +55,42 @@ const MyModal = (props: MyModalProps) => {
       handleAddAccess();
     }
   };
+
+  useEffect(() => {
+    items.map((item, index) => {
+      let status = false;
+      let itemIds: string[] = [];
+      if (open) {
+        if (item.title) {
+          item.Addresses.forEach((address: any) => {
+            itemIds.push(address.id);
+          });
+        } else if (item.address) {
+          item.Contents.forEach((content: any) => {
+            itemIds.push(content.id);
+          });
+        }
+        selected.forEach((value) => {
+          if (itemIds.includes(value)) {
+            hasAccess.add(item.id);
+            status = true;
+            return;
+          }
+        });
+        options.push({
+          label: item.title ? item.title : truncateEthAddress(item.address),
+          id: item.id,
+          index: index + 1,
+          title: item.title || "",
+          address: item.address || "",
+          status: status,
+        });
+      } else {
+        hasAccess.clear();
+        options = [];
+      }
+    });
+  }, [open, hasAccess]);
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -73,10 +112,9 @@ const MyModal = (props: MyModalProps) => {
         <Typography id="nested-modal-title" level="h2">
           {tableHeading}
         </Typography>
-        <Select
-          placeholder={placeholder}
+        <Autocomplete
           onChange={handleChange}
-          defaultValue={placeholder}
+          placeholder={placeholder}
           slotProps={{
             listbox: {
               sx: {
@@ -85,43 +123,24 @@ const MyModal = (props: MyModalProps) => {
               },
             },
           }}
-        >
-          {items.map((item, index) => {
-            let status = false;
-            let itemIds: string[] = [];
-            if (open) {
-              if (item.title) {
-                item.Addresses.forEach((address: any) => {
-                  itemIds.push(address.id);
-                });
-              } else if (item.address) {
-                item.Contents.forEach((content: any) => {
-                  itemIds.push(content.id);
-                });
-              }
-              selected.forEach((value) => {
-                if (itemIds.includes(value)) {
-                  hasAccess.add(item.id);
-                  status = true;
-                  return;
-                }
-              });
-            } else {
-              hasAccess.clear();
-            }
-            return (
-              <Option value={item.id} key={item.id}>
+          getOptionLabel={(option) => option.label}
+          options={options}
+          renderOption={(props, option) => (
+            <AutocompleteOption {...props}>
+              <ListItemDecorator key={option.id}>
                 <Typography
                   sx={{ px: 2, display: "flex", alignItems: "center", gap: 1 }}
                 >
-                  {index + 1}.{" "}
-                  {item.title ? item.title : truncateEthAddress(item.address)}
-                  {status && <CheckBoxOutlinedIcon color="primary" />}
+                  {option.index}.{" "}
+                  {option.title
+                    ? option.title
+                    : truncateEthAddress(option.address)}
+                  {option.status && <CheckBoxOutlinedIcon color="primary" />}
                 </Typography>
-              </Option>
-            );
-          })}
-        </Select>
+              </ListItemDecorator>
+            </AutocompleteOption>
+          )}
+        />
         <Box
           sx={{
             mt: 1,
