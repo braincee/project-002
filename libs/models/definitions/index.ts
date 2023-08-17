@@ -40,9 +40,9 @@ interface Log
 interface User
   extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   id: UUIDV4;
-  name: string;
   email: string;
   password: string;
+  invited: boolean;
 }
 
 const Address = sequelize.define<Address>(
@@ -156,17 +156,15 @@ export const User = sequelize.define<User>(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
     email: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     password: {
       type: DataTypes.TEXT,
-      allowNull: false,
+    },
+    invited: {
+      type: DataTypes.BOOLEAN,
     },
   },
   {
