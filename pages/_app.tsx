@@ -54,6 +54,10 @@ export default function MyApp(props: MyAppProps) {
           <Component {...pageProps} />
         </Layout>
       </CssVarsProvider>
+      const { pathname } = useRouter() 
+        if (['/serve'].includes(pathname)) {
+        return <Component {...pageProps} />
+        }
     </CacheProvider>
   );
 }
