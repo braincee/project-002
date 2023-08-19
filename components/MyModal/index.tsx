@@ -1,12 +1,16 @@
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import {
+  Autocomplete,
+  AutocompleteOption,
   Box,
   Button,
+  ListItemDecorator,
   Modal,
   ModalDialog,
-  Option,
-  Select,
   Typography,
 } from "@mui/joy";
+import { useEffect } from "react";
+import truncateEthAddress from "truncate-eth-address";
 
 interface MyModalProps {
   open: boolean;
@@ -14,11 +18,16 @@ interface MyModalProps {
   tableHeading: string;
   placeholder: string;
   items: any[];
-  handleAddItem: () => void;
-  handleRemoveItem: () => void;
+  handleAddAccess: () => void;
+  handleRemoveAccess: () => void;
   setSelectedOption: (value: string | null) => void;
   loading: boolean;
+  selectedOption: string | null;
+  selected: string[];
 }
+
+const hasAccess = new Set();
+let options: any = [];
 
 const MyModal = (props: MyModalProps) => {
   const {
@@ -27,15 +36,61 @@ const MyModal = (props: MyModalProps) => {
     tableHeading,
     placeholder,
     items,
-    handleAddItem,
-    handleRemoveItem,
+    handleAddAccess,
+    handleRemoveAccess,
     setSelectedOption,
     loading,
+    selectedOption,
+    selected,
   } = props;
 
-  const handleChange = (event: any, newValue: string | null) => {
-    setSelectedOption(newValue);
+  const handleChange = (event: any, newValue: any | null) => {
+    setSelectedOption(newValue && newValue.id);
   };
+
+  const handleAddOrRemove = () => {
+    if (hasAccess.size > 0 && hasAccess.has(selectedOption)) {
+      handleRemoveAccess();
+    } else {
+      handleAddAccess();
+    }
+  };
+
+  useEffect(() => {
+    items.map((item, index) => {
+      let status = false;
+      let itemIds: string[] = [];
+      if (open) {
+        if (item.title) {
+          item.Addresses.forEach((address: any) => {
+            itemIds.push(address.id);
+          });
+        } else if (item.address) {
+          item.Contents.forEach((content: any) => {
+            itemIds.push(content.id);
+          });
+        }
+        selected.forEach((value) => {
+          if (itemIds.includes(value)) {
+            hasAccess.add(item.id);
+            status = true;
+            return;
+          }
+        });
+        options.push({
+          label: item.title ? item.title : truncateEthAddress(item.address),
+          id: item.id,
+          index: index + 1,
+          title: item.title || "",
+          address: item.address || "",
+          status: status,
+        });
+      } else {
+        hasAccess.clear();
+        options = [];
+      }
+    });
+  }, [open, hasAccess]);
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -57,10 +112,9 @@ const MyModal = (props: MyModalProps) => {
         <Typography id="nested-modal-title" level="h2">
           {tableHeading}
         </Typography>
-        <Select
-          placeholder={placeholder}
+        <Autocomplete
           onChange={handleChange}
-          defaultValue={placeholder}
+          placeholder={placeholder}
           slotProps={{
             listbox: {
               sx: {
@@ -69,38 +123,39 @@ const MyModal = (props: MyModalProps) => {
               },
             },
           }}
-        >
-          {items.map((item, index) => (
-            <Option value={item.id} key={item.id}>
-              <Typography sx={{ px: 2 }}>
-                {index + 1}. {item.title ? item.title : item.address}{" "}
-              </Typography>
-            </Option>
-          ))}
-        </Select>
+          getOptionLabel={(option) => option.label}
+          options={options}
+          renderOption={(props, option) => (
+            <AutocompleteOption {...props}>
+              <ListItemDecorator key={option.id}>
+                <Typography
+                  sx={{ px: 2, display: "flex", alignItems: "center", gap: 1 }}
+                >
+                  {option.index}.{" "}
+                  {option.title
+                    ? option.title
+                    : truncateEthAddress(option.address)}
+                  {option.status && <CheckBoxOutlinedIcon color="primary" />}
+                </Typography>
+              </ListItemDecorator>
+            </AutocompleteOption>
+          )}
+        />
         <Box
           sx={{
             mt: 1,
             display: "flex",
             gap: 1,
-            flexDirection: { xs: "column", sm: "row-reverse" },
           }}
         >
           <Button
             variant="solid"
             color="primary"
-            onClick={() => handleAddItem()}
-            loading={loading ? true : false}
+            onClick={handleAddOrRemove}
+            loading={loading}
+            disabled={selectedOption === null ? true : false}
           >
-            Add Access
-          </Button>
-          <Button
-            variant="solid"
-            color="danger"
-            onClick={() => handleRemoveItem()}
-            loading={loading ? true : false}
-          >
-            Remove Access
+            Save
           </Button>
         </Box>
       </ModalDialog>

@@ -37,6 +37,22 @@ export const addAddress = async ({
   return response.json();
 };
 
+export const addUser = async ({ id, email }: { id: string; email: string }) => {
+  const data = {
+    id,
+    email,
+    invited: true,
+  };
+  const response = await fetch("/api/user/addUser", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+
 export const addContent = async ({
   id,
   title,
@@ -81,6 +97,10 @@ export const getAddresses = async () => {
   return response.json();
 };
 
+export const getUsers = async () => {
+  const response = await fetch("/api/user/getAllUsers");
+  return response.json();
+};
 export const getContentItems = async () => {
   const response = await fetch("/api/content/getAllContentItems");
   return response.json();
@@ -172,17 +192,17 @@ export const removeAddressIdContentIds = async ({
 
 export const removeContent = async ({
   id,
-  orfans,
+  keep_orfans,
 }: {
   id: string;
-  orfans: any[];
+  keep_orfans: boolean | null;
 }) => {
   const response = await fetch(`/api/content/${id}/removeContent`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ id, orfans }),
+    body: JSON.stringify({ id, keep_orfans }),
   });
   return response;
 };

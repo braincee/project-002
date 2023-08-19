@@ -19,7 +19,7 @@ const TableToolbar = (props: TableToolbarProps) => {
         display: "flex",
         alignItems: "center",
         py: 1,
-        px: { sm: 2 },
+        px: 2,
         ...(numSelected > 0 && {
           bgcolor: "background.level1",
         }),

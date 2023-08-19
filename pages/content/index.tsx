@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Box, Sheet, Stack, Table, Typography } from "@mui/joy";
+import {
+  Box,
+  Modal,
+  ModalDialog,
+  Radio,
+  RadioGroup,
+  Sheet,
+  Stack,
+  Table,
+  Typography,
+} from "@mui/joy";
 import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
 import {
@@ -7,6 +17,7 @@ import {
   addContent,
   addContentIdAddressIds,
   addFileToContentsStorage,
+  getAddresses,
   getContentItems,
   getFilePublicURL,
   removeAddressIdContentIds,
@@ -56,7 +67,7 @@ const ContentList = ({
   contentItems,
   addresses,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("Addresses");
   const [page, setPage] = useState(0);
@@ -66,9 +77,13 @@ const ContentList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [contentList, setContentList] = useState(contentItems);
+  const [addressList, setAddressList] = useState(addresses);
   const [file, setFile] = useState<any>("");
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [iconButtonId, setIconButtonId] = useState("");
+  const [keepOrfans, setKeepOrfans] = useState<boolean | null>(null);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -118,15 +133,22 @@ const ContentList = ({
       setOpenMain(false);
       setFile("");
     }
+    setLoading(false);
   };
 
   const handleRemoveContent = async (id: string) => {
-    const orfans = addresses.filter(
-      (address: any) => address.Contents.length === 0
-    );
-    await removeContent({ id, orfans });
+    setIconButtonId(id);
+    setLoading(true);
+    const keep_orfans = keepOrfans;
+    await removeContent({ id, keep_orfans });
     const { response } = await getContentItems();
     setContentList(response);
+    setIconButtonId("");
+    setLoading(false);
+    setKeepOrfans(null);
+    setSelected([]);
+    const allAddresses = await getAddresses();
+    setAddressList(allAddresses.response);
   };
 
   const handleRequestSort = (
@@ -149,7 +171,7 @@ const ContentList = ({
 
   const handleClick = (event: React.MouseEvent<unknown>, index: string) => {
     const selectedIndex = selected.indexOf(index);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, index);
@@ -273,12 +295,51 @@ const ContentList = ({
     return stabilizedThis.map((el) => el[0]);
   };
 
+  const handleKeepOrfans = (event: any) => {
+    setKeepOrfans(event.target.value == "true");
+    setTimeout(() => {
+      setDeleteOpen(false);
+    }, 1000);
+  };
+
   return (
-    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box
+      sx={{ px: { md: 4 }, display: "flex", flexDirection: "column", gap: 2 }}
+    >
       <Stack spacing={1}>
         <Sheet
           variant="outlined"
-          sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+          sx={{
+            width: "100%",
+            boxShadow: "sm",
+            borderRadius: "sm",
+            overflow: "auto",
+            // background needs to have transparency to show the scrolling shadows
+            "--TableRow-stripeBackground": "rgba(0 0 0 / 0.04)",
+            "--TableRow-hoverBackground": "rgba(0 0 0 / 0.08)",
+            background: (
+              theme
+            ) => `linear-gradient(to right, ${theme.vars.palette.background.surface} 30%, rgba(255, 255, 255, 0)),
+              linear-gradient(to right, rgba(255, 255, 255, 0), ${theme.vars.palette.background.surface} 70%) 0 100%,
+              radial-gradient(
+                farthest-side at 0 50%,
+                rgba(0, 0, 0, 0.12),
+                rgba(0, 0, 0, 0)
+              ),
+              radial-gradient(
+                  farthest-side at 100% 50%,
+                  rgba(0, 0, 0, 0.12),
+                  rgba(0, 0, 0, 0)
+                )
+                0 100%`,
+            backgroundSize:
+              "40px calc(100% - var(--TableCell-height)), 40px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height))",
+            backgroundRepeat: "no-repeat",
+            backgroundAttachment: "local, local, scroll, scroll",
+            backgroundPosition:
+              "var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height), var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height)",
+            backgroundColor: "background.surface",
+          }}
         >
           <TableToolbar
             numSelected={selected.length}
@@ -297,21 +358,35 @@ const ContentList = ({
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.primary.softBg,
               "& thead th:nth-child(1)": {
-                width: "5%",
+                width: "40px",
               },
               "& thead th:nth-child(2)": {
-                width: "25%",
+                width: { xs: "150px", md: "25%" },
               },
               "& thead th:nth-child(3)": {
-                width: "30%",
+                width: { xs: "200px", md: "25%" },
               },
               "& thead th:nth-child(4)": {
-                width: "13%",
+                width: { xs: "120px", md: "20%" },
               },
               "& thead th:nth-child(5)": {
-                width: "20%",
+                width: { xs: "100px", md: "20%" },
               },
+              "& thead th:nth-child(6)": {
+                width: "80px",
+              },
+
               "& tr > *:nth-child(n+4)": { textAlign: "center" },
+              "& tr > *:first-child": {
+                position: "sticky",
+                left: 0,
+                bgcolor: "background.surface",
+              },
+              "& tr > *:last-child": {
+                position: "sticky",
+                right: 0,
+                bgcolor: "background.surface",
+              },
             }}
           >
             <TableHead
@@ -338,6 +413,11 @@ const ContentList = ({
                   emptyRows={emptyRows}
                   name="Content"
                   handleRemove={handleRemoveContent}
+                  loading={loading}
+                  iconButtonId={iconButtonId}
+                  deleteOpen={deleteOpen}
+                  setDeleteOpen={setDeleteOpen}
+                  keepOrfans={keepOrfans}
                 />
                 <TableFoot
                   list={contentList}
@@ -367,18 +447,20 @@ const ContentList = ({
           setOpen={setOpen}
           tableHeading="Add / Remove Address Access for selected Content items"
           placeholder="Select an address"
-          items={addresses}
-          handleAddItem={handleAddAddressAccess}
-          handleRemoveItem={handleRemoveAddressAccess}
+          items={addressList}
+          handleAddAccess={handleAddAddressAccess}
+          handleRemoveAccess={handleRemoveAddressAccess}
           setSelectedOption={setSelectedOption}
           loading={loading}
+          selectedOption={selectedOption}
+          selected={selected}
         />
         <MainModal
           open={openMain}
           setOpen={setOpenMain}
           tableHeading="Add New Content Item"
           placeholder="Select an address"
-          items={addresses}
+          items={addressList}
           handleSubmit={handleSubmit}
           setSelectedOption={setSelectedOption}
           disable={disable}
@@ -388,6 +470,46 @@ const ContentList = ({
           selectedValues={selectedAddresses}
           loading={loading}
         />
+        <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+          <ModalDialog
+            aria-labelledby="nested-modal-title"
+            aria-describedby="nested-modal-description"
+            sx={(theme) => ({
+              [theme.breakpoints.only("xs")]: {
+                top: "unset",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                borderRadius: 0,
+                transform: "none",
+                maxWidth: "unset",
+                paddingY: 3,
+              },
+            })}
+          >
+            {" "}
+            <Typography
+              id="nested-modal-title"
+              level="h2"
+              sx={{ mb: { xs: 2 } }}
+            >
+              Keep / Delete Address(es)
+            </Typography>
+            <RadioGroup
+              orientation="horizontal"
+              name="keep_orfans"
+              onChange={handleKeepOrfans}
+            >
+              <Radio value="true" label="Keep" variant="outlined" size="lg" />
+              <Radio
+                value="false"
+                label="Delete"
+                variant="outlined"
+                size="lg"
+              />
+            </RadioGroup>
+          </ModalDialog>
+        </Modal>
       </Stack>
     </Box>
   );

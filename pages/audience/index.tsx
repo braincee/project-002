@@ -54,7 +54,7 @@ const AddressList = ({
   addresses,
   contentItems,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("Contents");
   const [page, setPage] = useState(0);
@@ -64,6 +64,7 @@ const AddressList = ({
   const [disable, setDisable] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [addressList, setAddressList] = useState<any[]>(addresses);
+  const [contentList, setContentList] = useState<any[]>(contentItems);
   const [selectedContents, setSelectedContents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -121,7 +122,7 @@ const AddressList = ({
 
   const handleClick = (event: React.MouseEvent<unknown>, index: string) => {
     const selectedIndex = selected.indexOf(index);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, index);
@@ -246,116 +247,164 @@ const AddressList = ({
   };
 
   return (
-    <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
-      <Stack spacing={2}>
-        <Sheet
-          variant="outlined"
-          sx={{ width: "100%", boxShadow: "sm", borderRadius: "sm" }}
+    <Box
+      sx={{
+        px: { md: 4 },
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        width: "100%",
+      }}
+    >
+      <Sheet
+        variant="outlined"
+        sx={{
+          width: "100%",
+          boxShadow: "sm",
+          borderRadius: "sm",
+          overflow: "auto",
+          // background needs to have transparency to show the scrolling shadows
+          "--TableRow-stripeBackground": "rgba(0 0 0 / 0.04)",
+          "--TableRow-hoverBackground": "rgba(0 0 0 / 0.08)",
+          background: (
+            theme
+          ) => `linear-gradient(to right, ${theme.vars.palette.background.surface} 30%, rgba(255, 255, 255, 0)),
+          linear-gradient(to right, rgba(255, 255, 255, 0), ${theme.vars.palette.background.surface} 70%) 0 100%,
+          radial-gradient(
+            farthest-side at 0 50%,
+            rgba(0, 0, 0, 0.12),
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(
+              farthest-side at 100% 50%,
+              rgba(0, 0, 0, 0.12),
+              rgba(0, 0, 0, 0)
+            )
+            0 100%`,
+          backgroundSize:
+            "40px calc(100% - var(--TableCell-height)), 40px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height))",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "local, local, scroll, scroll",
+          backgroundPosition:
+            "var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height), var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height)",
+          backgroundColor: "background.surface",
+        }}
+      >
+        <TableToolbar
+          numSelected={selected.length}
+          handleAccess={handleContentAccess}
+          buttonName={"Content"}
+          tableHeader={"Address List"}
+          handleAdd={handleAddAddress}
+        />
+        <Table
+          aria-label="stripe table"
+          hoverRow
+          sx={{
+            "--TableCell-headBackground": "transparent",
+            "--TableCell-selectedBackground": (theme) =>
+              theme.vars.palette.primary.softBg,
+            "& thead th:nth-child(1)": {
+              width: { xs: "40px", md: "5%" },
+            },
+            "& thead th:nth-child(2)": {
+              width: { xs: "150px", md: "55%" },
+            },
+            "& thead th:nth-child(3)": {
+              width: { xs: "120px", md: "20%" },
+            },
+            "& thead th:nth-child(4)": {
+              width: { xs: "100px", md: "20%" },
+            },
+            "& tr > *:nth-child(n+3)": { textAlign: "center" },
+            "& tr > *:first-child": {
+              position: "sticky",
+              left: 0,
+              bgcolor: "background.surface",
+            },
+            "& tr > *:last-child": {
+              position: "sticky",
+              right: 0,
+              bgcolor: "background.surface",
+            },
+          }}
         >
-          <TableToolbar
+          <TableHead
             numSelected={selected.length}
-            handleAccess={handleContentAccess}
-            buttonName={"Content"}
-            tableHeader={"Address List"}
-            handleAdd={handleAddAddress}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={addressList.length}
+            name="Address"
           />
-          <Table
-            aria-label="stripe table"
-            stripe="even"
-            hoverRow
-            sx={{
-              "--TableCell-headBackground": "transparent",
-              "--TableCell-selectedBackground": (theme) =>
-                theme.vars.palette.primary.softBg,
-              "& thead th:nth-child(1)": {
-                width: "5%",
-              },
-              "& thead th:nth-child(2)": {
-                width: "55%",
-              },
-              "& thead th:nth-child(3)": {
-                width: "20%",
-              },
-              "& thead th:nth-child(4)": {
-                width: "20%",
-              },
-              "& tr > *:nth-child(n+3)": { textAlign: "center" },
-            }}
-          >
-            <TableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={addressList.length}
-              name="Address"
-            />
-            {addressList.length > 0 ? (
-              <>
-                <TableBody
-                  stableSort={stableSort}
-                  list={addressList}
-                  getComparator={getComparator}
-                  order={order}
-                  orderBy={orderBy}
-                  page={page}
-                  rowsPerPage={rowsPerPage}
-                  isSelected={isSelected}
-                  handleClick={handleClick}
-                  emptyRows={emptyRows}
-                  name="Address"
-                  handleRemove={handleRemoveAddress}
-                />
-                <TableFoot
-                  list={addressList}
-                  page={page}
-                  rowsPerPage={rowsPerPage}
-                  handleChangePage={handleChangePage}
-                  handleChangeRowsPerPage={handleChangeRowsPerPage}
-                  getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
-                  labelDisplayedRows={labelDisplayedRows}
-                />
-              </>
-            ) : (
-              <tbody>
-                <tr>
-                  <th scope="row" colSpan={12}>
-                    <Typography level="h4" color="neutral">
-                      No Address available
-                    </Typography>
-                  </th>
-                </tr>
-              </tbody>
-            )}
-          </Table>
-        </Sheet>
-        <MyModal
-          open={open}
-          setOpen={setOpen}
-          tableHeading="Add Content Access for selected Addresses"
-          placeholder="Select a content item"
-          items={contentItems}
-          handleAddItem={handleAddContentItemAccess}
-          handleRemoveItem={handleRemoveContentItemAccess}
-          setSelectedOption={setSelectedOption}
-          loading={loading}
-        />
-        <MainModal
-          open={openMain}
-          setOpen={setOpenMain}
-          tableHeading="Add New Address"
-          placeholder="Select a content item"
-          items={contentItems}
-          handleSubmit={handleSubmit}
-          setSelectedOption={setSelectedOption}
-          disable={disable}
-          name="Address"
-          setSelectedValues={setSelectedContents}
-          selectedValues={selectedContents}
-          loading={loading}
-        />
-      </Stack>
+          {addressList.length > 0 ? (
+            <>
+              <TableBody
+                stableSort={stableSort}
+                list={addressList}
+                getComparator={getComparator}
+                order={order}
+                orderBy={orderBy}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                isSelected={isSelected}
+                handleClick={handleClick}
+                emptyRows={emptyRows}
+                name="Address"
+                handleRemove={handleRemoveAddress}
+                loading={loading}
+              />
+              <TableFoot
+                list={addressList}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                getLabelDisplayedRowsTo={getLabelDisplayedRowsTo}
+                labelDisplayedRows={labelDisplayedRows}
+              />
+            </>
+          ) : (
+            <tbody>
+              <tr>
+                <th scope="row" colSpan={12}>
+                  <Typography level="h4" color="neutral">
+                    No Address available
+                  </Typography>
+                </th>
+              </tr>
+            </tbody>
+          )}
+        </Table>
+      </Sheet>
+      <MyModal
+        open={open}
+        setOpen={setOpen}
+        tableHeading="Add Content Access for selected Addresses"
+        placeholder="Select a content item"
+        items={contentList}
+        handleAddAccess={handleAddContentItemAccess}
+        handleRemoveAccess={handleRemoveContentItemAccess}
+        setSelectedOption={setSelectedOption}
+        loading={loading}
+        selectedOption={selectedOption}
+        selected={selected}
+      />
+      <MainModal
+        open={openMain}
+        setOpen={setOpenMain}
+        tableHeading="Add New Address"
+        placeholder="Select a content item"
+        items={contentList}
+        handleSubmit={handleSubmit}
+        setSelectedOption={setSelectedOption}
+        disable={disable}
+        name="Address"
+        setSelectedValues={setSelectedContents}
+        selectedValues={selectedContents}
+        loading={loading}
+      />
     </Box>
   );
 };

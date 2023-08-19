@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Sheet,
   Stack,
   Table,
   Tooltip,
@@ -11,8 +12,36 @@ import {
 } from "@mui/joy";
 import { Download } from "@mui/icons-material";
 import { ExportToCsv } from "export-to-csv";
+import { Log } from "@/libs/models";
+import { InferGetServerSidePropsType } from "next";
 
-const Logs = () => {
+export const getServerSideProps = async () => {
+  const logs = JSON.stringify(
+    await Log.findAll({
+      order: [["created_at", "DESC"]],
+    })
+  );
+  return {
+    props: { logs: JSON.parse(logs) },
+  };
+};
+
+const users = [
+  {
+    id: 1,
+    name: "User 1",
+    email: "user1@mail.com",
+  },
+  {
+    id: 2,
+    name: "User 2",
+    email: "user2@mail.com",
+  },
+];
+
+const Logs = ({
+  logs,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [alert, setAlert] = useState<ReactElement<any> | string>("");
 
@@ -49,11 +78,12 @@ const Logs = () => {
 
   const handleDownload = () => {
     const data: any[] = [];
-    [].forEach((log) => {
+    logs.forEach((log: any, index: number) => {
       data.push({
-        log: "",
-        "content request": "",
-        "created at": "",
+        user: [(users[index] && users[index].name) || users[0].name],
+        "request time": `${new Date(log.log).toDateString()} ${new Date(log.log)
+          .toTimeString()
+          .substring(0, 12)}` as any,
       });
     });
 
@@ -67,7 +97,7 @@ const Logs = () => {
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: false,
-      headers: ["Log", "Content request", "Date created"],
+      headers: ["User", "Request time"],
     };
 
     const csvExporter = new ExportToCsv(options);
@@ -87,7 +117,13 @@ const Logs = () => {
 
   return (
     <Box
-      sx={{ py: 2, px: 4, display: "flex", flexDirection: "column", gap: 2 }}
+      sx={{
+        py: 2,
+        px: { md: 4 },
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
     >
       <Typography level="h3">Logs</Typography>
       <Stack spacing={2}>
@@ -123,82 +159,110 @@ const Logs = () => {
             </Tooltip>
           </Stack>
         </Box>
-        <Table
-          aria-label="stripe table"
-          stripe="even"
-          stickyHeader
-          hoverRow
+        <Sheet
+          variant="outlined"
           sx={{
-            "--TableCell-headBackground": "transparent",
-            "--TableCell-selectedBackground": (theme) =>
-              theme.vars.palette.primary.softBg,
-            "& thead th:nth-child(1)": {
-              width: "40px",
-            },
-            "& thead th:nth-child(3)": {
-              width: "20%",
-            },
-            "& thead th:nth-child(4)": {
-              width: "30%",
-            },
-            "& tr > *:nth-child(n+3)": { textAlign: "center" },
+            width: "100%",
+            boxShadow: "sm",
+            borderRadius: "sm",
+            // background needs to have transparency to show the scrolling shadows
+            "--TableRow-stripeBackground": "rgba(0 0 0 / 0.04)",
+            "--TableRow-hoverBackground": "rgba(0 0 0 / 0.08)",
+            background: (
+              theme
+            ) => `linear-gradient(to right, ${theme.vars.palette.background.surface} 30%, rgba(255, 255, 255, 0)),
+          linear-gradient(to right, rgba(255, 255, 255, 0), ${theme.vars.palette.background.surface} 70%) 0 100%,
+          radial-gradient(
+            farthest-side at 0 50%,
+            rgba(0, 0, 0, 0.12),
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(
+              farthest-side at 100% 50%,
+              rgba(0, 0, 0, 0.12),
+              rgba(0, 0, 0, 0)
+            )
+            0 100%`,
+            backgroundSize:
+              "40px calc(100% - var(--TableCell-height)), 40px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height)), 14px calc(100% - var(--TableCell-height))",
+            backgroundRepeat: "no-repeat",
+            backgroundAttachment: "local, local, scroll, scroll",
+            backgroundPosition:
+              "var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height), var(--Table-firstColumnWidth) var(--TableCell-height), calc(100% - var(--Table-lastColumnWidth)) var(--TableCell-height)",
+            backgroundColor: "background.surface",
           }}
         >
-          <thead>
-            <tr>
-              <th>
-                <Checkbox
-                  onChange={handleSelectAllClick}
-                  sx={{ verticalAlign: "sub" }}
-                />
-              </th>
-              <th>Logs</th>
-              <th>Content Request</th>
-              <th>Date Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[].map((log: any, index: number) => {
-              const isItemSelected = isSelected(log.id);
-              return (
-                <tr
-                  key={index}
-                  onClick={(event) => handleClick(event, log.id)}
-                  role="checkbox"
-                  tabIndex={-1}
-                  aria-checked={isItemSelected}
-                  style={
-                    isItemSelected
-                      ? ({
-                          "--TableCell-dataBackground":
-                            "var(--TableCell-selectedBackground)",
-                          "--TableCell-headBackground":
-                            "var(--TableCell-selectedBackground)",
-                        } as React.CSSProperties)
-                      : {}
-                  }
-                >
-                  <th scope="row">
-                    <Checkbox
-                      checked={isItemSelected}
-                      sx={{ verticalAlign: "top" }}
-                    />
-                  </th>
-                  <td>
-                    <Typography level="h4">{log.log}</Typography>
-                  </td>
-                  <td>{log.Contents.length}</td>
-                  <td>
-                    <Typography color="neutral">
-                      {new Date(log.created_at).toDateString()}
+          <Table
+            aria-label="stripe table"
+            stripe="even"
+            hoverRow
+            sx={{
+              "--TableCell-headBackground": "transparent",
+              "--TableCell-selectedBackground": (theme) =>
+                theme.vars.palette.primary.softBg,
+              "& thead th:nth-child(1)": {
+                width: "50%",
+              },
+              "& thead th:nth-child(2)": {
+                width: "50%",
+              },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Request time</th>
+              </tr>
+            </thead>
+            {logs.length > 0 ? (
+              <tbody>
+                {logs.map((log: any, index: number) => {
+                  const isItemSelected = isSelected(log.id);
+                  return (
+                    <tr
+                      key={index}
+                      onClick={(event) => handleClick(event, log.id)}
+                      role="checkbox"
+                      tabIndex={-1}
+                      aria-checked={isItemSelected}
+                      style={
+                        isItemSelected
+                          ? ({
+                              "--TableCell-dataBackground":
+                                "var(--TableCell-selectedBackground)",
+                              "--TableCell-headBackground":
+                                "var(--TableCell-selectedBackground)",
+                            } as React.CSSProperties)
+                          : {}
+                      }
+                    >
+                      <td>
+                        <Typography>
+                          {(users[index] && users[index].name) || users[0].name}
+                        </Typography>
+                      </td>
+                      <td>
+                        {new Date(log.log).toDateString()} @{" "}
+                        {new Date(log.log).toTimeString().substring(0, 12)}
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr></tr>
+              </tbody>
+            ) : (
+              <tbody>
+                <tr>
+                  <th scope="row" colSpan={12}>
+                    <Typography level="h4" color="neutral">
+                      No Address available
                     </Typography>
-                  </td>
+                  </th>
                 </tr>
-              );
-            })}
-            <tr></tr>
-          </tbody>
-        </Table>
+              </tbody>
+            )}
+          </Table>
+        </Sheet>
       </Stack>
     </Box>
   );

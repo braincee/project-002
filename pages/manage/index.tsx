@@ -10,9 +10,54 @@ import {
   ModalDialog,
 } from "@mui/joy";
 import Add from "@mui/icons-material/Add";
+import { addUser, getUsers } from "@/libs/api";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { User } from "@/libs/models";
+import { v4 as uuidV4 } from "uuid";
 
-const Manage = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const users = JSON.stringify(
+    await User.findAll({
+      order: [["created_at", "DESC"]],
+    })
+  );
+  return {
+    props: {
+      addresses: JSON.parse(users),
+    },
+  };
+};
+
+interface Data {
+  id: string;
+  email: string;
+}
+
+const Manage = ({
+  users,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userList, setUserList] = useState<any[]>(users || []);
+  const [newUserEmail, setNewUserEmail] = useState("");
+
+  const handleAddUser = async () => {
+    if (newUserEmail) {
+      setLoading(true);
+      const userId = uuidV4();
+      await addUser({ id: userId, email: newUserEmail });
+      const { response } = await getUsers();
+      setUserList(response);
+      setLoading(false);
+      setNewUserEmail("");
+      setOpen(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    setNewUserEmail("");
+  };
 
   return (
     <Box sx={{ px: 4, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -36,14 +81,14 @@ const Manage = () => {
         >
           Add User
         </Button>
-        <Sheet sx={{ height: 200, overflow: "auto" }}>
+        <Sheet sx={{ height: 100, overflow: "auto" }}>
           <Table
             aria-label="stripe table"
             stripe="even"
             stickyHeader
             hoverRow
             sx={{
-              "--TableCell-headBackground": "transparent",
+              "--TableCell-headBackground": "#eeeeee",
               "--TableCell-selectedBackground": (theme) =>
                 theme.vars.palette.primary.softBg,
               "& thead th:nth-child(1)": {
@@ -57,19 +102,15 @@ const Manage = () => {
           >
             <thead>
               <tr>
-                <th>Users</th>
+                <th>USERS</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>test@test.com</td>
-              </tr>
-              <tr>
-                <td>test@test.com</td>
-              </tr>
-              <tr>
-                <td>test@test.com</td>
-              </tr>
+              {userList.map((user: Data) => (
+                <tr key={user.id}>
+                  <td>{user.email}</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Sheet>
@@ -93,7 +134,11 @@ const Manage = () => {
           <Typography id="nested-modal-title" level="h2">
             Add New Entries
           </Typography>
-          <Input placeholder="Add user email" />
+          <Input
+            placeholder="Add user email"
+            value={newUserEmail}
+            onChange={(e) => setNewUserEmail(e.target.value)}
+          />
           <Box
             sx={{
               mt: 1,
@@ -104,17 +149,12 @@ const Manage = () => {
           >
             <Button
               variant="solid"
-              color="neutral"
-              onClick={() => setOpen(false)}
+              color="primary"
+              onClick={() => handleAddUser()}
+              loading={loading}
+              isModalClose={handleCloseModal}
             >
-              Add
-            </Button>
-            <Button
-              variant="outlined"
-              color="neutral"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
+              Save
             </Button>
           </Box>
         </ModalDialog>

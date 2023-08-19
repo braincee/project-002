@@ -107,7 +107,7 @@ const TableHead = (props: TableHeadProps) => {
   return (
     <thead>
       <tr>
-        <th>
+        <th style={{ zIndex: 20 }}>
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}

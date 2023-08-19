@@ -12,9 +12,9 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
-import { Spinner } from "@nextui-org/react";
+import truncateEthAddress from "truncate-eth-address";
 
-interface MyModalProps {
+interface MainModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   tableHeading: string;
@@ -30,7 +30,7 @@ interface MyModalProps {
   loading: boolean;
 }
 
-const MainModal = (props: MyModalProps) => {
+const MainModal = (props: MainModalProps) => {
   const {
     open,
     setOpen,
@@ -82,6 +82,7 @@ const MainModal = (props: MyModalProps) => {
           [theme.breakpoints.not("xs")]: {
             maxHeight: "98%",
             overflow: "auto",
+            minWidth: "500px",
           },
         })}
       >
@@ -102,7 +103,6 @@ const MainModal = (props: MyModalProps) => {
             event.preventDefault();
             handleSubmit(event);
           }}
-          style={{ minWidth: "500px" }}
           method="POST"
         >
           <Stack spacing={2} direction={{ xs: "column" }}>
@@ -157,7 +157,8 @@ const MainModal = (props: MyModalProps) => {
               {items.map((item, index) => (
                 <Option value={item} key={item.id}>
                   <Typography sx={{ px: 2 }}>
-                    {index + 1}. {item.title ? item.title : item.address}
+                    {index + 1}.{" "}
+                    {item.title ? item.title : truncateEthAddress(item.address)}
                   </Typography>
                 </Option>
               ))}

@@ -5,31 +5,35 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id, orfans } = req.body;
-  await Content.destroy({
-    where: {
-      id,
-    },
-  });
-  const allAddresses = await Address.findAll({
-    include: { model: Content },
-  });
-  let addresses = JSON.stringify(allAddresses);
+  const { id, keep_orfans } = req.body;
+  if (keep_orfans) {
+    await Content.destroy({
+      where: {
+        id,
+      },
+    });
+  } else {
+    const content = await Content.findByPk(id, {
+      include: {
+        model: Address,
+      },
+    });
 
-  const filteredAddresses = JSON.parse(addresses).filter(
-    (address: any) => address.Contents.length == 0
-  );
-  filteredAddresses.forEach((address: any) => {
-    let set1 = new Set(orfans);
-    let set2 = new Set(orfans);
-    set2.add(address);
-    if (set2.size > set1.size) {
+    const addresses = JSON.parse(JSON.stringify(content)).Addresses;
+
+    await Content.destroy({
+      where: {
+        id,
+      },
+    });
+
+    if (addresses.length === 1) {
       Address.destroy({
         where: {
-          id: address.id,
+          id: addresses[0].id,
         },
       });
     }
-  });
+  }
   res.status(200).json({ response: "Success" });
 }

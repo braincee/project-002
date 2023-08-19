@@ -1,5 +1,7 @@
 import { Delete } from "@mui/icons-material";
-import { Checkbox, IconButton } from "@mui/joy";
+import { Checkbox, CircularProgress, IconButton } from "@mui/joy";
+import { useEffect, useState } from "react";
+import truncateEthAddress from "truncate-eth-address";
 
 interface TableBodyProps {
   stableSort: (value1: any[], value2: any) => any[];
@@ -14,7 +16,13 @@ interface TableBodyProps {
   emptyRows: number;
   name: string;
   handleRemove: (value: string) => void;
+  iconButtonId?: string;
+  loading?: boolean;
+  deleteOpen?: boolean;
+  setDeleteOpen?: (value: boolean) => void;
+  keepOrfans?: boolean | null;
 }
+
 const TableBody = (props: TableBodyProps) => {
   const {
     stableSort,
@@ -29,7 +37,28 @@ const TableBody = (props: TableBodyProps) => {
     emptyRows,
     name,
     handleRemove,
+    iconButtonId,
+    loading,
+    deleteOpen,
+    setDeleteOpen,
+    keepOrfans,
   } = props;
+
+  const [removeId, setRemoveId] = useState<string>("");
+
+  const setOrfanValue = (id: string) => {
+    if (name === "Content") {
+      setDeleteOpen?.(true);
+      setRemoveId(id);
+    }
+  };
+
+  useEffect(() => {
+    if (keepOrfans !== null) {
+      handleRemove(removeId);
+    }
+  }, [keepOrfans]);
+
   return (
     <tbody>
       {stableSort(list, getComparator(order, orderBy))
@@ -76,15 +105,22 @@ const TableBody = (props: TableBodyProps) => {
                   <td>{item.Addresses.length}</td>
                   <td>{new Date(item.created_at).toDateString()}</td>
                   <td>
-                    <IconButton onClick={() => handleRemove(item.id)}>
-                      <Delete />
+                    <IconButton
+                      onClick={() => setOrfanValue(item.id)}
+                      disabled={loading}
+                    >
+                      {iconButtonId === item.id ? (
+                        <CircularProgress size="sm" variant="plain" />
+                      ) : (
+                        <Delete />
+                      )}
                     </IconButton>
                   </td>
                 </>
               ) : (
                 <>
                   <th id={labelId} scope="row">
-                    {item.address}
+                    {truncateEthAddress(item.address)}
                   </th>
                   <td>{item.Contents.length}</td>
                   <td>{new Date(item.created_at).toDateString()}</td>

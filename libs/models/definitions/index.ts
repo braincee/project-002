@@ -34,14 +34,15 @@ interface ContentAddress
 interface Log
   extends Model<InferAttributes<Log>, InferCreationAttributes<Log>> {
   id: UUIDV4;
-  log: string;
+  log: Date;
 }
 
 interface User
   extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   id: UUIDV4;
-  name: string;
+  email: string;
   password: string;
+  invited: boolean;
 }
 
 const Address = sequelize.define<Address>(
@@ -134,7 +135,7 @@ export const Log = sequelize.define<Log>(
       allowNull: false,
     },
     log: {
-      type: DataTypes.TEXT,
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
@@ -155,13 +156,15 @@ export const User = sequelize.define<User>(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
-    name: {
+    email: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     password: {
       type: DataTypes.TEXT,
-      allowNull: false,
+    },
+    invited: {
+      type: DataTypes.BOOLEAN,
     },
   },
   {
