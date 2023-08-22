@@ -3,9 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabase2: SupabaseClient = createClient(
+const options = {
+  db: { schema: "storage" },
+};
+
+const supabase2: SupabaseClient<any, any, any> = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_SUPABASE_SERVICE_KEY!
+  process.env.NEXT_SUPABASE_SERVICE_KEY!,
+  options
 );
 
 export default async function handler(
