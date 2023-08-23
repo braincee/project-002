@@ -107,35 +107,39 @@ const ContentList = ({
     event.target[3].value = "";
 
     const filename = await addFileToContentsStorage({ file, urlString });
-    // const {
-    //   data: {
-    //     response: {
-    //       data: { publicUrl },
-    //     },
-    //   },
-    //   contentId,
-    // } = await getFilePublicURL(filename);
-    const test = getFilePublicURL(filename);
-    console.log((await test).data.response);
+    const {
+      data: {
+        response: {
+          data: { publicUrl },
+          mimeType,
+        },
+      },
+      contentId,
+    } = await getFilePublicURL(filename);
 
-    // await addContent({ id: contentId, title, description, url: publicUrl });
-    // if (selectedAddresses.length > 0) {
-    //   const addressIds = selectedAddresses.map((address) => address.id);
-    //   await addContentIdAddressIds({ contentId, addressIds });
-    //   const { response } = await getContentItems();
-    //   setContentList(response);
-    //   setDisable(false);
-    //   setOpenMain(false);
-    //   setFile("");
-    //   setSelectedAddresses([]);
-    // } else {
-    //   const { response } = await getContentItems();
-    //   setContentList(response);
-    //   setDisable(false);
-    //   setOpenMain(false);
-    //   setFile("");
-    // }
-    setDisable(false); // to be removed
+    await addContent({
+      id: contentId,
+      title,
+      description,
+      url: publicUrl,
+      fileType: urlString === "" ? mimeType : "unknown",
+    });
+    if (selectedAddresses.length > 0) {
+      const addressIds = selectedAddresses.map((address) => address.id);
+      await addContentIdAddressIds({ contentId, addressIds });
+      const { response } = await getContentItems();
+      setContentList(response);
+      setDisable(false);
+      setOpenMain(false);
+      setFile("");
+      setSelectedAddresses([]);
+    } else {
+      const { response } = await getContentItems();
+      setContentList(response);
+      setDisable(false);
+      setOpenMain(false);
+      setFile("");
+    }
     setLoading(false);
   };
 

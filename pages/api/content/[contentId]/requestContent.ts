@@ -1,24 +1,35 @@
 import supabase from "@/libs/supabase";
 import { NextApiRequest, NextApiResponse } from "next";
+import { StorageClient } from "@supabase/storage-js";
 
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
-const options = {
-  db: { schema: "storage" },
-};
-
-const supabase2: SupabaseClient<any, any, any> = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_SUPABASE_SERVICE_KEY!,
-  options
+const storageClient = new StorageClient(
+  process.env.NEXT_SUPABASE_STORAGE_URL!,
+  {
+    apiKey: process.env.NEXT_SUPABASE_SERVICE_KEY!,
+    Authorization: `Bearer ${process.env.NEXT_SUPABASE_SERVICE_KEY}`,
+  }
 );
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const filename = req.body;
-  // const response = supabase.storage.from("contents").getPublicUrl(filename);
-  const response = supabase2.from("objects").select();
+  const filename = req.body;
+  const { data } = supabase.storage.from("contents").getPublicUrl(filename);
+  const index = data.publicUrl.indexOf("contents/");
+  const length = "contents/".length;
+
+  const result = data.publicUrl.slice(index + length);
+  const object = await storageClient.from("contents").list("", {
+    search: result,
+  });
+
+  const mimeType =
+    (object.data && object.data[0].metadata.mimetype) || "unknown";
+  const response = {
+    data,
+    mimeType,
+  };
+
   res.status(200).json({ response: response });
 }

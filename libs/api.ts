@@ -59,12 +59,14 @@ export const addContent = async ({
   description,
   url,
   urlString,
+  fileType,
 }: {
   id: string;
   title: string;
   description: string;
   url?: string;
   urlString?: string;
+  fileType: string;
 }) => {
   let data;
   if (url) {
@@ -73,6 +75,7 @@ export const addContent = async ({
       title,
       description,
       url,
+      fileType,
     };
   } else {
     const data = {
@@ -80,6 +83,7 @@ export const addContent = async ({
       title,
       description,
       urlString,
+      fileType,
     };
   }
   const response = await fetch("/api/content/add", {
@@ -210,7 +214,7 @@ export const removeContent = async ({
 const getFileFromUrl = async (
   url: any,
   name: string,
-  defaultType = "image/png"
+  defaultType = "unknown"
 ) => {
   const response = await fetch(url);
   const data = await response.blob();

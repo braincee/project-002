@@ -20,6 +20,7 @@ interface Content
   title: string;
   description: string;
   url: string;
+  fileType: string;
 }
 
 interface ContentAddress
@@ -85,6 +86,10 @@ const Content = sequelize.define<Content>(
       allowNull: false,
     },
     url: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    fileType: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
