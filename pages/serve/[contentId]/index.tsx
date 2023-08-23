@@ -11,23 +11,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const response = await fetch(url, {
     method: "HEAD",
   });
-  const fileType = response.headers.get("Content-Type") || "unknown";
+  // const fileType = response.headers.get("Content-Type") || "unknown";
   return {
-    props: { content: JSON.parse(content), fileType },
+    props: { content: JSON.parse(content) },
   };
 };
 
 const ServeContent = ({
   content,
-  fileType,
+  // fileType,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let renderedContent;
 
-  if (fileType.startsWith("video")) {
+  if (content.fileType.startsWith("video")) {
     renderedContent = (
       <video controls src={content.url} sx={{ maxWidth: "100%" }} />
     );
-  } else if (fileType.startsWith("image")) {
+  } else if (content.fileType.startsWith("image")) {
     renderedContent = (
       <img
         src={content.url}
@@ -35,9 +35,9 @@ const ServeContent = ({
         sx={{ maxWidth: "100%", height: "auto" }}
       />
     );
-  } else if (fileType.startsWith("audio")) {
+  } else if (content.fileType.startsWith("audio")) {
     renderedContent = <audio controls src={content.url} />;
-  } else if (fileType === "link") {
+  } else if (content.fileType === "link") {
     renderedContent = (
       <a href={content.url} target="_blank" rel="noopener noreferrer">
         Link to Content
