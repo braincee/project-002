@@ -5,16 +5,25 @@ import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
 import { initDb } from "@/libs/api";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
-initDb();
+// initDb();
 
 export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async (event: any) => {
     setLoading(true);
-    router.push("/dashboard");
+    const email = event.target[0].value;
+    const password = event.target[1].value;
+    const response = await signIn("credentials", {
+      email,
+      password,
+    });
+    setLoading(false);
+    console.log(response);
+    // router.push("/dashboard");
   };
 
   return (
@@ -36,23 +45,25 @@ export default function Index() {
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            handleLogin(event);
           }}
+          method="POST"
         >
           <Input
-            placeholder="Name"
+            placeholder="Enter your email address"
+            type="email"
             sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
             size="lg"
+            required
           />
           <Input
             placeholder="Enter your password"
+            type="password"
             sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
             size="lg"
+            required
           />
-          <Button
-            type="submit"
-            onClick={handleLogin}
-            loading={loading ? true : false}
-          >
+          <Button type="submit" loading={loading ? true : false}>
             Submit
           </Button>
         </form>
