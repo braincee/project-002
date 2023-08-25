@@ -8,6 +8,7 @@ import {
   Sheet,
   Modal,
   ModalDialog,
+  Stack,
 } from "@mui/joy";
 import Add from "@mui/icons-material/Add";
 import { addUser, getUsers } from "@/libs/api";
@@ -40,23 +41,19 @@ const Manage = ({
   const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState<any[]>(users || []);
   const [newUserEmail, setNewUserEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleAddUser = async () => {
     if (newUserEmail) {
       setLoading(true);
       const userId = uuidV4();
-      await addUser({ id: userId, email: newUserEmail });
+      await addUser({ id: userId, email: newUserEmail, password: password });
       const { response } = await getUsers();
       setUserList(response);
       setLoading(false);
       setNewUserEmail("");
       setOpen(false);
     }
-  };
-
-  const handleCloseModal = () => {
-    setOpen(false);
-    setNewUserEmail("");
   };
 
   return (
@@ -81,7 +78,7 @@ const Manage = ({
         >
           Add User
         </Button>
-        <Sheet sx={{ height: 100, overflow: "auto" }}>
+        <Sheet sx={{ height: 300, overflow: "auto" }}>
           <Table
             aria-label="stripe table"
             stripe="even"
@@ -97,7 +94,7 @@ const Manage = ({
               "& thead th:nth-child(2)": {
                 width: "20%",
               },
-              "& tr > *:nth-child(n+3)": { textAlign: "right" },
+              "& tr > *:nth-child(n+2)": { textAlign: "right" },
             }}
           >
             <thead>
@@ -129,34 +126,53 @@ const Manage = ({
               transform: "none",
               maxWidth: "unset",
             },
+            [theme.breakpoints.not("xs")]: {
+              minWidth: "500px",
+            },
           })}
         >
           <Typography id="nested-modal-title" level="h2">
             Add New Entries
           </Typography>
-          <Input
-            placeholder="Add user email"
-            value={newUserEmail}
-            onChange={(e) => setNewUserEmail(e.target.value)}
-          />
-          <Box
-            sx={{
-              mt: 1,
-              display: "flex",
-              gap: 1,
-              flexDirection: { xs: "column", sm: "row-reverse" },
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleAddUser();
             }}
+            method="POST"
           >
-            <Button
-              variant="solid"
-              color="primary"
-              onClick={() => handleAddUser()}
-              loading={loading}
-              isModalClose={handleCloseModal}
+            <Stack spacing={2} direction={{ xs: "column" }}>
+              <Input
+                placeholder="Add user email"
+                type="email"
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+              />
+              <Input
+                placeholder="Add user password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Stack>
+            <Box
+              sx={{
+                mt: 1,
+                display: "flex",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row-reverse" },
+              }}
             >
-              Save
-            </Button>
-          </Box>
+              <Button
+                type="submit"
+                variant="solid"
+                color="primary"
+                loading={loading}
+              >
+                Save
+              </Button>
+            </Box>
+          </form>
         </ModalDialog>
       </Modal>
     </Box>

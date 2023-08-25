@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 import supabase from "./supabase";
+import { hash } from "bcrypt-ts";
 
 export const initDb = async () => {
   const response = await fetch("api/initDb");
@@ -37,10 +38,20 @@ export const addAddress = async ({
   return response.json();
 };
 
-export const addUser = async ({ id, email }: { id: string; email: string }) => {
+export const addUser = async ({
+  id,
+  email,
+  password,
+}: {
+  id: string;
+  email: string;
+  password: string;
+}) => {
+  const hashPassword = await hash(password, 10);
   const data = {
     id,
     email,
+    password: hashPassword,
     invited: true,
   };
   const response = await fetch("/api/user/addUser", {
