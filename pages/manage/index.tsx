@@ -12,11 +12,28 @@ import {
 } from "@mui/joy";
 import Add from "@mui/icons-material/Add";
 import { addUser, getUsers } from "@/libs/api";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { User } from "@/libs/models";
 import { v4 as uuidV4 } from "uuid";
+import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const session = await getSession({ req: context.req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permananet: false,
+      },
+      props: {},
+    };
+  }
   const users = JSON.stringify(
     await User.findAll({
       order: [["created_at", "DESC"]],

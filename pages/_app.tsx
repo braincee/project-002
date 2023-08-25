@@ -10,6 +10,7 @@ import createEmotionCache from "@/libs/createEmotionCache";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import "@/styles/globals.css";
+import { SessionProvider } from "next-auth/react";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -20,47 +21,56 @@ interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { pathname } = useRouter();
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const {
+    Component,
+    emotionCache = clientSideEmotionCache,
+    pageProps: { session, ...pageProps },
+  } = props;
   if (pathname.includes("serve")) {
     return <Component {...pageProps} />;
   } else {
     return (
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
-        <CssVarsProvider
-          defaultMode="system"
-          theme={theme}
-          modeStorageKey="mode-key"
-          disableNestedContext
-        >
-          <CssBaseline />
-          <GlobalStyles
-            styles={{
-              html: {
-                overflowY: "scroll",
-              },
-              a: {
-                textDecoration: "none",
-                color: "var(--joy-palette-primary-500)",
-              },
-              "a:hover": {
-                color: "var(--joy-palette-primary-600)",
-              },
-              "a:active": {
-                color: "var(--joy-palette-primary-700)",
-              },
-              li: {
-                paddingLeft: "0 !important",
-              },
-            }}
-          />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </CssVarsProvider>
-      </CacheProvider>
+      <SessionProvider session={session}>
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <meta
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <CssVarsProvider
+            defaultMode="system"
+            theme={theme}
+            modeStorageKey="mode-key"
+            disableNestedContext
+          >
+            <CssBaseline />
+            <GlobalStyles
+              styles={{
+                html: {
+                  overflowY: "scroll",
+                },
+                a: {
+                  textDecoration: "none",
+                  color: "var(--joy-palette-primary-500)",
+                },
+                "a:hover": {
+                  color: "var(--joy-palette-primary-600)",
+                },
+                "a:active": {
+                  color: "var(--joy-palette-primary-700)",
+                },
+                li: {
+                  paddingLeft: "0 !important",
+                },
+              }}
+            />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </CssVarsProvider>
+        </CacheProvider>
+      </SessionProvider>
     );
   }
 }

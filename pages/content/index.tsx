@@ -24,13 +24,30 @@ import {
   removeContent,
 } from "@/libs/api";
 import { Address, Content } from "@/libs/models";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import TableHead from "@/components/TableHead";
 import MainModal from "@/components/MainModal";
 import TableBody from "@/components/TableBody";
 import TableFoot from "@/components/TableFoot";
+import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const session = await getSession({ req: context.req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permananet: false,
+      },
+      props: {},
+    };
+  }
   const contentItems = JSON.stringify(
     await Content.findAll({
       order: [["created_at", "DESC"]],

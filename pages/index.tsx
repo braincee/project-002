@@ -1,13 +1,35 @@
-import { Button, Grid, AspectRatio } from "@mui/joy";
+import { Button, Grid } from "@mui/joy";
 import { useRouter } from "next/router";
 import Input from "@mui/joy/Input";
 import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
-import { initDb } from "@/libs/api";
+// import { initDb } from "@/libs/api";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 // initDb();
+
+//@ts-ignore
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const session = await getSession({ req: context.req });
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permananet: false,
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
 export default function Index() {
   const router = useRouter();
@@ -17,13 +39,13 @@ export default function Index() {
     setLoading(true);
     const email = event.target[0].value;
     const password = event.target[1].value;
-    const response = await signIn("credentials", {
+    await signIn("credentials", {
+      redirect: false,
       email,
       password,
     });
     setLoading(false);
-    console.log(response);
-    // router.push("/dashboard");
+    router.push("/dashboard");
   };
 
   return (
@@ -52,6 +74,7 @@ export default function Index() {
           <Input
             placeholder="Enter your email address"
             type="email"
+            name="email"
             sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
             size="lg"
             required

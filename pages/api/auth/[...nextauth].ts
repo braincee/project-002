@@ -1,8 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth from "next-auth/next";
+import NextAuth, { NextAuthOptions } from "next-auth";
 
-export const authOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -30,14 +29,11 @@ export const authOptions = {
         }
 
         const user = await authResponse.json();
-
-        return user;
+        return user.response;
       },
     }),
   ],
-  pages: {
-    signIn: "/",
-  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
