@@ -22,6 +22,7 @@
     "@supabase/auth-helpers-nextjs": "^0.7.4",
     "@supabase/storage-js": "^2.5.2",
     "@supabase/supabase-js": "^2.32.0",
+    "@thirdweb-dev/chains": "^0.1.47",
     "@thirdweb-dev/react": "^3.14.36",
     "@thirdweb-dev/sdk": "^3.10.55",
     "axios": "^1.4.0",
