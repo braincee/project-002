@@ -185,7 +185,9 @@ const MainModal = (props: MainModalProps) => {
                       }}
                       key={value.id}
                     >
-                      {value.address ? value.address : value.title}
+                      {value.address
+                        ? truncateEthAddress(value.address)
+                        : value.title}
                     </Typography>
                   );
                 })}
