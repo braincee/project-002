@@ -8,7 +8,7 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import truncateEthAddress from "truncate-eth-address";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
@@ -40,7 +40,6 @@ export default function Dashboard({
   addresses,
   contentLength,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { data: session } = useSession();
   const chartData = () => {
     const data = new Map();
     const labels: any[] = [];
@@ -59,8 +58,6 @@ export default function Dashboard({
     });
     return { labels, dataValues };
   };
-
-  console.log(session);
 
   return (
     <Box

@@ -24,7 +24,6 @@ export default async function handler(
   let response;
   if (user) {
     const status = comparePassword(data.password, user.password);
-    console.log("status", status);
     if (status) {
       response = {
         id: user.id,
@@ -33,7 +32,6 @@ export default async function handler(
     } else {
       response = "Invalid password";
     }
-    console.log("user", user);
   } else {
     response = null;
   }

@@ -12,8 +12,9 @@ import NextLink from "next/link";
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
 import NextProgress from "next-progress";
+import { signOut } from "next-auth/react";
 
-const Header: React.FC = () => {
+const Header = () => {
   const router = useRouter();
 
   return (
@@ -117,7 +118,9 @@ const Header: React.FC = () => {
         aria-label="spacing primary button group"
       >
         <ModeButton />
-        <Button variant="outlined">Logout</Button>
+        <Button variant="outlined" onClick={() => signOut()}>
+          Logout
+        </Button>
       </ButtonGroup>
     </Box>
   );
