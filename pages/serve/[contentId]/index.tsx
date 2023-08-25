@@ -5,7 +5,7 @@ import Head from 'next/head'
 import React from 'react'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
 import { ConnectWallet } from '@thirdweb-dev/react'
-import { Button } from "@mui/joy"
+// import { useAddress } from '@thirdweb-dev/react'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { contentId } = context.query as any
@@ -14,6 +14,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const response = await fetch(url, {
         method: 'HEAD',
     })
+    // const fileType = response.headers.get("Content-Type") || "unknown";
     return {
         props: { content: JSON.parse(content) },
     }
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const ServeContent = ({
     content,
-}:
+}: // fileType,
 InferGetServerSidePropsType<typeof getServerSideProps>) => {
     let renderedContent
 
@@ -42,6 +43,10 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
     } else {
         renderedContent = <p>Unsupported Content Type</p>
     }
+    
+    // const address = useAddress();
+
+    // if (!address) return <div>No wallet connected</div>;
 
     return (
         <ThirdwebProvider activeChain='ethereum' clientId='4ca916cd2429acbfee7deea1b4a8222b'>
@@ -53,8 +58,10 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
                 </Head>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Box sx={{ width: '100%', height: '100%', p: 10 }}>{renderedContent}</Box>
+                    
                 </Box>
                 <ConnectWallet theme='dark' btnTitle='Connect Wallet' />
+                {/* <div>My wallet address is {address}</div> */}
             </>
         </ThirdwebProvider>
     )
