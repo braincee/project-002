@@ -5,7 +5,7 @@ import Head from "next/head";
 import React from "react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
-// import { useAddress } from '@thirdweb-dev/react'
+import { useAddress } from "@thirdweb-dev/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { contentId } = context.query as any;
@@ -14,7 +14,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const response = await fetch(url, {
     method: "HEAD",
   });
-  // const fileType = response.headers.get("Content-Type") || "unknown";
   return {
     props: { content: JSON.parse(content) },
   };
@@ -22,8 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const ServeContent = ({
   content,
-}: // fileType,
-InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let renderedContent;
 
   if (content.fileType.startsWith("video")) {
@@ -47,12 +45,12 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
       </a>
     );
   } else {
-    renderedContent = <p>Unsupported Content Type</p>;
+    renderedContent = <p>Content Not Found</p>;
   }
 
-  // const address = useAddress();
+  const address = useAddress();
 
-  // if (!address) return <div>No wallet connected</div>;
+  if (!address) return <div>No wallet connected</div>;
 
   return (
     <ThirdwebProvider
@@ -71,7 +69,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
           </Box>
         </Box>
         <ConnectWallet theme="dark" btnTitle="Connect Wallet" />
-        {/* <div>My wallet address is {address}</div> */}
+        <div>My wallet address is {address}</div>
       </>
     </ThirdwebProvider>
   );
