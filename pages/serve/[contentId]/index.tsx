@@ -1,21 +1,23 @@
-import { Content } from "@/libs/models";
+import { Address, Content } from "@/libs/models";
 import { Box, Button, Typography } from "@mui/joy";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import React from "react";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import React, { useEffect, useState } from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
-// import { useAddress } from '@thirdweb-dev/react'
+import { useAddress } from "@thirdweb-dev/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { contentId } = context.query as any;
   try {
-    const content = JSON.stringify(await Content.findByPk(contentId));
+    const content = JSON.stringify(
+      await Content.findByPk(contentId, {
+        include: { model: Address },
+      })
+    );
     return {
       props: { content: JSON.parse(content) },
     };
   } catch {
-    console.log("test is null");
     return {
       props: { content: "No content found" },
     };
@@ -25,7 +27,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const ServeContent = ({
   content,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [viewStatus, setViewStatus] = useState<boolean>(false);
+  const address = useAddress();
+  // const address = "0x1b5E9G7e1402q7yy9E47E16Ebc09FE7155A74B09"; //This was used to text for when address is available
+
   let renderedContent;
+
+  useEffect(() => {
+    const contentAddress =
+      content.Addresses &&
+      content.Addresses.find((myaddress: any) => myaddress.address === address);
+    if (contentAddress) {
+      setViewStatus(true);
+    }
+    console.log(contentAddress);
+  }, []);
 
   if (content.fileType && content.fileType.startsWith("video")) {
     renderedContent = (
@@ -47,6 +63,7 @@ const ServeContent = ({
   ) {
     renderedContent = (
       <Button
+        variant="outlined"
         component="a"
         href={content.url}
         target="_blank"
@@ -58,10 +75,6 @@ const ServeContent = ({
   } else {
     renderedContent = <p>Unsupported Content Type</p>;
   }
-
-  // const address = useAddress();
-
-  // if (!address) return <div>No wallet connected</div>;
 
   return (
     <>
@@ -76,50 +89,49 @@ const ServeContent = ({
             display: "flex",
             justifyContent: "center",
             width: "100%",
-            height: "100%",
-            p: 10,
+            height: "100vh",
+            pt: 10,
           }}
         >
           <Typography level="h3">Content Not Found </Typography>
         </Box>
-      ) : (
-        <ThirdwebProvider
-          activeChain="ethereum"
-          clientId="4ca916cd2429acbfee7deea1b4a8222b"
+      ) : address && viewStatus ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ width: "100%", height: "100%", p: 10 }}>
+            {renderedContent}
+          </Box>
+        </Box>
+      ) : address ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "100vh",
+            pt: 10,
+          }}
         >
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box sx={{ width: "100%", height: "100%", p: 10 }}>
-              {renderedContent}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: "100%",
-              height: "100vh",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-              }}
-            >
-              <ConnectWallet
-                className="connect-wallet"
-                theme="dark"
-                btnTitle="Connect Wallet"
-              />
-              {/* <div>My wallet address is {address}</div> */}
-            </Box>
-          </Box>
-        </ThirdwebProvider>
+          <Typography level="h3">
+            You do not have access to this content
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            zIndex: 20,
+          }}
+        >
+          <ConnectWallet
+            className="connect-wallet"
+            theme="dark"
+            btnTitle="Connect Wallet"
+          />
+        </Box>
       )}
     </>
   );

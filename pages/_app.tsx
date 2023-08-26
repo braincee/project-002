@@ -11,6 +11,7 @@ import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -27,7 +28,26 @@ export default function MyApp(props: MyAppProps) {
     pageProps: { session, ...pageProps },
   } = props;
   if (pathname.includes("serve")) {
-    return <Component {...pageProps} />;
+    return (
+      <ThirdwebProvider
+        activeChain="ethereum"
+        clientId="4ca916cd2429acbfee7deea1b4a8222b"
+      >
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <CssVarsProvider
+          defaultMode="system"
+          theme={theme}
+          modeStorageKey="mode-key"
+          disableNestedContext
+        >
+          <CssBaseline />
+
+          <Component {...pageProps} />
+        </CssVarsProvider>
+      </ThirdwebProvider>
+    );
   } else {
     return (
       <SessionProvider session={session}>
