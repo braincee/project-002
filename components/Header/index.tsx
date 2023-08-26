@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Box,
@@ -12,10 +12,19 @@ import NextLink from "next/link";
 import ModeButton from "../ModeButton";
 import { useRouter } from "next/router";
 import NextProgress from "next-progress";
-import { signOut } from "next-auth/react";
+import { signOut as signOutNextAuth } from "next-auth/react";
 
 const Header = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const signOut = async () => {
+    setLoading(true);
+    await signOutNextAuth();
+    setLoading(false);
+    router.push("/");
+  };
+
 
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2 }}>
@@ -52,7 +61,7 @@ const Header = () => {
           aria-label="spacing primary button group"
         >
           <ModeButton />
-          <Button variant="outlined">Logout</Button>
+          <Button variant="outlined" onClick={signOut} loading={loading ? true : false}>Logout</Button>
         </ButtonGroup>
         <NextLink href="/">
           <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
@@ -118,7 +127,7 @@ const Header = () => {
         aria-label="spacing primary button group"
       >
         <ModeButton />
-        <Button variant="outlined" onClick={() => signOut()}>
+        <Button variant="outlined" onClick={signOut} loading={loading ? true : false}>
           Logout
         </Button>
       </ButtonGroup>
