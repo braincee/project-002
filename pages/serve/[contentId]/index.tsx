@@ -4,8 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { ConnectWallet, useSDK } from "@thirdweb-dev/react";
-import { useAddress } from "@thirdweb-dev/react";
-import { Stack } from "@mui/system";
+// import { useAddress } from "@thirdweb-dev/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { contentId } = context.query as any;
@@ -29,12 +28,10 @@ const ServeContent = ({
   content,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [viewStatus, setViewStatus] = useState<boolean>(false);
-  const [walletStatus, setWalletStatus] = useState<boolean>(false);
   const [signature, setSignature] = useState("");
   const [address, setAddress] = useState("");
 
   // const address = useAddress();
-  // const address = "0x1b5E9G7e1402q7yy9E47E16Ebc09FE7155A74B09"; //This was used to text for when address is available
   const message = "I am requesting content";
   const sdk = useSDK();
 
@@ -48,13 +45,15 @@ const ServeContent = ({
     setSignature(sign);
   };
 
-  const recoverAddress = () => {
-    const addr = sdk?.wallet.recoverAddress(message, signature);
-    if (!addr) {
-      throw new Error("No address");
+  useEffect(() => {
+    if (signature) {
+      const addr = sdk?.wallet.recoverAddress(message, signature);
+      if (!addr) {
+        throw new Error("No address");
+      }
+      setAddress(addr);
     }
-    setAddress(addr);
-  };
+  }, [signature]);
 
   useEffect(() => {
     const contentAddress =
@@ -158,22 +157,13 @@ const ServeContent = ({
             theme="dark"
             btnTitle="Connect Wallet"
           />
-          <Stack spacing={2}>
-            <Button
-              variant="outlined"
-              disabled={signature ? true : false}
-              onClick={signMessage}
-            >
-              Sign Message
-            </Button>
-            <Button
-              variant="outlined"
-              disabled={!signature ? true : false}
-              onClick={recoverAddress}
-            >
-              Recover Address
-            </Button>
-          </Stack>
+          <Button
+            variant="outlined"
+            disabled={signature ? true : false}
+            onClick={signMessage}
+          >
+            Sign Message
+          </Button>
         </Box>
       )}
     </>
