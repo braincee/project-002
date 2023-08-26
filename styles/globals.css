@@ -4,3 +4,9 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
 }
+
+.connect-wallet {
+  background: #fff;
+  color: #0091ff;
+  border: 1px solid #0091ff;
+}

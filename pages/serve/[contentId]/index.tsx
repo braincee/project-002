@@ -1,5 +1,5 @@
 import { Content } from "@/libs/models";
-import { Box } from "@mui/joy";
+import { Box, Button, Typography } from "@mui/joy";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import React from "react";
@@ -9,28 +9,29 @@ import { ConnectWallet } from "@thirdweb-dev/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { contentId } = context.query as any;
-  const content = JSON.stringify(await Content.findByPk(contentId));
-  const { url } = JSON.parse(content);
-  const response = await fetch(url, {
-    method: "HEAD",
-  });
-  // const fileType = response.headers.get("Content-Type") || "unknown";
-  return {
-    props: { content: JSON.parse(content) },
-  };
+  try {
+    const content = JSON.stringify(await Content.findByPk(contentId));
+    return {
+      props: { content: JSON.parse(content) },
+    };
+  } catch {
+    console.log("test is null");
+    return {
+      props: { content: "No content found" },
+    };
+  }
 };
 
 const ServeContent = ({
   content,
-}: // fileType,
-InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let renderedContent;
 
-  if (content.fileType.startsWith("video")) {
+  if (content.fileType && content.fileType.startsWith("video")) {
     renderedContent = (
       <video controls src={content.url} style={{ maxWidth: "100%" }} />
     );
-  } else if (content.fileType.startsWith("image")) {
+  } else if (content.fileType && content.fileType.startsWith("image")) {
     renderedContent = (
       <img
         src={content.url}
@@ -38,13 +39,21 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
         style={{ maxWidth: "100%", height: "auto" }}
       />
     );
-  } else if (content.fileType.startsWith("audio")) {
+  } else if (content.fileType && content.fileType.startsWith("audio")) {
     renderedContent = <audio controls src={content.url} />;
-  } else if (content.fileType === "link") {
+  } else if (
+    content.fileType &&
+    (content.fileType === "link" || content.fileType === "unknown")
+  ) {
     renderedContent = (
-      <a href={content.url} target="_blank" rel="noopener noreferrer">
+      <Button
+        component="a"
+        href={content.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Link to Content
-      </a>
+      </Button>
     );
   } else {
     renderedContent = <p>Unsupported Content Type</p>;
@@ -55,25 +64,64 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
   // if (!address) return <div>No wallet connected</div>;
 
   return (
-    <ThirdwebProvider
-      activeChain="ethereum"
-      clientId="4ca916cd2429acbfee7deea1b4a8222b"
-    >
-      <>
-        <Head>
-          <title>NFT Gated Server</title>
-          <meta name="robots" content="follow, index" />
-          <meta name="description" content="description" />
-        </Head>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Box sx={{ width: "100%", height: "100%", p: 10 }}>
-            {renderedContent}
-          </Box>
+    <>
+      <Head>
+        <title>NFT Gated Server</title>
+        <meta name="robots" content="follow, index" />
+        <meta name="description" content="description" />
+      </Head>
+      {content === "No content found" ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            p: 10,
+          }}
+        >
+          <Typography level="h3">Content Not Found </Typography>
         </Box>
-        <ConnectWallet theme="dark" btnTitle="Connect Wallet" />
-        {/* <div>My wallet address is {address}</div> */}
-      </>
-    </ThirdwebProvider>
+      ) : (
+        <ThirdwebProvider
+          activeChain="ethereum"
+          clientId="4ca916cd2429acbfee7deea1b4a8222b"
+        >
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "100%", height: "100%", p: 10 }}>
+              {renderedContent}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "100vh",
+            }}
+          >
+            <Box
+              sx={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <ConnectWallet
+                className="connect-wallet"
+                theme="dark"
+                btnTitle="Connect Wallet"
+              />
+              {/* <div>My wallet address is {address}</div> */}
+            </Box>
+          </Box>
+        </ThirdwebProvider>
+      )}
+    </>
   );
 };
 
