@@ -18,7 +18,6 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import { User } from "@/libs/models";
-import { v4 as uuidV4 } from "uuid";
 import { getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (
@@ -49,6 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (
 interface Data {
   id: string;
   email: string;
+  password: string;
 }
 
 const Manage = ({
@@ -66,8 +66,7 @@ const Manage = ({
       //! YOU DO NOT GENERATE A UUID FOR THE USER.
       //! OR FOR ANY OBJECT, CREATED IN THE SUPABASE DB.
       //! THE DATABASE AUTOMATICALLY ASSIGNS AN ID TO EACH OBJECT ON CREATION.
-      const userId = uuidV4();
-      await addUser({ id: userId, email: newUserEmail, password: password });
+      await addUser({ email: newUserEmail, password: password });
       const { response } = await getUsers();
       setUserList(response);
       setLoading(false);
