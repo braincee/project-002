@@ -13,26 +13,9 @@ import {
 import { Download } from "@mui/icons-material";
 import { ExportToCsv } from "export-to-csv";
 import { Log } from "@/libs/models";
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from "next";
-import { getSession } from "next-auth/react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await getSession({ req: context.req });
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permananet: false,
-      },
-      props: {},
-    };
-  }
+export const getServerSideProps: GetServerSideProps = async () => {
   const logs = JSON.stringify(
     await Log.findAll({
       order: [["created_at", "DESC"]],

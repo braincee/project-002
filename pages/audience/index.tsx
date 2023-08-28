@@ -9,32 +9,15 @@ import {
   getAddresses,
   removeContentIdAddressIds,
 } from "@/libs/api";
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Address, Content } from "@/libs/models";
 import TableHead from "@/components/TableHead";
 import MainModal from "@/components/MainModal";
 import TableBody from "@/components/TableBody";
 import TableFoot from "@/components/TableFoot";
 import { v4 as uuidV4 } from "uuid";
-import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await getSession({ req: context.req });
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permananet: false,
-      },
-      props: {},
-    };
-  }
+export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
     await Address.findAll({
       order: [["created_at", "DESC"]],

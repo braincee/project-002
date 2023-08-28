@@ -2,27 +2,10 @@ import React from "react";
 import { Box, Card, Grid, List, Stack, Typography } from "@mui/joy";
 import BarChart from "@/components/BarChart";
 import { Address, Content } from "@/libs/models";
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import truncateEthAddress from "truncate-eth-address";
-import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await getSession({ req: context.req });
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permananet: false,
-      },
-      props: {},
-    };
-  }
+export const getServerSideProps: GetServerSideProps = async () => {
   const addresses = JSON.stringify(
     await Address.findAll({ order: [["created_at", "DESC"]] })
   );
