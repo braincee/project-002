@@ -12,7 +12,11 @@ export const getAddress = async ({ addressId }: { addressId: string }) => {
   return response.json();
 };
 
-export const getContent = async ({ contentId }: { contentId: string }) => {
+export const getContent = async ({
+  contentId,
+}: {
+  contentId: string | undefined;
+}) => {
   const response = await fetch(`/api/content/${contentId}`);
   return response.json();
 };
@@ -39,17 +43,14 @@ export const addAddress = async ({
 };
 
 export const addUser = async ({
-  id,
   email,
   password,
 }: {
-  id: string;
   email: string;
   password: string;
 }) => {
   const hashPassword = await hash(password, 10);
   const data = {
-    id,
     email,
     password: hashPassword,
     invited: true,

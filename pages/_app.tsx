@@ -21,22 +21,33 @@ interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { pathname } = useRouter();
+  console.log(pathname);
   const {
     Component,
     emotionCache = clientSideEmotionCache,
     pageProps: { session, ...pageProps },
   } = props;
-  if (pathname.includes("serve")) {
-    return (
-      //! MOVE THIRDWEB PROVIDER, HEAD, CSS BASLINE TO /LOGIN PAGE
-      //! DELETE CSS VARS PROVIDER (NOT APPLY STYLES)
+  if (pathname.includes("serve") || pathname === "/") {
+    //! MOVE THIRDWEB PROVIDER, HEAD, CSS BASLINE TO /LOGIN PAGE
+    //! DELETE CSS VARS PROVIDER (NOT APPLY STYLES)
 
-      //! RETURN ONLY COMPONENT HERE
+    //! RETURN ONLY COMPONENT HERE
+    return (
       <ThirdwebProvider
         activeChain="ethereum"
         clientId="4ca916cd2429acbfee7deea1b4a8222b"
       >
+        <Component {...pageProps} />;
+      </ThirdwebProvider>
+    );
+  }
+  return (
+    <SessionProvider session={session}>
+      <CacheProvider value={emotionCache}>
         <Head>
+          <title>NFT Gated Server</title>
+          <meta name="robots" content="follow, index" />
+          <meta name="description" content="description" />
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
         <CssVarsProvider
@@ -46,54 +57,31 @@ export default function MyApp(props: MyAppProps) {
           disableNestedContext
         >
           <CssBaseline />
-
-          <Component {...pageProps} />
+          <GlobalStyles
+            styles={{
+              html: {
+                overflowY: "scroll",
+              },
+              a: {
+                textDecoration: "none",
+                color: "var(--joy-palette-primary-500)",
+              },
+              "a:hover": {
+                color: "var(--joy-palette-primary-600)",
+              },
+              "a:active": {
+                color: "var(--joy-palette-primary-700)",
+              },
+              li: {
+                paddingLeft: "0 !important",
+              },
+            }}
+          />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </CssVarsProvider>
-      </ThirdwebProvider>
-    );
-  } else {
-    return (
-      <SessionProvider session={session}>
-        <CacheProvider value={emotionCache}>
-          <Head>
-            <meta
-              name="viewport"
-              content="initial-scale=1, width=device-width"
-            />
-          </Head>
-          <CssVarsProvider
-            defaultMode="system"
-            theme={theme}
-            modeStorageKey="mode-key"
-            disableNestedContext
-          >
-            <CssBaseline />
-            <GlobalStyles
-              styles={{
-                html: {
-                  overflowY: "scroll",
-                },
-                a: {
-                  textDecoration: "none",
-                  color: "var(--joy-palette-primary-500)",
-                },
-                "a:hover": {
-                  color: "var(--joy-palette-primary-600)",
-                },
-                "a:active": {
-                  color: "var(--joy-palette-primary-700)",
-                },
-                li: {
-                  paddingLeft: "0 !important",
-                },
-              }}
-            />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </CssVarsProvider>
-        </CacheProvider>
-      </SessionProvider>
-    );
-  }
+      </CacheProvider>
+    </SessionProvider>
+  );
 }

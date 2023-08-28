@@ -6,7 +6,7 @@ body {
 }
 
 .connect-wallet {
-  background: #fff;
-  color: #0091ff;
-  border: 1px solid #0091ff;
+  background: #fff !important;
+  color: #0091ff !important;
+  border: 1px solid #0091ff !important;
 }
