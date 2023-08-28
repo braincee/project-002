@@ -79,7 +79,12 @@ const Manage = ({
         <Typography level="h4" sx={{ marginBottom: 2 }}>
           Email Address: test@test.com
         </Typography>
-        <Input placeholder="Enter new password" type="password" value="" />
+        <Input placeholder="Enter new password" type="password" value="" sx={{
+            width: "100%",
+            "@media (min-width: 768px)": {
+              width: "300px",
+            },
+          }}/>
         <Button variant="outlined" sx={{ marginTop: 2 }}>
           Change Password
         </Button>
@@ -101,9 +106,7 @@ const Manage = ({
             stickyHeader
             hoverRow
             sx={{
-              "--TableCell-headBackground": "#eeeeee",
-              "--TableCell-selectedBackground": (theme) =>
-                theme.vars.palette.primary.softBg,
+              "--TableCell-headBackground": "#bbbbbb",
               "& thead th:nth-child(1)": {
                 width: "40px",
               },
@@ -111,6 +114,9 @@ const Manage = ({
                 width: "20%",
               },
               "& tr > *:nth-child(n+2)": { textAlign: "right" },
+              "& th": {
+                color: "black",
+              },
             }}
           >
             <thead>
