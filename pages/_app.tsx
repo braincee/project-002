@@ -13,7 +13,6 @@ import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 
-// Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
 interface MyAppProps extends AppProps {
@@ -29,6 +28,10 @@ export default function MyApp(props: MyAppProps) {
   } = props;
   if (pathname.includes("serve")) {
     return (
+      //! MOVE THIRDWEB PROVIDER, HEAD, CSS BASLINE TO /LOGIN PAGE
+      //! DELETE CSS VARS PROVIDER (NOT APPLY STYLES)
+
+      //! RETURN ONLY COMPONENT HERE
       <ThirdwebProvider
         activeChain="ethereum"
         clientId="4ca916cd2429acbfee7deea1b4a8222b"

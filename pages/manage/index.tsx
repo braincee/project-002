@@ -63,6 +63,9 @@ const Manage = ({
   const handleAddUser = async () => {
     if (newUserEmail) {
       setLoading(true);
+      //! YOU DO NOT GENERATE A UUID FOR THE USER.
+      //! OR FOR ANY OBJECT, CREATED IN THE SUPABASE DB.
+      //! THE DATABASE AUTOMATICALLY ASSIGNS AN ID TO EACH OBJECT ON CREATION.
       const userId = uuidV4();
       await addUser({ id: userId, email: newUserEmail, password: password });
       const { response } = await getUsers();

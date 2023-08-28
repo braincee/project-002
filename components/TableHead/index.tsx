@@ -20,6 +20,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
+//! How about proper naming conventions?
 const headCells1: readonly HeadCell[] = [
   {
     id: "address",
@@ -41,6 +42,7 @@ const headCells1: readonly HeadCell[] = [
   },
 ];
 
+//! How about proper naming conventions?
 const headCells2: readonly HeadCell[] = [
   {
     id: "title",

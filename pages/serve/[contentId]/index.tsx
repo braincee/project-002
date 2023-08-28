@@ -1,4 +1,6 @@
 import { Address, Content } from "@/libs/models";
+//! REMOVE ALL MUI COMPONENTS FROM THIS PAGE
+//! IT WAS EXPLAINED TO YOU THAT MUI STYLES ARE NOT IMPORTED IN THIS PAGE, IT IS MEANT TO BE AS LIGHT AS POSSIBLE
 import { Box, Button, Typography } from "@mui/joy";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
@@ -28,14 +30,23 @@ const ServeContent = ({
   content,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [viewStatus, setViewStatus] = useState<boolean>(false);
-  const [signature, setSignature] = useState("");
-  const [address, setAddress] = useState("");
+  // const [signature, setSignature] = useState('') //! delete
+  // const [address, setAddress] = useState('') //! delete
+  //! ADD ERRORMESSAGE STATE TO HANDLE DIFFERENCE BETWEEN NO ADDRESS, INVALID ADDRESS, DOES NOT HAVE ACCESS
 
   // const address = useAddress();
   const message = "I am requesting content";
   const sdk = useSDK();
 
-  let renderedContent;
+  let renderedContent; //! change from variable to a useCallback that returns the rendered content based on content.fileType, or error message
+
+  //! RE-WRTIE THIS WEB3 LOGIC
+  //! USER PRESSES CONNECT BUTTON
+  //! YOU HAVE A USEEFFECT THAT LISTENS FOR `ADDRESS` TO CHANGE (FROM THIRDWEB useADDRESS, NOT YOUR VARIABLE)
+  //! WHEN THE USEEFFECT RECEIVES A NON NULL ADDRESS, IT TRIGGERS SDK.WALLET.SIGN
+  //! YOU CHECK THE FUNCTION RESPONSE (RECOVER) AND COMPARE THE 2 ADDRESS
+  //! IF VALID YOU GET THE CONTENT AND CHECK THE CONTENT.ADDRESSES, IF ADDRESS IS THERE YOU SET VIEW STATUS
+  //! THIS IS ALL IN ONE USEEFFECT, NO ADDRESS OR SIGNATURE STATE NEEDED
 
   const signMessage = async () => {
     const sign = await sdk?.wallet.sign(message);
@@ -66,6 +77,7 @@ const ServeContent = ({
   }, [address]);
 
   if (content.fileType && content.fileType.startsWith("video")) {
+    //! this is bad, see change above to a useCallback
     renderedContent = (
       <video controls src={content.url} style={{ maxWidth: "100%" }} />
     );
@@ -112,6 +124,7 @@ const ServeContent = ({
             justifyContent: "center",
             width: "100%",
             height: "100vh",
+            //! Remove this padding
             pt: 10,
           }}
         >
@@ -132,6 +145,7 @@ const ServeContent = ({
             justifyContent: "center",
             width: "100%",
             height: "100vh",
+            //! Remove this padding
             pt: 10,
           }}
         >
