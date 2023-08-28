@@ -3,14 +3,10 @@ import { useRouter } from "next/router";
 import Input from "@mui/joy/Input";
 import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
-// import { initDb } from "@/libs/api";
 import { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
-// initDb();
-
-//@ts-ignore
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {

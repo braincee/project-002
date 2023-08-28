@@ -39,17 +39,14 @@ export const addAddress = async ({
 };
 
 export const addUser = async ({
-  id,
   email,
   password,
 }: {
-  id: string;
   email: string;
   password: string;
 }) => {
   const hashPassword = await hash(password, 10);
   const data = {
-    id,
     email,
     password: hashPassword,
     invited: true,
