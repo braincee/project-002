@@ -116,8 +116,8 @@ const MainModal = (props: MainModalProps) => {
                   sx={{
                     width: {
                       xs: "100%",
-                      display: checked ? "flex" : "none",
                     },
+                    display: checked ? "flex" : "none",
                   }}
                 />
                 <Input

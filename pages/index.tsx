@@ -4,6 +4,7 @@ import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import NextProgress from "next-progress";
 
 export default function Index() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Index() {
 
   return (
     <>
+      <NextProgress delay={100} options={{ showSpinner: false }} />
       <Grid
         container
         sx={{

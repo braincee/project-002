@@ -1,32 +1,30 @@
-import "react-dropzone-uploader/dist/styles.css";
-import Dropzone, {
-  IFileWithMeta,
-  IUploadParams,
-} from "react-dropzone-uploader";
+import { ReactElement, useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 
-const DragDrop = () => {
-  const getUploadParams = ({ meta }: IFileWithMeta): IUploadParams => {
-    return { url: "https://httpbin.org/post" };
-  };
-
-  const handleChangeStatus = (
-    { meta, file }: IFileWithMeta,
-    status: string
-  ) => {
-    console.log(status, meta, file);
-  };
-
-  const handleSubmit = (files: IFileWithMeta[]) => {
-    console.log(files.map((f) => f.meta));
-  };
+const DragDrop = ({ setFile, checked }: { setFile: any; checked: boolean }) => {
+  const [display, setDisplay] = useState<any>(
+    "Drag 'n' drop some files here, or click to select files"
+  );
+  const onDrop = useCallback((acceptedFiles: any) => {
+    acceptedFiles.forEach((file: any) => {
+      setFile(file);
+      setDisplay(file.path);
+    });
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <Dropzone
-      getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      onSubmit={handleSubmit}
-      accept="image/*,audio/*,video/*"
-    />
+    <div
+      {...getRootProps()}
+      style={{
+        border: "1px solid #cdd7e1",
+        padding: "0px 8px",
+        display: checked ? "none" : "block",
+      }}
+    >
+      <input {...getInputProps()} required={checked ? false : true} />
+      {isDragActive ? <p>Drop the files here ...</p> : <p>{display}</p>}
+    </div>
   );
 };
 

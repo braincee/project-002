@@ -102,6 +102,8 @@ const ContentList = ({
   const [iconButtonId, setIconButtonId] = useState("");
   const [keepOrfans, setKeepOrfans] = useState<boolean | null>(null);
 
+  console.log(file);
+
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
   useEffect(() => {
