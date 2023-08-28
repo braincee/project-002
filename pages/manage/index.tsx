@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   );
   return {
     props: {
-      addresses: JSON.parse(users),
+      users: JSON.parse(users),
     },
   };
 };
