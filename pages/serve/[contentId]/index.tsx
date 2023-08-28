@@ -29,15 +29,12 @@ import { useRouter } from "next/router";
 interface ContentProps {
   url: string;
   fileType: string;
-  title: string;
-  description: string;
 }
 
 const ServeContent = () => {
   const { query } = useRouter();
-  const [errorMessage, setErrorMesaage] = useState("No Address");
+  const [errorMessage, setErrorMesaage] = useState("");
   const [content, setContent] = useState<ContentProps>();
-  //! ADD ERRORMESSAGE STATE TO HANDLE DIFFERENCE BETWEEN NO ADDRESS, INVALID ADDRESS, DOES NOT HAVE ACCESS
 
   const address = useAddress();
   const message = "I am requesting content";
@@ -65,8 +62,6 @@ const ServeContent = () => {
           Link to Content
         </a>
       );
-    } else {
-      return <p>Unsupported Content Type</p>;
     }
   }, [content]); //! change from variable to a useCallback that returns the rendered content based on content.fileType, or error message
 
@@ -145,7 +140,7 @@ const ServeContent = () => {
           <h3>Sorry, The Address is Invalid!!</h3>
         </div>
       )}
-      {address && content && errorMessage === "Does not have access" ? (
+      {address && content && errorMessage === "Does not have access" && (
         <div
           style={{
             display: "flex",
@@ -156,10 +151,11 @@ const ServeContent = () => {
         >
           <h3>You do not have access to this content</h3>
         </div>
-      ) : (
+      )}
+      {address && content && errorMessage === "" && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", height: "100%", padding: 10 }}>
-            {renderedContent}
+            {renderedContent()}
           </div>
         </div>
       )}
@@ -168,51 +164,3 @@ const ServeContent = () => {
 };
 
 export default ServeContent;
-// {
-//   content === undefined ? (
-//     <div
-//       style={{
-//         display: "flex",
-//         justifyContent: "center",
-//         width: "100%",
-//         height: "100vh",
-//       }}
-//     >
-//       <h3>Content Not Found </h3>
-//     </div>
-//   ) : address && viewStatus ? (
-//     <div style={{ display: "flex", justifyContent: "center" }}>
-//       <div style={{ width: "100%", height: "100%", padding: 10 }}></div>
-//     </div>
-//   ) : address ? (
-//     <div
-//       style={{
-//         display: "flex",
-//         justifyContent: "center",
-//         width: "100%",
-//         height: "100vh",
-//       }}
-//     >
-//       <h3>You do not have access to this content</h3>
-//     </div>
-//   ) : (
-//     <div
-//       style={{
-//         position: "relative",
-//         display: "flex",
-//         flexDirection: "column",
-//         justifyContent: "center",
-//         alignItems: "center",
-//         height: "100vh",
-//         gap: 3,
-//         zIndex: 20,
-//       }}
-//     >
-//       <ConnectWallet
-//         className="connect-wallet"
-//         theme="dark"
-//         btnTitle="Connect Wallet"
-//       />
-//     </div>
-//   );
-// }

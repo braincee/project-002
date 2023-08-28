@@ -1,33 +1,9 @@
-import { Button, CssBaseline, GlobalStyles, Grid } from "@mui/joy";
+import { Button, Grid, Input } from "@mui/joy";
 import { useRouter } from "next/router";
-import Input from "@mui/joy/Input";
 import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
 import { useState } from "react";
-import { getSession, signIn } from "next-auth/react";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
-import Head from "next/head";
-
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await getSession({ req: context.req });
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permananet: false,
-      },
-    };
-  }
-  return {
-    props: {
-      session,
-    },
-  };
-};
+import { signIn } from "next-auth/react";
 
 export default function Index() {
   const router = useRouter();
@@ -47,136 +23,54 @@ export default function Index() {
   };
 
   return (
-    <ThirdwebProvider
-      activeChain="ethereum"
-      clientId="4ca916cd2429acbfee7deea1b4a8222b"
-    >
-      <>
-        <Head>
-          <title>NFT Gated Server</title>
-          <meta name="robots" content="follow, index" />
-          <meta name="description" content="description" />
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
-        <CssBaseline />
-        <GlobalStyles
-          styles={{
-            html: {
-              overflowY: "scroll",
-            },
-            a: {
-              textDecoration: "none",
-              color: "var(--joy-palette-primary-500)",
-            },
-            "a:hover": {
-              color: "var(--joy-palette-primary-600)",
-            },
-            "a:active": {
-              color: "var(--joy-palette-primary-700)",
-            },
-            li: {
-              paddingLeft: "0 !important",
-            },
-          }}
-        />
+    <>
+      <Grid
+        container
+        sx={{
+          width: "100%",
+          height: "100vh",
+          m: 0,
+        }}
+        spacing={5}
+      >
         <Grid
-          container
-          sx={{
-            width: "100%",
-            minHeight: "98vh",
-            mx: "auto",
-          }}
-          spacing={3}
+          xs={12}
+          md={4}
+          sx={{ alignItems: "center", display: "grid", py: 0 }}
         >
-          <Grid
-            lg={4}
-            md={6}
-            xs={12}
-            sx={{ alignItems: "center", display: "grid" }}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
           >
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-              }}
-            >
-              <Input
-                placeholder="Name"
-                sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
-                size="lg"
-              />
-              <Input
-                placeholder="Enter your password"
-                sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
-                size="lg"
-              />
-              <Button
-                type="submit"
-                onClick={handleLogin}
-                loading={loading ? true : false}
-              >
-                Submit
-              </Button>
-            </form>
-          </Grid>
-          <Grid lg={8} md={6} xs={12} sx={{ minHeight: "100%" }}>
-            <Image
-              className="nft-image"
-              src={NFTImage}
-              alt="NTF Image"
-              style={{ height: "100%", width: "100%" }}
+            <Input
+              placeholder="Name"
+              sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
+              size="lg"
             />
-          </Grid>
+            <Input
+              placeholder="Enter your password"
+              sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
+              size="lg"
+            />
+            <Button
+              type="submit"
+              onClick={handleLogin}
+              loading={loading ? true : false}
+            >
+              Submit
+            </Button>
+          </form>
         </Grid>
-        {/* <div
-          style={{
-            width: "100%",
-            minHeight: "100vh",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-          }}
-        >
-          <div
-            style={{ alignSelf: "center", gridColumn: "1/1", padding: "10px" }}
-          >
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                handleLogin(event);
-              }}
-              method="POST"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <input
-                placeholder="Enter your email address"
-                type="email"
-                name="email"
-                style={{ marginBottom: "10px", padding: "8px" }}
-                required
-              />
-              <input
-                placeholder="Enter your password"
-                type="password"
-                style={{ marginBottom: "10px", padding: "8px" }}
-                required
-              />
-              <div style={{ display: "flex" }}>
-                <button type="submit">Submit</button>
-              </div>
-            </form>
-          </div>
-          <div style={{ minHeight: "100%", gridColumn: "2/4" }}>
-            <Image
-              className="nft-image"
-              src={NFTImage}
-              alt="NTF Image"
-              style={{ height: "100%", width: "100%" }}
-            />
-          </div>
-        </div> */}
-      </>
-    </ThirdwebProvider>
+        <Grid xs={12} md={8} sx={{ py: 0, px: 0, height: "100vh" }}>
+          <Image
+            className="nft-image"
+            src={NFTImage}
+            alt="NTF Image"
+            style={{ height: "100%", width: "100%" }}
+          />
+        </Grid>
+      </Grid>
+    </>
   );
 }

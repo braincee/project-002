@@ -2,7 +2,6 @@ import Box from "@mui/joy/Box";
 import { PropsWithChildren } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Header from "./Header";
 
 export default function Layout(props: PropsWithChildren) {
   const router = useRouter();
@@ -12,15 +11,12 @@ export default function Layout(props: PropsWithChildren) {
       <Box
         sx={{
           width: "100%",
-          height: "100%",
+          height: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <Header />
-        <Box sx={{ width: "100%", flexGrow: 1, padding: 2 }}>
-          {props.children}
-        </Box>
+        <Box sx={{ width: "100%", flexGrow: 1 }}>{props.children}</Box>
       </Box>
     </>
   );
