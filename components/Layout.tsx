@@ -1,6 +1,5 @@
 import Box from "@mui/joy/Box";
 import { PropsWithChildren } from "react";
-import Head from "next/head";
 import { useRouter } from "next/router";
 
 export default function Layout(props: PropsWithChildren) {

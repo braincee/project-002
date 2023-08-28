@@ -25,7 +25,6 @@ const Header = () => {
     router.push("/");
   };
 
-
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2 }}>
       <NextProgress delay={100} options={{ showSpinner: false }} />
@@ -61,17 +60,14 @@ const Header = () => {
           aria-label="spacing primary button group"
         >
           <ModeButton />
-          <Button variant="outlined" onClick={signOut} loading={loading ? true : false}>Logout</Button>
+          <Button
+            variant="outlined"
+            onClick={signOut}
+            loading={loading ? true : false}
+          >
+            Logout
+          </Button>
         </ButtonGroup>
-        <NextLink href="/">
-          <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
-            <Option value="login">
-              <Typography sx={{ paddingX: 2 }} level="h3">
-                Login
-              </Typography>
-            </Option>
-          </Link>
-        </NextLink>
         <NextLink href="/dashboard">
           <Link underline="none" sx={{ width: "100%", height: "100%", pb: 1 }}>
             <Option value="dashboard">
@@ -127,7 +123,11 @@ const Header = () => {
         aria-label="spacing primary button group"
       >
         <ModeButton />
-        <Button variant="outlined" onClick={signOut} loading={loading ? true : false}>
+        <Button
+          variant="outlined"
+          onClick={signOut}
+          loading={loading ? true : false}
+        >
           Logout
         </Button>
       </ButtonGroup>

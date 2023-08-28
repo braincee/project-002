@@ -28,14 +28,13 @@ export default function MyApp(props: MyAppProps) {
     pageProps: { session, ...pageProps },
   } = props;
   if (pathname.includes("serve")) {
-    //! MOVE THIRDWEB PROVIDER, HEAD, CSS BASLINE TO /LOGIN PAGE
-    //! DELETE CSS VARS PROVIDER (NOT APPLY STYLES)
-
-    //! RETURN ONLY COMPONENT HERE
+    // The ThirdWeb Provider has to wrap the component to be able to have access to useAddress
+    // This is why it is still here
+    // I could not find any other way to wrap it around the component.
     return (
       <ThirdwebProvider
         activeChain="ethereum"
-        clientId="4ca916cd2429acbfee7deea1b4a8222b"
+        clientId="19086ab219f91521de7ac12f38c0a1f0"
       >
         <Component {...pageProps} />
       </ThirdwebProvider>

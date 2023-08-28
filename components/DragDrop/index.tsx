@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 const DragDrop = ({ setFile, checked }: { setFile: any; checked: boolean }) => {
