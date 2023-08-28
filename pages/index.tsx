@@ -28,7 +28,7 @@ export default function Index() {
         container
         sx={{
           width: "100%",
-          height: "100vh",
+          height: "100%",
           m: 0,
         }}
         spacing={5}
@@ -36,33 +36,53 @@ export default function Index() {
         <Grid
           xs={12}
           md={4}
-          sx={{ alignItems: "center", display: "grid", py: 0 }}
+          sx={{
+            alignItems: "center",
+            display: "grid",
+            py: 0,
+            zIndex: 100,
+          }}
         >
           <form
             onSubmit={(event) => {
               event.preventDefault();
+              handleLogin(event);
             }}
+            method="POST"
           >
             <Input
-              placeholder="Name"
+              placeholder="Enter your email address"
+              type="email"
+              name="email"
               sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
               size="lg"
+              required
             />
             <Input
               placeholder="Enter your password"
-              sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
+              type="password"
+              sx={{
+                mb: 2,
+                fontSize: "var(--joy-fontSize-sm)",
+              }}
               size="lg"
+              required
             />
-            <Button
-              type="submit"
-              onClick={handleLogin}
-              loading={loading ? true : false}
-            >
+            <Button type="submit" loading={loading ? true : false}>
               Submit
             </Button>
           </form>
         </Grid>
-        <Grid xs={12} md={8} sx={{ py: 0, px: 0, height: "100vh" }}>
+        <Grid
+          xs={12}
+          md={8}
+          sx={{
+            py: 0,
+            px: 0,
+            height: "100%",
+            position: { xs: "absolute", md: "relative" },
+          }}
+        >
           <Image
             className="nft-image"
             src={NFTImage}
