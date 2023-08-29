@@ -44,13 +44,10 @@ interface Data {
   address?: string;
   title?: string;
   description?: string;
-  //! Rename Contents, Addresses and all Uppercase names to lowercase `contents`, `addresses`
-  //! Change them here and wherevery needed (database, supabase, functions, etc)
-  Contents?: any[];
-  Addresses?: any[];
+  contents?: any[];
+  addresses?: any[];
   created_at: Date;
-  //! Change this any type
-  action?: any;
+  action?: string;
 }
 
 const AddressList = ({
@@ -59,7 +56,7 @@ const AddressList = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Data>("Contents");
+  const [orderBy, setOrderBy] = useState<keyof Data>("contents");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
