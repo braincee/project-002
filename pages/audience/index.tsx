@@ -44,9 +44,12 @@ interface Data {
   address?: string;
   title?: string;
   description?: string;
+  //! Rename Contents, Addresses and all Uppercase names to lowercase `contents`, `addresses`
+  //! Change them here and wherevery needed (database, supabase, functions, etc)
   Contents?: any[];
   Addresses?: any[];
   created_at: Date;
+  //! Change this any type
   action?: any;
 }
 
