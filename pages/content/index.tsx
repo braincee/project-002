@@ -57,10 +57,10 @@ interface Data {
   address?: string;
   title?: string;
   description?: string;
-  contents?: any[];
-  addresses?: any[];
+  Contents?: any[];
+  Addresses?: any[];
   created_at: Date;
-  action?: string;
+  action?: any;
 }
 
 const ContentList = ({
@@ -69,7 +69,7 @@ const ContentList = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Data>("addresses");
+  const [orderBy, setOrderBy] = useState<keyof Data>(addresses);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
@@ -78,14 +78,12 @@ const ContentList = ({
   const [selectedOption, setSelectedOption] = useState<string | null>("");
   const [contentList, setContentList] = useState(contentItems);
   const [addressList, setAddressList] = useState(addresses);
-  const [file, setFile] = useState<any>("");
+  // const [file, setFile] = useState<any>("");
   const [selectedAddresses, setSelectedAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [iconButtonId, setIconButtonId] = useState("");
   const [keepOrfans, setKeepOrfans] = useState<boolean | null>(null);
-
-  console.log(file);
 
   const isSelected = (index: string) => selected.indexOf(index) !== -1;
 
@@ -95,20 +93,32 @@ const ContentList = ({
     }
   }, [openMain]);
 
-  const handleSubmit = async (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     let urlString = "";
-    if (event.target[1].type === "url") {
-      urlString = event.target[1].value;
+    let myFile;
+    const target = event.target as typeof event.target & {
+      file: { files: File[] };
+      url: { value: string; required: boolean };
+      title: { value: string };
+      description: { value: string };
+    };
+    if (target.url.required) {
+      urlString = target.url.value;
+    } else {
+      myFile = target.file.files[0];
     }
-    let title = event.target[2].value;
-    let description = event.target[3].value;
+    let title = target.title.value;
+    let description = target.description.value;
     setDisable(true);
-    event.target[1].value = "";
-    event.target[2].value = "";
-    event.target[3].value = "";
+    target.title.value = "";
+    target.description.value = "";
+    target.url.value = "";
 
-    const filename = await addFileToContentsStorage({ file, urlString });
+    const filename = await addFileToContentsStorage({
+      file: myFile,
+      urlString,
+    });
     const {
       data: {
         response: {
@@ -133,14 +143,12 @@ const ContentList = ({
       setContentList(response);
       setDisable(false);
       setOpenMain(false);
-      setFile("");
       setSelectedAddresses([]);
     } else {
       const { response } = await getContentItems();
       setContentList(response);
       setDisable(false);
       setOpenMain(false);
-      setFile("");
     }
     setLoading(false);
   };
@@ -161,7 +169,7 @@ const ContentList = ({
   };
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    event: React.MouseEvent<unknown, MouseEvent>,
     property: keyof Data
   ) => {
     const isAsc = orderBy === property && order === "asc";
@@ -307,9 +315,12 @@ const ContentList = ({
     return stabilizedThis.map((el) => el[0]);
   };
 
-  const handleKeepOrfans = (event: React.ChangeEvent<{ value: unknown }>) => {
-    //! Why are you comparing something to true? Just use the value as a boolean, true is true.
-    setKeepOrfans(event.target.value == "true");
+  const handleKeepOrfans = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value == "true") {
+      setKeepOrfans(true);
+    } else {
+      setKeepOrfans(false);
+    }
     setTimeout(() => {
       setDeleteOpen(false);
     }, 1000);
@@ -478,7 +489,7 @@ const ContentList = ({
           setSelectedOption={setSelectedOption}
           disable={disable}
           name="Content"
-          setFile={setFile}
+          // setFile={setFile}
           setSelectedValues={setSelectedAddresses}
           selectedValues={selectedAddresses}
           loading={loading}

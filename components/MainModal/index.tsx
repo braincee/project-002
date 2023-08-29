@@ -22,9 +22,9 @@ interface MainModalProps {
   disable: boolean;
   name: string;
   items: any[];
-  handleSubmit: (event: React.FormEvent) => void;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   setSelectedOption: (value: string | null) => void;
-  setFile?: React.Dispatch<React.SetStateAction<File | undefined>>;
+  // setFile?: React.Dispatch<React.SetStateAction<File | undefined>>;
   setSelectedValues?: (value: any) => void;
   selectedValues?: any[];
   loading: boolean;
@@ -41,7 +41,7 @@ const MainModal = (props: MainModalProps) => {
     setSelectedOption,
     disable,
     name,
-    setFile,
+    // setFile,
     setSelectedValues,
     selectedValues,
     loading,
@@ -108,10 +108,11 @@ const MainModal = (props: MainModalProps) => {
           <Stack spacing={2} direction={{ xs: "column" }}>
             {name === "Content" ? (
               <>
-                <DragDrop setFile={setFile} checked={checked} />
+                <DragDrop checked={checked} />
                 <Input
                   placeholder="Add URL"
                   type="url"
+                  name="url"
                   required={checked ? true : false}
                   sx={{
                     width: {
@@ -123,12 +124,14 @@ const MainModal = (props: MainModalProps) => {
                 <Input
                   required
                   placeholder="Add title"
+                  name="title"
                   sx={{
                     width: { xs: "100%" },
                   }}
                 />
                 <Textarea
                   required
+                  name="description"
                   minRows={2}
                   placeholder="Add description"
                   sx={{ width: { xs: "100%" } }}
@@ -138,6 +141,7 @@ const MainModal = (props: MainModalProps) => {
               <Input
                 required
                 placeholder="Add an address"
+                name="address"
                 sx={{ width: { xs: "100%" } }}
               />
             )}

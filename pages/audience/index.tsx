@@ -1,4 +1,4 @@
-import { Box, Sheet, Stack, Table, Typography } from "@mui/joy";
+import { Box, Sheet, Table, Typography } from "@mui/joy";
 import React, { useEffect, useState } from "react";
 import TableToolbar from "@/components/TableToolbar";
 import MyModal from "@/components/MyModal";
@@ -44,10 +44,10 @@ interface Data {
   address?: string;
   title?: string;
   description?: string;
-  contents?: any[];
-  addresses?: any[];
+  Contents?: any[];
+  Addresses?: any[];
   created_at: Date;
-  action?: string;
+  action?: any;
 }
 
 const AddressList = ({
@@ -56,7 +56,7 @@ const AddressList = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Data>("contents");
+  const [orderBy, setOrderBy] = useState<keyof Data>(contentItems);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
@@ -103,7 +103,7 @@ const AddressList = ({
   const handleRemoveAddress = (id: string) => {};
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    event: React.MouseEvent<unknown, MouseEvent>,
     property: keyof Data
   ) => {
     const isAsc = orderBy === property && order === "asc";
