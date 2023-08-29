@@ -6,8 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { contentId } = req.query as any;
-  const response = await Content.findOne({
-    where: { id: contentId },
+  const response = await Content.findByPk(contentId, {
     include: Address,
   });
   res.status(200).json({ response: response });

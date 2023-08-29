@@ -1,27 +1,12 @@
-import { useCallback, useState } from "react";
-import { useDropzone, FileWithPath } from "react-dropzone";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 interface DragDropProps {
-  // setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
   checked: boolean;
 }
 
 const DragDrop: React.FC<DragDropProps> = ({ checked }) => {
-  const [display, setDisplay] = useState<string | undefined>(
-    "Drag 'n' drop some files here, or click to select files"
-  );
-
-  // const onDrop = useCallback(
-  //   (acceptedFiles: FileWithPath[]) => {
-  //     acceptedFiles.forEach((file: FileWithPath) => {
-  //       setFile(file);
-  //       setDisplay(file.path);
-  //     });
-  //   },
-  //   [setFile]
-  // );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone();
+  const { getRootProps, getInputProps } = useDropzone();
 
   return (
     <div

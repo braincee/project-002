@@ -24,7 +24,6 @@ interface MainModalProps {
   items: any[];
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   setSelectedOption: (value: string | null) => void;
-  // setFile?: React.Dispatch<React.SetStateAction<File | undefined>>;
   setSelectedValues?: (value: any) => void;
   selectedValues?: any[];
   loading: boolean;
@@ -41,7 +40,6 @@ const MainModal = (props: MainModalProps) => {
     setSelectedOption,
     disable,
     name,
-    // setFile,
     setSelectedValues,
     selectedValues,
     loading,
