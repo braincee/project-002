@@ -1,21 +1,31 @@
-import React from "react";
-import { FileUploader } from "react-drag-drop-files";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 
-// const fileTypes = ["JPG", "PNG", "GIF"];
+interface DragDropProps {
+  checked: boolean;
+}
 
-function DragDrop({ setFile, checked }: { setFile: any; checked: boolean }) {
-  const handleChange = (file: any) => {
-    setFile(file);
-  };
+const DragDrop: React.FC<DragDropProps> = ({ checked }) => {
+  const { getRootProps, getInputProps } = useDropzone();
+
   return (
-    <div style={{ display: checked ? "none" : "block" }}>
-      <FileUploader
-        required={checked ? false : true}
-        handleChange={handleChange}
+    <div
+      {...getRootProps()}
+      style={{
+        border: "1px solid #cdd7e1",
+        borderRadius: "4px",
+        padding: "0px 8px",
+        display: checked ? "none" : "block",
+      }}
+    >
+      <input
+        {...getInputProps()}
+        required={!checked}
         name="file"
+        style={{ display: "block", padding: "8px" }}
       />
     </div>
   );
-}
+};
 
 export default DragDrop;

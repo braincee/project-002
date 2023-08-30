@@ -13,9 +13,9 @@ import {
 import { Download } from "@mui/icons-material";
 import { ExportToCsv } from "export-to-csv";
 import { Log } from "@/libs/models";
-import { InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const logs = JSON.stringify(
     await Log.findAll({
       order: [["created_at", "DESC"]],

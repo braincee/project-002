@@ -20,11 +20,10 @@ interface MainModalProps {
   tableHeading: string;
   placeholder: string;
   disable: boolean;
-  name: String;
+  name: string;
   items: any[];
-  handleSubmit: (event: React.FormEvent) => void;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   setSelectedOption: (value: string | null) => void;
-  setFile?: (value: any) => void;
   setSelectedValues?: (value: any) => void;
   selectedValues?: any[];
   loading: boolean;
@@ -41,7 +40,6 @@ const MainModal = (props: MainModalProps) => {
     setSelectedOption,
     disable,
     name,
-    setFile,
     setSelectedValues,
     selectedValues,
     loading,
@@ -108,27 +106,30 @@ const MainModal = (props: MainModalProps) => {
           <Stack spacing={2} direction={{ xs: "column" }}>
             {name === "Content" ? (
               <>
-                <DragDrop setFile={setFile} checked={checked} />
+                <DragDrop checked={checked} />
                 <Input
                   placeholder="Add URL"
                   type="url"
+                  name="url"
                   required={checked ? true : false}
                   sx={{
                     width: {
                       xs: "100%",
-                      display: checked ? "flex" : "none",
                     },
+                    display: checked ? "flex" : "none",
                   }}
                 />
                 <Input
                   required
                   placeholder="Add title"
+                  name="title"
                   sx={{
                     width: { xs: "100%" },
                   }}
                 />
                 <Textarea
                   required
+                  name="description"
                   minRows={2}
                   placeholder="Add description"
                   sx={{ width: { xs: "100%" } }}
@@ -138,6 +139,7 @@ const MainModal = (props: MainModalProps) => {
               <Input
                 required
                 placeholder="Add an address"
+                name="address"
                 sx={{ width: { xs: "100%" } }}
               />
             )}
@@ -185,7 +187,9 @@ const MainModal = (props: MainModalProps) => {
                       }}
                       key={value.id}
                     >
-                      {value.address ? value.address : value.title}
+                      {value.address
+                        ? truncateEthAddress(value.address)
+                        : value.title}
                     </Typography>
                   );
                 })}

@@ -1,70 +1,102 @@
-import { Button, Grid, AspectRatio } from "@mui/joy";
+import { Button, Grid, Input } from "@mui/joy";
 import { useRouter } from "next/router";
-import Input from "@mui/joy/Input";
 import NFTImage from "@/public/images/nft_image.png";
 import Image from "next/image";
-import { initDb } from "@/libs/api";
-import { useState } from "react";
-
-initDb();
+import { ChangeEvent, FormEvent, useState } from "react";
+import { signIn } from "next-auth/react";
+import NextProgress from "next-progress";
 
 export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
+    const target = event.target as typeof event.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+    const email = target.email.value;
+    const password = target.password.value;
+    await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    setLoading(false);
     router.push("/dashboard");
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        width: "100%",
-        minHeight: "98vh",
-        mx: "auto",
-      }}
-      spacing={3}
-    >
+    <>
       <Grid
-        lg={4}
-        md={6}
-        xs={12}
-        sx={{ alignItems: "center", display: "grid" }}
+        container
+        sx={{
+          width: "100%",
+          height: "100%",
+          m: 0,
+        }}
+        spacing={5}
       >
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
+        <Grid
+          xs={12}
+          md={4}
+          sx={{
+            alignItems: "center",
+            display: "grid",
+            py: 0,
+            zIndex: 100,
           }}
         >
-          <Input
-            placeholder="Name"
-            sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
-            size="lg"
-          />
-          <Input
-            placeholder="Enter your password"
-            sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
-            size="lg"
-          />
-          <Button
-            type="submit"
-            onClick={handleLogin}
-            loading={loading ? true : false}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleLogin(event);
+            }}
+            method="POST"
           >
-            Submit
-          </Button>
-        </form>
+            <Input
+              placeholder="Enter your email address"
+              type="email"
+              name="email"
+              sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
+              size="lg"
+              required
+            />
+            <Input
+              placeholder="Enter your password"
+              type="password"
+              name="password"
+              sx={{
+                mb: 2,
+                fontSize: "var(--joy-fontSize-sm)",
+              }}
+              size="lg"
+              required
+            />
+            <Button type="submit" loading={loading ? true : false}>
+              Submit
+            </Button>
+          </form>
+        </Grid>
+        <Grid
+          xs={12}
+          md={8}
+          sx={{
+            py: 0,
+            px: 0,
+            height: "100%",
+            position: { xs: "absolute", md: "relative" },
+          }}
+        >
+          <Image
+            className="nft-image"
+            src={NFTImage}
+            alt="NTF Image"
+            style={{ height: "100%", width: "100%" }}
+          />
+        </Grid>
       </Grid>
-      <Grid lg={8} md={6} xs={12} sx={{ minHeight: "100%" }}>
-        <Image
-          className="nft-image"
-          src={NFTImage}
-          alt="NTF Image"
-          style={{ height: "100%", width: "100%" }}
-        />
-      </Grid>
-    </Grid>
+    </>
   );
 }

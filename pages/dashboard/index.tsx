@@ -26,7 +26,7 @@ export default function Dashboard({
         const labels: any[] = []
         const dataValues: any[] = []
         addresses.map((address: any) => {
-            let date = new Date(address.created_at).toDateString()
+            const date = new Date(address.created_at).toDateString()
             if (data.has(date)) {
                 data.set(date, data.get(date) + 1)
             } else {
@@ -93,7 +93,9 @@ export default function Dashboard({
                                 sx={{ textAlign: 'start', backgroundColor: 'inherit' }}
                                 key={index}
                             >
-                                <Typography level='h4'>{truncateEthAddress(address.address)}</Typography>
+                                <Typography level='h4'>
+                                    {truncateEthAddress(address.address)}
+                                </Typography>
                                 <Typography color='neutral'>
                                     {new Date(address.created_at).toDateString()}
                                 </Typography>

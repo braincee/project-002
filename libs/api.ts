@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 import supabase from "./supabase";
+import { hash } from "bcrypt-ts";
 
 export const initDb = async () => {
   const response = await fetch("api/initDb");
@@ -11,7 +12,11 @@ export const getAddress = async ({ addressId }: { addressId: string }) => {
   return response.json();
 };
 
-export const getContent = async ({ contentId }: { contentId: string }) => {
+export const getContent = async ({
+  contentId,
+}: {
+  contentId: string | undefined;
+}) => {
   const response = await fetch(`/api/content/${contentId}`);
   return response.json();
 };
@@ -37,10 +42,17 @@ export const addAddress = async ({
   return response.json();
 };
 
-export const addUser = async ({ id, email }: { id: string; email: string }) => {
+export const addUser = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  const hashPassword = await hash(password, 10);
   const data = {
-    id,
     email,
+    password: hashPassword,
     invited: true,
   };
   const response = await fetch("/api/user/addUser", {
@@ -59,12 +71,14 @@ export const addContent = async ({
   description,
   url,
   urlString,
+  fileType,
 }: {
   id: string;
   title: string;
   description: string;
   url?: string;
   urlString?: string;
+  fileType: string;
 }) => {
   let data;
   if (url) {
@@ -73,6 +87,7 @@ export const addContent = async ({
       title,
       description,
       url,
+      fileType,
     };
   } else {
     const data = {
@@ -80,6 +95,7 @@ export const addContent = async ({
       title,
       description,
       urlString,
+      fileType,
     };
   }
   const response = await fetch("/api/content/add", {
@@ -210,7 +226,7 @@ export const removeContent = async ({
 const getFileFromUrl = async (
   url: any,
   name: string,
-  defaultType = "image/png"
+  defaultType = "unknown"
 ) => {
   const response = await fetch(url);
   const data = await response.blob();

@@ -20,7 +20,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
-const headCells1: readonly HeadCell[] = [
+const HeadCells1: readonly HeadCell[] = [
   {
     id: "address",
     numeric: false,
@@ -41,7 +41,7 @@ const headCells1: readonly HeadCell[] = [
   },
 ];
 
-const headCells2: readonly HeadCell[] = [
+const HeadCells2: readonly HeadCell[] = [
   {
     id: "title",
     numeric: false,
@@ -122,7 +122,7 @@ const TableHead = (props: TableHeadProps) => {
         </th>
         {name &&
           name === "Address" &&
-          headCells1.map((headCell) => {
+          HeadCells1.map((headCell) => {
             const active = orderBy === headCell.id;
             return (
               <th
@@ -176,7 +176,7 @@ const TableHead = (props: TableHeadProps) => {
           })}
         {name &&
           name === "Content" &&
-          headCells2.map((headCell) => {
+          HeadCells2.map((headCell) => {
             const active = orderBy === headCell.id;
             return (
               <th
