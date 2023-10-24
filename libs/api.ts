@@ -2,11 +2,6 @@ import { v4 as uuidV4 } from "uuid";
 import supabase from "./supabase";
 import { hash } from "bcrypt-ts";
 
-export const initDb = async () => {
-  const response = await fetch("api/initDb");
-  return response.json();
-};
-
 export const getAddress = async ({ addressId }: { addressId: string }) => {
   const response = await fetch(`/api/address?addressId=${addressId}`);
   return response.json();
@@ -90,7 +85,7 @@ export const addContent = async ({
       fileType,
     };
   } else {
-    const data = {
+    data = {
       id,
       title,
       description,
