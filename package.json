@@ -6,7 +6,8 @@
     "start": "next start",
     "fix:lint": "eslint --ext .jsx --ext .js . --fix",
     "fix:prettier": "prettier --write \"**/*.{css,js,jsx,ts,tsx,json,md}\"",
-    "fix": "npm run fix:lint && npm run fix:prettier"
+    "fix": "npm run fix:lint && npm run fix:prettier",
+    "db:generate": "drizzle-kit generate:pg --config=drizzle.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

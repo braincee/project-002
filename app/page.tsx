@@ -1,39 +1,39 @@
-'use client'
-import Image from 'next/image'
-import { Button, Grid, Input } from '@mui/joy'
-import { useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
-import NFTImage from '@/public/images/nft_image.png'
-import { signIn } from 'next-auth/react'
+"use client";
+import Image from "next/image";
+import { Button, Grid, Input } from "@mui/joy";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import NFTImage from "@/public/images/nft_image.png";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
-    setLoading(true)
+    setLoading(true);
     const target = event.target as typeof event.target & {
-      email: { value: string }
-      password: { value: string }
-    }
-    const email = target.email.value
-    const password = target.password.value
-    await signIn('credentials', {
+      email: { value: string };
+      password: { value: string };
+    };
+    const email = target.email.value;
+    const password = target.password.value;
+    await signIn("credentials", {
       redirect: false,
       email,
       password,
-    })
-    setLoading(false)
-    router.push('/dashboard')
-  }
+    });
+    setLoading(false);
+    router.push("/dashboard");
+  };
 
   return (
-    <main className='h-screen'>
+    <main className="h-screen">
       <Grid
         container
         sx={{
-          width: '100%',
-          height: '100%',
+          width: "100%",
+          height: "100%",
           m: 0,
         }}
         spacing={5}
@@ -42,39 +42,39 @@ export default function Home() {
           xs={12}
           md={4}
           sx={{
-            alignItems: 'center',
-            display: 'grid',
+            alignItems: "center",
+            display: "grid",
             py: 0,
             zIndex: 100,
           }}
         >
           <form
             onSubmit={(event) => {
-              event.preventDefault()
-              handleLogin(event)
+              event.preventDefault();
+              handleLogin(event);
             }}
-            method='POST'
+            method="POST"
           >
             <Input
-              placeholder='Enter your email address'
-              type='email'
-              name='email'
-              sx={{ mb: 2, fontSize: 'var(--joy-fontSize-sm)' }}
-              size='lg'
+              placeholder="Enter your email address"
+              type="email"
+              name="email"
+              sx={{ mb: 2, fontSize: "var(--joy-fontSize-sm)" }}
+              size="lg"
               required
             />
             <Input
-              placeholder='Enter your password'
-              type='password'
-              name='password'
+              placeholder="Enter your password"
+              type="password"
+              name="password"
               sx={{
                 mb: 2,
-                fontSize: 'var(--joy-fontSize-sm)',
+                fontSize: "var(--joy-fontSize-sm)",
               }}
-              size='lg'
+              size="lg"
               required
             />
-            <Button type='submit' loading={loading ? true : false}>
+            <Button type="submit" loading={loading ? true : false}>
               Submit
             </Button>
           </form>
@@ -85,18 +85,18 @@ export default function Home() {
           sx={{
             py: 0,
             px: 0,
-            height: '100%',
-            position: { xs: 'absolute', md: 'relative' },
+            height: "100%",
+            position: { xs: "absolute", md: "relative" },
           }}
         >
           <Image
-            className='nft-image'
+            className="nft-image"
             src={NFTImage}
-            alt='NTF Image'
-            style={{ height: '100%', width: '100%' }}
+            alt="NTF Image"
+            style={{ height: "100%", width: "100%" }}
           />
         </Grid>
       </Grid>
     </main>
-  )
+  );
 }
