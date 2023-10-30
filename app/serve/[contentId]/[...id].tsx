@@ -79,11 +79,7 @@ const ServeContent = () => {
 
   return (
     <main>
-      {/* <Head>
-        <title>NFT Gated Server</title>
-        <meta name='robots' content='noindex, nofollow' />
-        <meta name='description' content='An NFT Gated Server.' />
-      </Head> */}
+
       {!address && (
         <div
           style={{
