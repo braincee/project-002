@@ -6,8 +6,8 @@ dotenv.config({
 })
 
 export default {
-  schema: './libs/drizzle/schema.ts',
-  out: './libs/drizzle/schena-out.ts',
+  schema: './db/schema.ts',
+  out: './db/schema-out.ts',
   dbCredentials: {
     connectionString: process.env.NEXT_POSTGRESQL_URI as string,
   },

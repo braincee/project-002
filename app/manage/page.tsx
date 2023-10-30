@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import ManageUser from './ManageUser'
+import { db } from '@/db/drizzle'
+import ManageUser from '@/components/ManageUser'
 
 async function getUsers() {
   const response = await db.query.users.findMany({

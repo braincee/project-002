@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import Log from './Log'
+import { db } from '@/db/drizzle'
+import Log from '@/components/Log'
 
 async function getLogs() {
   const response = await db.query.logs.findMany({

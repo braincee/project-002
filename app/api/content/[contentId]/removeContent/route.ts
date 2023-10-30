@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import { addresses, contents } from '@/libs/drizzle/schema'
+import { db } from '@/db/drizzle'
+import { addresses, contents } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 
 export async function POST(req: Request) {

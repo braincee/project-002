@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import Content from './Content'
+import { db } from '@/db/drizzle'
+import Content from '@/components/Content'
 
 async function getAddresses() {
   const response = await db.query.addresses.findMany({

@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import { contentAddresses, logs } from '@/libs/drizzle/schema'
+import { db } from '@/db/drizzle'
+import { contentAddresses, logs } from '@/db/schema'
 import { v4 as uuidV4 } from 'uuid'
 
 export async function POST(req: Request) {

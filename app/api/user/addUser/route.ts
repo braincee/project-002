@@ -1,5 +1,5 @@
-import { db } from '@/libs/drizzle/db'
-import { users } from '@/libs/drizzle/schema'
+import { db } from '@/db/drizzle'
+import { users } from '@/db/schema'
 
 export async function POST(req: Request) {
   const data = await req.json()

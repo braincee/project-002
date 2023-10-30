@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { compareSync } from 'bcrypt-ts'
-import { db } from '@/libs/drizzle/db'
+import { db } from '@/db/drizzle'
 
 const comparePassword = (password: string, hash: any) => {
   const result = compareSync(password, hash)

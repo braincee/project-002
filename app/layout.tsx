@@ -1,4 +1,3 @@
-import ThemeRegistry from './ThemeRegistry'
 import './globals.css'
 import type { Metadata } from 'next'
 
@@ -15,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <ThemeRegistry options={{ key: 'joy' }}>{children}</ThemeRegistry>
+        {children}
       </body>
     </html>
   )

@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Card, Grid, List, Stack, Typography } from '@mui/joy'
 import BarChart from '@/components/BarChart'
 import truncateEthAddress from 'truncate-eth-address'
-import { db } from '@/libs/drizzle/db'
+import { db } from '@/db/drizzle'
 
 async function getAddresses() {
   const response = await db.query.addresses.findMany({
