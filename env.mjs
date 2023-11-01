@@ -1,13 +1,14 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs'
+import { z } from 'zod'
 
 export const env = createEnv({
   server: {
-    NODE_ENV: z.enum(["development", "test", "production"]),
+    NODE_ENV: z.enum(['development', 'test', 'production']),
     POSTGRESQL_URI: z.string(),
     NEXT_PUBLIC_SUPABASE_KEY: z.string(),
     NEXT_PUBLIC_SUPABASE_URL: z.string(),
-    NEXT_STORAGE_SUPABASE_URL: z.string(),
+    SUPABASE_STORAGE_URL: z.string(),
+    SUPABASE_SERVICE_KEY: z.string(),
     NEXTAUTH_SECRET: z.string(),
     NEXTAUTH_URL: z.string(),
   },
@@ -20,8 +21,8 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
     SUPABASE_STORAGE_URL: process.env.SUPABASE_STORAGE_URL,
+    SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET
-   
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   },
-});
+})

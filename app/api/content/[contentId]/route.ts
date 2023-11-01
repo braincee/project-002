@@ -1,8 +1,8 @@
 import { db } from '@/db/drizzle'
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const contentId = searchParams.get("contentId");
+  const { searchParams } = new URL(req.url)
+  const contentId = searchParams.get('contentId')
   if (contentId) {
     const response = await db.query.contents.findMany({
       where: (content, { eq }) => eq(content.id, contentId),
@@ -19,8 +19,8 @@ export async function GET(req: Request) {
           },
         },
       },
-    });
+    })
 
-    return Response.json({ response });
+    return Response.json({ response })
   }
 }

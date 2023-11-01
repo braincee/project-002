@@ -1,12 +1,12 @@
-import { db } from '@/db/drizzle'
-import Log from '@/components/Log'
+import { db } from "@/db/drizzle"
+import Log from "@/components/Log"
 
 async function getLogs() {
   const response = await db.query.logs.findMany({
     orderBy: (log, { desc }) => [desc(log.createdAt)],
-  })
+  });
 
-  return response
+  return response;
 }
 
 const Logs = async () => {
@@ -15,7 +15,7 @@ const Logs = async () => {
     <main>
       <Log logs={logs} />
     </main>
-  )
-}
+  );
+};
 
-export default Logs
+export default Logs;

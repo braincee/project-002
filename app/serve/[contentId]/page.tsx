@@ -15,8 +15,6 @@ const ServeContent = () => {
   const message = 'I am requesting content'
   const sdk = useSDK()
 
-  console.log(params)
-
   const renderedContent = useCallback(() => {
     if (content && content.fileType.startsWith('video')) {
       return <video controls src={content.url} style={{ maxWidth: '100%' }} />
@@ -62,6 +60,7 @@ const ServeContent = () => {
           const myContent = await getContent({
             contentId: params.contentId?.toString(),
           })
+          console.log("My Content >>>",myContent)
           setContent(myContent.response)
           const contentAddress = myContent.response.Addresses.find(
             (myAddress: any) => myAddress.address == signedAddress
@@ -79,7 +78,6 @@ const ServeContent = () => {
 
   return (
     <main>
-
       {!address && (
         <div
           style={{

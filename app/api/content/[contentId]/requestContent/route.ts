@@ -2,13 +2,10 @@ import supabase from '@/libs/supabase'
 import { StorageClient } from '@supabase/storage-js'
 import { env } from '@/env.mjs'
 
-const storageClient = new StorageClient(
-  env.SUPABASE_STORAGE_URL!,
-  {
-    apiKey: process.env.NEXT_SUPABASE_SERVICE_KEY!,
-    Authorization: `Bearer ${process.env.NEXT_SUPABASE_SERVICE_KEY}`,
-  }
-)
+const storageClient = new StorageClient(env.SUPABASE_STORAGE_URL, {
+  apiKey: env.SUPABASE_SERVICE_KEY,
+  Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+})
 
 export async function POST(req: Request) {
   const filename = await req.json()
