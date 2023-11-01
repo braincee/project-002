@@ -1,5 +1,6 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
 import NextAuth, { NextAuthOptions } from 'next-auth'
+import { env } from '@/env.mjs'
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -14,7 +15,7 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const authResponse = await fetch(
-          `${process.env.NEXTAUTH_URL}/api/user/login`,
+          `${env.NEXTAUTH_URL}/api/user/login`,
           {
             method: 'POST',
             headers: {
@@ -33,7 +34,7 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/',
   },

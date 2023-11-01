@@ -1,8 +1,9 @@
 import supabase from '@/libs/supabase'
 import { StorageClient } from '@supabase/storage-js'
+import { env } from '@/env.mjs'
 
 const storageClient = new StorageClient(
-  process.env.NEXT_SUPABASE_STORAGE_URL!,
+  env.SUPABASE_STORAGE_URL!,
   {
     apiKey: process.env.NEXT_SUPABASE_SERVICE_KEY!,
     Authorization: `Bearer ${process.env.NEXT_SUPABASE_SERVICE_KEY}`,
