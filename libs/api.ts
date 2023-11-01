@@ -1,64 +1,61 @@
-import { v4 as uuidV4 } from "uuid";
-import supabase from "./supabase";
-import { hash } from "bcrypt-ts";
+import { v4 as uuidV4 } from 'uuid'
+import supabase from './supabase'
+import { hash } from 'bcrypt-ts'
 
 export const getAddress = async ({ addressId }: { addressId: string }) => {
-  const response = await fetch(`/api/address?addressId=${addressId}`);
-  return response.json();
-};
+  const response = await fetch(`/api/address?addressId=${addressId}`)
+  return response.json()
+}
 
-export const getContent = async ({
-  contentId,
-}: {
-  contentId: string | undefined;
-}) => {
-  const response = await fetch(`/api/content/${contentId}`);
-  return response.json();
-};
+export const getContent = async ({ contentId }: { contentId: string }) => {
+  console.log('test')
+  const response = await fetch(`/api/content/${contentId}/`)
+  return response.json()
+}
 
 export const addAddress = async ({
   id,
   address,
 }: {
-  id: string;
-  address: string;
+  id: string
+  address: string
 }) => {
   const data = {
     id,
     address,
-  };
-  const response = await fetch("/api/address/addAddress", {
+  }
+  const response = await fetch('/api/address/addAddress', {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const addUser = async ({
   email,
   password,
 }: {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }) => {
-  const hashPassword = await hash(password, 10);
+  const hashPassword = await hash(password, 10)
   const data = {
     email,
     password: hashPassword,
     invited: true,
-  };
-  const response = await fetch("/api/user/addUser", {
+  }
+  const response = await fetch('/api/user/addUser', {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const addContent = async ({
   id,
@@ -68,14 +65,14 @@ export const addContent = async ({
   urlString,
   fileType,
 }: {
-  id: string;
-  title: string;
-  description: string;
-  url?: string;
-  urlString?: string;
-  fileType: string;
+  id: string
+  title: string
+  description: string
+  url?: string
+  urlString?: string
+  fileType: string
 }) => {
-  let data;
+  let data
   if (url) {
     data = {
       id,
@@ -83,7 +80,7 @@ export const addContent = async ({
       description,
       url,
       fileType,
-    };
+    }
   } else {
     data = {
       id,
@@ -91,204 +88,204 @@ export const addContent = async ({
       description,
       urlString,
       fileType,
-    };
+    }
   }
-  const response = await fetch("/api/content/add", {
+  const response = await fetch('/api/content/add', {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const getAddresses = async () => {
-  const response = await fetch("/api/address/getAllAddresses");
-  return response.json();
-};
+  const response = await fetch('/api/address/getAllAddresses')
+  return response.json()
+}
 
 export const getUsers = async () => {
-  const response = await fetch("/api/user/getAllUsers");
-  return response.json();
-};
+  const response = await fetch('/api/user/getAllUsers')
+  return response.json()
+}
 export const getContentItems = async () => {
-  const response = await fetch("/api/content/getAllContentItems");
-  return response.json();
-};
+  const response = await fetch('/api/content/getAllContentItems')
+  return response.json()
+}
 
 export const addAddressIdContentIds = async ({
   addressId,
   contentIds,
 }: {
-  addressId: string | null;
-  contentIds: readonly string[];
+  addressId: string | null
+  contentIds: readonly string[]
 }) => {
   const data = {
     addressId,
     contentIds,
-  };
-  const response = await fetch("/api/address/addAllowed", {
+  }
+  const response = await fetch('/api/address/addAllowed', {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const addContentIdAddressIds = async ({
   contentId,
   addressIds,
 }: {
-  contentId: string | null;
-  addressIds: readonly string[];
+  contentId: string | null
+  addressIds: readonly string[]
 }) => {
   const data = {
     contentId,
     addressIds,
-  };
+  }
   const response = await fetch(`/api/content/${contentId}/addAllowed`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const removeContentIdAddressIds = async ({
   contentId,
   addressIds,
 }: {
-  contentId: string | null;
-  addressIds: readonly string[];
+  contentId: string | null
+  addressIds: readonly string[]
 }) => {
   const data = {
     contentId,
     addressIds,
-  };
+  }
   const response = await fetch(`/api/content/${contentId}/removeAllowed`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const removeAddressIdContentIds = async ({
   contentIds,
   addressId,
 }: {
-  contentIds: readonly string[];
-  addressId: string | null;
+  contentIds: readonly string[]
+  addressId: string | null
 }) => {
   const data = {
     contentIds,
     addressId,
-  };
+  }
   const response = await fetch(`/api/address/removeAllowed`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 export const removeContent = async ({
   id,
   keep_orfans,
 }: {
-  id: string;
-  keep_orfans: boolean | null;
+  id: string
+  keep_orfans: boolean | null
 }) => {
   const response = await fetch(`/api/content/${id}/removeContent`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({ id, keep_orfans }),
-  });
-  return response;
-};
+  })
+  return response
+}
 
 const getFileFromUrl = async (
   url: any,
   name: string,
-  defaultType = "unknown"
+  defaultType = 'unknown'
 ) => {
-  const response = await fetch(url);
-  const data = await response.blob();
+  const response = await fetch(url)
+  const data = await response.blob()
   const ext =
-    (data?.type && data?.type.slice(data.type.indexOf("/") + 1)) || "png";
+    (data?.type && data?.type.slice(data.type.indexOf('/') + 1)) || 'png'
   const file = new File([data], `${name}.${ext}`, {
     type: data.type || defaultType,
-  });
-  return file;
-};
+  })
+  return file
+}
 
 export const addFileToContentsStorage = async ({
   file,
   urlString,
 }: {
-  file?: any;
-  urlString?: any;
+  file?: any
+  urlString?: any
 }) => {
   if (urlString) {
     const myFile = await getFileFromUrl(
       urlString,
       new Date().getTime().toString()
-    );
+    )
     const filename = `${uuidV4()}.${myFile.name.substring(
-      myFile.name.lastIndexOf(".") + 1,
+      myFile.name.lastIndexOf('.') + 1,
       myFile.name.length
-    )}`;
+    )}`
 
     const response = await supabase.storage
-      .from("contents")
+      .from('contents')
       .upload(filename, myFile, {
-        cacheControl: "3600",
+        cacheControl: '3600',
         upsert: false,
-      });
+      })
     if (response?.error && response?.error?.message) {
-      return response.error.message;
+      return response.error.message
     }
-    return filename;
+    return filename
   } else {
     const filename = `${uuidV4()}.${file.name.substring(
-      file.name.lastIndexOf(".") + 1,
+      file.name.lastIndexOf('.') + 1,
       file.name.length
-    )}`;
+    )}`
 
     const response = await supabase.storage
-      .from("contents")
+      .from('contents')
       .upload(filename, file, {
-        cacheControl: "3600",
+        cacheControl: '3600',
         upsert: false,
-      });
+      })
     if (response?.error && response?.error?.message) {
-      return response.error.message;
+      return response.error.message
     }
-    return filename;
+    return filename
   }
-};
+}
 
 export const getFilePublicURL = async (filename: string) => {
   // const { data } = supabase.storage.from("contents").getPublicUrl(filename);
-  const contentId = uuidV4();
+  const contentId = uuidV4()
   const response = await fetch(`/api/content/${contentId}/requestContent`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(filename),
-  });
-  const data = await response.json();
-  return { data, contentId };
-};
+  })
+  const data = await response.json()
+  return { data, contentId }
+}
